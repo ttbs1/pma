@@ -71,7 +71,7 @@ and open the template in the editor.
 
                     <button type="submit" class="btn btn-success">Pesquisar</button>
                     <a href="list_cliente.php" type="btn" class="btn btn-default">Voltar</a>
-                    <a href="../../index.php" type="btn" class="btn btn-default">Menu Principal</a>
+                    <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                 </form>
             </div>
         </div>

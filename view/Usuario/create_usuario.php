@@ -461,7 +461,7 @@ if(!empty($_POST)) {
                             <br/>
 
                             <button type="submit" class="btn btn-success">Adicionar</button>
-                            <a href="../../index.php" type="btn" class="btn btn-default">Menu Principal</a>
+                            <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                             <a href="list_usuario.php" type="btn" class="btn btn-default">Voltar</a>
                         </div>
                         

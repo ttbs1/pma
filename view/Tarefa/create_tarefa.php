@@ -90,7 +90,7 @@ and open the template in the editor.
                                 <br/>
 
                                 <button type="submit" class="btn btn-success">Adicionar</button>
-                                <a href="../../index.php" type="btn" class="btn btn-default">Menu Principal</a>
+                                <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                                 <?php echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$id.'" type="btn" class="btn btn-default">Voltar</a>'?>
 
                             </div>

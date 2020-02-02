@@ -30,7 +30,7 @@ and open the template in the editor.
                 session_start();
                 $_SESSION['usuario'] = $auth['id'];
                 
-                header("Location: ../../index.php");
+                header("Location: ../home/home.php");
             } else {
                 $msg = true;
             }
@@ -52,7 +52,7 @@ and open the template in the editor.
                                 <input type="text" name="usuario" placeholder="Usuário">
                                 <input type="password" name="senha" placeholder="Senha">
                                 <button type="submit" value="Login">Login</button>
-                                <a href=""><?php if($msg) echo 'Usuário ou senha incorretos!' ?></a>
+                                <a href=""><?php if($msg) {echo 'Usuário ou senha incorretos!';} ?></a>
                         </div>
                 </div>
             </form>

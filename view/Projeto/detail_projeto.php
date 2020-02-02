@@ -263,7 +263,7 @@ if(!empty($_GET['id']))
 
 
                             <div class="form-actions">
-                                <a href="../../index.php" type="btn" class="btn btn-default">Menu Principal</a>
+                                <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                                 <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
                             </div>
                         </div>
