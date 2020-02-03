@@ -16,6 +16,7 @@ and open the template in the editor.
         <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
+        <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <?php
@@ -63,8 +64,28 @@ and open the template in the editor.
         
         <div class="container">
             
-            <div class="jumbotron">
+            <div class="jumbotron row">
+                <div>
                     <h2>Cadastro de Endereços</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
             </div>
     
             <form class="form-horizontal" action="create_endereco.php" method="post">
@@ -258,6 +279,8 @@ and open the template in the editor.
                 </div>
             </form>
         </div>
-        
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>

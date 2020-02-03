@@ -9,45 +9,7 @@ and open the template in the editor.
 */
 
 
-input.iUser {
-    width: 240px;
-}
 
-input.iSenha {
-    width: 240px;
-}
-
-input.iNome {
-    width: 28%;
-}
-
-input.iEmail {
-    width: 25%;
-}
-
-input.iCEP {
-    width: 8%;
-}
-
-input.iRua {
-    width: 28%;
-}
-
-input.iNumero {
-    width: 6%;
-}
-
-input.iBairro {
-    width: 12%;
-}
-
-input.iCidade {
-    width: 12%;
-}
-
-input.iEstado {
-    width: 3%;
-}
 
 input.reformulado {
     width: 14%;

@@ -16,13 +16,36 @@ and open the template in the editor.
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
         
+        <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        
+        
         <title>PMA - Usuários</title>
     </head>
 
     <body>
             <div class="container">
-              <div class="jumbotron">
+              <div class="jumbotron row">
+                <div>
                     <h2>Listagem de Usuários</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
               </div>
                 </br>
                 <div style="text-align: right;">

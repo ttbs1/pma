@@ -216,11 +216,38 @@ if(!empty($_POST)) {
         <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
+        <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="container">
-            <div class="jumbotron">
+            <div class="jumbotron row">
+                <div>
                     <h2>Cadastro de Usuários</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div clas="span10 offset1">
@@ -233,25 +260,30 @@ if(!empty($_POST)) {
 
                         <table>
                             <tr>
-                                <td style="width: 300px;">
+                                <td style="width: 280px;">
                                     <fieldset>
                                         <legend>Novo usuário</legend>
-                                        <label for="usuario">Nome de usuário: </label><br>
+                                        
+                                        <label for="usuario" style="margin-left: 15px">Nome de usuário: </label><br>
+                                        <div class="form-group col-md-3">
                                                     <span id="usuario1" class="textfieldHintState">
                                                         <input type="text" class="iUser" name="usuario" id="usuario" placeholder="Usuario" value="" /><br>
                                                         <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
+                                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                                     </span>
+                                        </div>
                                         <script>
                                             var user = new Spry.Widget.ValidationTextField("user", "custom", {validateOn:["blur"], maxChars: 85});
                                         </script>
 
-                                        <label for="senha" >Senha: </label><br>
+                                        <label for="senha" style="margin-left: 15px">Senha: </label><br>
+                                        <div class="form-group col-md-3">
                                                     <span id="senha" class="textfieldHintState">
                                                         <input type="password" class="iSenha" name="senha" id="senha" placeholder="Senha" value="" /><br>
                                                         <span class="textfieldMaxCharsMsg">Esse campo tem limite de 12 caracteres.</span>
                                                         <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
                                                     </span>
+                                        </div>
                                         <script>
                                             var senha = new Spry.Widget.ValidationTextField("senha", "custom", {validateOn:["blur"], maxChars: 12});
                                         </script>

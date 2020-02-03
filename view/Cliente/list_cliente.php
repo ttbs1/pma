@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>PMA - Clientes</title>
+    <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
@@ -16,8 +17,30 @@
 
 <body>
         <div class="container">
-          <div class="jumbotron">
-                <h2>Listagem de Clientes</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+          <div class="jumbotron row">
+                <div>
+                    <h2>Listagem de Clientes</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
+                
           </div>
             </br>
             <div class="row">

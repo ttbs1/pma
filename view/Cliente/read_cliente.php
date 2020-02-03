@@ -24,10 +24,13 @@ and open the template in the editor.
         <title>PMA - Pesquisar Cliente</title>
         <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
+        <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        
+        
     </head>
     <body>
         <script type="text/javascript">
@@ -49,8 +52,28 @@ and open the template in the editor.
         </script>
         
         <div class="container">
-            <div class="jumbotron">
+            <div class="jumbotron row">
+                <div>
                     <h2>Pesquisa de Clientes</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <form class="form-horizontal" action="read_cliente.php?" method="post">
@@ -75,6 +98,7 @@ and open the template in the editor.
                 </form>
             </div>
         </div>
+        
         
     </body>
 </html>

@@ -18,6 +18,12 @@ and open the template in the editor.
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </head>
     <body>
         <?php
@@ -58,8 +64,28 @@ and open the template in the editor.
 	
     ?>
         <div class="container">
-            <div class="jumbotron">
-                  <h2>Atualização de Clientes</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+            <div class="jumbotron row">
+                <div>
+                    <h2>Atualização de Clientes</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <form class="form-horizontal" action="update_cliente.php" method="post">
             <fieldset>
@@ -67,20 +93,25 @@ and open the template in the editor.
 
                     <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" /><br>
 
-                    <label for="nome">Nome: </label>
+                    <div class="form-group col-md-8">
+                        <label for="nome">Nome: </label>
                             <span id="nome1" class="textfieldHintState">
-                                <input type="text" class="iNome" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" /><br>
+                                <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>
+                    </div>
 
                     <script>
                         var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
                     </script>
 
-                    <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(strlen($data['cpf_cnpj'])==14){echo 'checked';} ?>> CPF 
-                    <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(strlen($data['cpf_cnpj'])>14){echo 'checked';} ?>> CNPJ <br>
-                    <div id="documentfield"></div>
+                    <div class="form-group col-md-3">
+                        <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(strlen($data['cpf_cnpj'])==14){echo 'checked';} ?>> CPF 
+                        <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(strlen($data['cpf_cnpj'])>14){echo 'checked';} ?>> CNPJ <br>
+                        <div id="documentfield"></div>
+                    </div>
+                    
                     <script type="text/javascript">
                         if (<?php echo strlen($data['cpf_cnpj']) ?> >= 14){
                             changeDocType();
@@ -91,9 +122,9 @@ and open the template in the editor.
                             var cpf = document.getElementById("cpf").checked;
                             var cnpj = document.getElementById("cnpj").checked;
 
-                            document.getElementById("documentfield").innerHTML = '<label>CPF/CNPJ</label><br>'
+                            document.getElementById("documentfield").innerHTML = '<label>CPF/CNPJ</label>'
                         + '<span id="cpf_cnpj" class="textfieldHintState">'
-                        +    '<input class="reformulado" size="20" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" >'
+                        +    '<input class="form-control" size="20" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" >'
                         +    '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
                         +'</span>';
 
@@ -107,22 +138,25 @@ and open the template in the editor.
                         }
                     </script>
 
-                    <label for="telefone">Telefone 01: </label>
-                    <select id=tipo1 onchange="changeTelType(1)">
-                        <option> </option>
-                        <option>Celular</option>
-                        <option>Fixo</option>
-                    </select>
-                    <div id="tel1field"></div>        
+                    <div class="form-group col-md-2">
+                        <label for="telefone">Telefone 01: </label>
+                        <select id=tipo1 onchange="changeTelType(1)">
+                            <option> </option>
+                            <option>Celular</option>
+                            <option>Fixo</option>
+                        </select>
+                        <div id="tel1field"></div>    
+                    </div>
 
-
-                    <label for="telefone">Telefone 02: </label>
-                    <select id=tipo2 onchange="changeTelType(2)">
-                        <option> </option>
-                        <option>Celular</option>
-                        <option>Fixo</option>
-                    </select>
-                    <div id="tel2field"></div>  
+                    <div class="form-group col-md-2">
+                        <label for="telefone">Telefone 02: </label>
+                        <select id=tipo2 onchange="changeTelType(2)">
+                            <option> </option>
+                            <option>Celular</option>
+                            <option>Fixo</option>
+                        </select>
+                        <div id="tel2field"></div>  
+                    </div>
 
                     <script type="text/javascript">
 
@@ -148,7 +182,7 @@ and open the template in the editor.
                             var tipo = document.getElementById("tipo"+i).value;
 
                             document.getElementById("tel"+i+"field").innerHTML = '<span id="telefone1'+i+'" class="textfieldHintState">'
-                            +       '<input class="reformulado" type="text" name="telefone'+i+'" id="telefone'+i+'" /><br>'
+                            +       '<input class="form-control" type="text" name="telefone'+i+'" id="telefone'+i+'" />'
                             +       '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
                             +'</span>';
 
@@ -162,10 +196,12 @@ and open the template in the editor.
                         }
                     </script>
 
-                    <label for="email">E-Mail: </label>
+                    <div class="form-group col-md-6">
+                        <label for="email">E-Mail: </label>
                             <span id="email1" class="textfieldHintState">
-                                <input type="text" class="iEmail" name="email" id="email" placeholder="exemplo@meudominio.com" value="<?php echo $data['email']?>" /><br>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="exemplo@meudominio.com" value="<?php echo $data['email']?>" />
                             </span>
+                    </div>
 
                     <script>
                         var email1 = new Spry.Widget.ValidationTextField("email1", "email", {validateOn:["blur"], maxChars: 85, isRequired: false});

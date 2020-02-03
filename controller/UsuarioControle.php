@@ -111,7 +111,7 @@ class UsuarioControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "SELECT (id) FROM usuario WHERE usuario = ? and senha = ?";
+            $sql = "SELECT id, permissao_id FROM usuario WHERE usuario = ? and senha = ?";
             $q = $pdo->prepare($sql);
             $q->execute(array($usuario, $senha));
             $data = $q->fetch(PDO::FETCH_ASSOC);

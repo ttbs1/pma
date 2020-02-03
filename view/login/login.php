@@ -28,7 +28,7 @@ and open the template in the editor.
             
             if($auth) {
                 session_start();
-                $_SESSION['usuario'] = $auth['id'];
+                $_SESSION['usuario_id'] = $auth['id'];
                 
                 header("Location: ../home/home.php");
             } else {

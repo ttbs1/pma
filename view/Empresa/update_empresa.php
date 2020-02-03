@@ -53,8 +53,28 @@ and open the template in the editor.
 	
     ?>
         <div class="container">
-            <div class="jumbotron">
-                  <h2>Atualização de Empresas</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+            <div class="jumbotron row">
+                <div>
+                    <h2>Atualização de Empresas</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                </div>
+                <div class="header-user">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../../util/user.png" width="30px" height="30px">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#"><?php session_start(); 
+                                                                    if(isset($_SESSION['usuario'])) {
+                                                                        echo 'Usuário: '. $_SESSION['usuario'];
+                                                                    } else {
+                                                                        header("Location: ../login/login.php");
+                                                                    } ?></a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <form class="form-horizontal" action="update_empresa.php" method="post">
             <fieldset>
@@ -62,34 +82,40 @@ and open the template in the editor.
 
                     <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" /><br>
 
-                    <label for="nome">Nome: </label>
+                    <div class="form-group col-md-6">
+                        <label for="nome">Nome: </label>
                             <span id="nome1" class="textfieldHintState">
-                                <input type="text" class="iNome" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" /><br>
+                                <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>
+                    </div>
 
                     <script>
                         var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
                     </script>
 
-                    <label for="cnpj">CNPJ: </label>
-                    <span id="cnpj1" class="textfieldHintState">
-                        <input class="reformulado" name="cnpj" id="cnpj" type="text" placeholder="00.000.000/0000-00" value="<?php echo $data ['cnpj']?>"><br>
-                        <span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>
-                    </span>
+                    <div class="form-group col-md-3">
+                        <label for="cnpj">CNPJ: </label>
+                        <span id="cnpj1" class="textfieldHintState">
+                            <input class="form-control" name="cnpj" id="cnpj" type="text" placeholder="00.000.000/0000-00" value="<?php echo $data ['cnpj']?>">
+                            <span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>
+                        </span>
+                    </div>
                     
                     <script>
                         var cnpj1 = new Spry.Widget.ValidationTextField("cnpj1", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
                     </script>
 
-                    <label for="telefone">Telefone</label>
-                    <select id=tipo1 onchange="changeTelType(1)">
-                        <option> </option>
-                        <option>Celular</option>
-                        <option>Fixo</option>
-                    </select>
-                    <div id="tel1field"></div>
+                    <div class="form-group col-md-2">
+                        <label for="telefone">Telefone: </label>
+                        <select id=tipo1 onchange="changeTelType(1)">
+                            <option> </option>
+                            <option>Celular</option>
+                            <option>Fixo</option>
+                        </select>
+                        <div id="tel1field"></div>
+                    </div>
 
                     <script type="text/javascript">
 
@@ -107,7 +133,7 @@ and open the template in the editor.
                             var tipo = document.getElementById("tipo"+i).value;
 
                             document.getElementById("tel"+i+"field").innerHTML = '<span id="telefone1'+i+'" class="textfieldHintState">'
-                            +       '<input class="reformulado" type="text" name="telefone'+i+'" id="telefone'+i+'" /><br>'
+                            +       '<input class="form-control" type="text" name="telefone'+i+'" id="telefone'+i+'" />'
                             +       '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
                             +'</span>';
 
@@ -194,9 +220,8 @@ and open the template in the editor.
                 </div>
             </form>
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>
