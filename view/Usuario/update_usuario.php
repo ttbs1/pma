@@ -257,7 +257,7 @@ if(!empty($_POST)) {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
@@ -505,7 +505,7 @@ if(!empty($_POST)) {
                             <br/>
 
                             <button type="submit" class="btn btn-success">Atualizar</button>
-                            <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
+                            <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                             <a href="list_usuario.php" type="btn" class="btn btn-default">Voltar</a>
                         </div>
                         

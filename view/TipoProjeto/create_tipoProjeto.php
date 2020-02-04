@@ -51,7 +51,7 @@ if(!empty($_POST)) {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
@@ -64,30 +64,29 @@ if(!empty($_POST)) {
                     </div>
                     <div class="card-body">
                     <form class="form-horizontal" action="create_tipoProjeto.php" method="post">
+                        
+                        <fieldset>
+                            <legend>Novo Modelo de Projeto</legend>
 
-                        <table>
-                            <tr>
-                                <td>
-                                    <fieldset>
-                                        <legend>Descrição</legend>
-                                        <label for="descricao">Descrição: </label><br>
-                                                    <span id="descricao1" class="textfieldHintState">
-                                                        <input style="width: 380px;" type="text" class="iDescricao" name="descricao" id="descricao" placeholder="Descrição" value="" /><br>
-                                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                                                    </span>
-                                        <script>
-                                            var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
-                                        </script>
-                                    </fieldset>
-                                </td>
-                            </tr>
-                        </table>
+                            <div class="form-group col-md-6">
+                                <label for="descricao">Descrição: </label><br>
+                                    <span id="descricao1" class="textfieldHintState">
+                                        <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="" />
+                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                    </span>
+                            </div>
+
+                            <script>
+                                var user = new Spry.Widget.ValidationTextField("descricao1", "custom", {validateOn:["blur"], maxChars: 85});
+                            </script>
+                        </fieldset>
+                        
                         <div class="form-actions">
                             <br/>
 
                             <button type="submit" class="btn btn-success">Adicionar</button>
-                            <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
+                            <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                             <a href="list_tipoProjeto.php" type="btn" class="btn btn-default">Voltar</a>
                         </div>
                     </form>

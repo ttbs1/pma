@@ -70,7 +70,7 @@ and open the template in the editor.
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
@@ -142,7 +142,7 @@ and open the template in the editor.
                         ?>
                                 </label>
                         <div class="form-actions" align="right">
-                            <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?id='.$data['id'].'">Adicionar Tarefa</a>' ?>
+                            <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?tipoTarefa_id='.$data['id'].'">Adicionar Tarefa</a>' ?>
                         </div>
 
                         <br/>

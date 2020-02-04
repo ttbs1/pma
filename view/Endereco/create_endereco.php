@@ -82,7 +82,7 @@ and open the template in the editor.
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
@@ -265,7 +265,7 @@ and open the template in the editor.
                     <br/>
 
                     <button type="submit" class="btn btn-success">Adicionar</button>
-                    <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
+                    <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                     <?php 
                     
                     if($tipo=="cliente") {

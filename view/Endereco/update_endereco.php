@@ -90,7 +90,7 @@ and open the template in the editor.
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>

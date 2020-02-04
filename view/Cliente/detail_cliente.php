@@ -42,7 +42,7 @@
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
@@ -193,7 +193,7 @@
                     
                     <br/>
                     <div class="form-actions">
-                        <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
+                        <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                         <a href="list_cliente.php" type="btn" class="btn btn-default">Voltar</a>
                     </div>
                   </div>

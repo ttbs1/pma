@@ -66,9 +66,22 @@ class TarefaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO tarefa (projeto_id, descricao, peso) VALUES (?,?,?)";
+            $sql = "INSERT INTO tarefa (projeto_id, descricao, peso, status) VALUES (?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($projeto_id,$tarefa['descricao'], $tarefa['peso']));
+            $q->execute(array($projeto_id,$tarefa['descricao'], $tarefa['peso'], 'a'));
+            $pdo = conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function novaTarefa_Projeto2 ($tarefa,$projeto_id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "INSERT INTO tarefa (projeto_id, descricao, peso, status) VALUES (?,?,?,?)";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($projeto_id,$tarefa->getDescricao(), $tarefa->getPeso(), 'a'));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();

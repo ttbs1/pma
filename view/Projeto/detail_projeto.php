@@ -3,6 +3,8 @@
 include_once '../../controller/ProjetoControle.php';
 include_once '../../controller/ClienteControle.php';
 include_once '../../controller/TarefaControle.php';
+include_once '../../controller/IteracaoControle.php';
+include_once '../../controller/UsuarioControle.php';
 
 if(!empty($_GET['id']))
 {
@@ -60,7 +62,7 @@ if(!empty($_GET['id']))
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="../home/logout.php">Sair</a>
+                            <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
@@ -76,113 +78,187 @@ if(!empty($_GET['id']))
 
                         ?>
                 </div>
+                
+                <?php 
+
+                $tarefaControle = new TarefaControle();
+                $tarefas = $tarefaControle->list_tarefasProjeto($data['id']);
+
+                $peso_total = 0;
+
+                if ($tarefas) foreach($tarefas as $row) {
+                    $peso_total = $peso_total + $row['peso'];
+                }
+
+                ?>
+                
+                <div class="row" style="width: 100%; height: 25px; margin: 0px 0px 8px 8px"> 
+                    
+                    <?php 
+                    if ($tarefas) foreach($tarefas as $row) {
+                        if ($row['status'] == 'a') { $cor = 'rgb(250,128,114)'; } elseif ($row['status'] == 'b') { $cor = 'rgb(255,210,150)'; } elseif ($row['status'] == 'c') { $cor = 'rgb(40,180,50)';}
+                        echo '<div style="width: '.floor((($row['peso']/$peso_total)*100)-1) .'%; height: 25px; margin-right: 4px; background-color: '. $cor .'"></div>';
+                    }
+                    ?>
+                    
+                </div>
             
                 <div class="card">
                     <div class="card-header">
                         <h3 class="well">Informações do Projeto</h3> 
                     </div>
-                    <div class="container" style="padding: 15px;">
+                    <div class="container info-detail" style="padding: 15px;">
                         <div class="form-horizontal">
-                            <div class="control-group">
-                                <label class="control-label">Cliente: </label>
-                                <div class="controls">
-                                    <label class="carousel-inner">
-                                        <?php echo $cliente['nome']; ?>
-                                    </label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="control-group">
+                                        <label class="control-label">Cliente: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php echo $cliente['nome']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label">Descrição: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php echo $data['descricao']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label">Tempo restante: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php //DIA ATUAL CONTA COMO DIA DE TRABALHO
+
+                                                $start = new DateTime();
+                                                $end = new DateTime($data['data_prevista']);
+                                                // otherwise the  end date is excluded (bug?)
+                                                $end->modify('+2 day');
+
+                                                $interval = $end->diff($start);
+
+                                                // total days
+                                                $days = $interval->days;
+
+                                                // create an iterateable period of date (P1D equates to 1 day)
+                                                $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+
+                                                // best stored as array, so you can add more than one
+                                                //$holidays = array('2012-09-07');
+
+                                                foreach($period as $dt) {
+                                                    $curr = $dt->format('D');
+
+                                                    // substract if Saturday or Sunday
+                                                    if ($curr == 'Sat' || $curr == 'Sun') {
+                                                        $days--;
+                                                    }
+
+                                                    /* (optional) for the updated question
+                                                    elseif (in_array($dt->format('Y-m-d'), $holidays)) {
+                                                        $days--;
+                                                    }*/
+                                                }
+
+                                                if ($days < 0)
+                                                    $days = 0;
+                                                else if ($start > $end)
+                                                    $days = 0;
+                                                echo $days . ' dia(s)';
+
+                                                ?> <img name="info" id="info" class="info" src="https://cdn.pixabay.com/photo/2012/04/02/17/46/signs-25066_960_720.png" alt="A contagem considera o dia atual como dia de trabalho, exceto para fins de semana!" title="A contagem considera o dia atual como dia de trabalho, exceto para fins de semana!" width="13px" height="13px">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label">Tempo decorrido: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php //DIA QUE FOI CADASTRADO NÃO ENTRA
+                                                $start = new DateTime($data['data_entrada']);
+                                                $end = new DateTime();
+                                                // otherwise the  end date is excluded (bug?)
+                                                $end->modify('+0 day');
+
+                                                $interval = $end->diff($start);
+
+                                                // total days
+                                                $days = $interval->days;
+
+                                                // create an iterateable period of date (P1D equates to 1 day)
+                                                $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+
+                                                // best stored as array, so you can add more than one
+                                                //$holidays = array('2012-09-07');
+
+                                                foreach($period as $dt) {
+                                                    $curr = $dt->format('D');
+
+                                                    // substract if Saturday or Sunday
+                                                    if ($curr == 'Sat' || $curr == 'Sun') {
+                                                        $days--;
+                                                    }
+
+                                                    /* (optional) for the updated question
+                                                    elseif (in_array($dt->format('Y-m-d'), $holidays)) {
+                                                        $days--;
+                                                    }*/
+                                                }
+
+                                                if ($days < 0)
+                                                    $days = 0;
+                                                echo $days . ' dia(s)';
+                                                ?>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label">Valor: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php echo 'R$ '. $data['valor']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div class="control-group">
-                                <label class="control-label">Tempo restante: </label>
-                                <div class="controls">
-                                    <label class="carousel-inner">
-                                        <?php //DIA ATUAL CONTA COMO DIA DE TRABALHO
-                                        
-                                        $start = new DateTime();
-                                        $end = new DateTime($data['data_prevista']);
-                                        // otherwise the  end date is excluded (bug?)
-                                        $end->modify('+2 day');
-                                        
-                                        $interval = $end->diff($start);
+                                <div class="col-md-6">
+                                    <div class="card" style="margin-bottom: 1em">
+                                        <div class="card-header">
+                                            <h4 class="well" >Observações e comentários </h4> 
+                                        </div>
+                                        <div class="container" style="padding: 15px; min-height: 15em">
+                                                        
+                                            <?php 
 
-                                        // total days
-                                        $days = $interval->days;
+                                            $iteracaoControle = new IteracaoControle();
+                                            $iteracoes = $iteracaoControle->list_iteracoesProjeto($data['id']);
+                                            $usuarioControle = new UsuarioControle();
 
-                                        // create an iterateable period of date (P1D equates to 1 day)
-                                        $period = new DatePeriod($start, new DateInterval('P1D'), $end);
-
-                                        // best stored as array, so you can add more than one
-                                        //$holidays = array('2012-09-07');
-
-                                        foreach($period as $dt) {
-                                            $curr = $dt->format('D');
-
-                                            // substract if Saturday or Sunday
-                                            if ($curr == 'Sat' || $curr == 'Sun') {
-                                                $days--;
+                                            if($iteracoes) foreach ($iteracoes as $row) {
+                                                $usuario = $usuarioControle->readUsuario($row['usuario_id']);
+                                                $datahora = new DateTime($row['datahora']);
+                                                echo '<div class="iteration">';
+                                                    echo '<input type="hidden" class="iteracao_id" value="'.$row['id'].'">';
+                                                    echo '<div class="">'.$row['descricao'].'</div>';
+                                                    echo '<div class="" style="text-align: right; font-size: smaller">'.$usuario['usuario'].' às '.$datahora->format('H:i:s').' em '.$datahora->format('d/m/Y').'</div>';
+                                                echo '</div>';
                                             }
 
-                                            /* (optional) for the updated question
-                                            elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-                                                $days--;
-                                            }*/
-                                        }
-
-                                        if ($days < 0)
-                                            $days = 0;
-                                        else if ($start > $end)
-                                            $days = 0;
-                                        echo $days . ' dia(s)';
-                                        
-                                        ?> <img name="info" id="info" class="info" src="https://cdn.pixabay.com/photo/2012/04/02/17/46/signs-25066_960_720.png" alt="A contagem considera o dia atual como dia de trabalho, exceto para fins de semana!" title="A contagem considera o dia atual como dia de trabalho, exceto para fins de semana!" width="13px" height="13px">
-                                    </label>
-                                </div>
+                                            ?>
+                                            <div class="form-actions" align="right">
+                                                <?php echo '<a class="btn btn-default" href="../Iteracao/create_iteracao.php?id='.$data['id'].'">Novo comentário</a>' ?>
+                                            </div>
+                                        </div>
+                                    </div>
                             </div>
-
-                            <div class="control-group">
-                                <label class="control-label">Tempo decorrido: </label>
-                                <div class="controls">
-                                    <label class="carousel-inner">
-                                        <?php //DIA QUE FOI CADASTRADO NÃO ENTRA
-                                        $start = new DateTime($data['data_entrada']);
-                                        $end = new DateTime();
-                                        // otherwise the  end date is excluded (bug?)
-                                        $end->modify('+0 day');
-
-                                        $interval = $end->diff($start);
-
-                                        // total days
-                                        $days = $interval->days;
-
-                                        // create an iterateable period of date (P1D equates to 1 day)
-                                        $period = new DatePeriod($start, new DateInterval('P1D'), $end);
-
-                                        // best stored as array, so you can add more than one
-                                        //$holidays = array('2012-09-07');
-
-                                        foreach($period as $dt) {
-                                            $curr = $dt->format('D');
-
-                                            // substract if Saturday or Sunday
-                                            if ($curr == 'Sat' || $curr == 'Sun') {
-                                                $days--;
-                                            }
-
-                                            /* (optional) for the updated question
-                                            elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-                                                $days--;
-                                            }*/
-                                        }
-
-                                        if ($days < 0)
-                                            $days = 0;
-                                        echo $days . ' dia(s)';
-                                        ?>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div class="card">
+                                <div class="card" style="width: 95%; margin-left: 2.5%">
                                 <div class="card-header">
                                     <h3 class="well">Kanban de Tarefas</h3> 
                                 </div>
@@ -214,9 +290,6 @@ if(!empty($_GET['id']))
 
                                                         <?php 
 
-                                                        $tarefaControle = new TarefaControle();
-                                                        $tarefas = $tarefaControle->list_tarefasProjeto($data['id']);
-                                                        
                                                         if($tarefas) foreach ($tarefas as $row) {
                                                             if ($row['status'] == 'a') {
                                                                 echo '<div class="portlet">';
@@ -237,9 +310,6 @@ if(!empty($_GET['id']))
 
 
                                                         <?php 
-
-                                                        $tarefaControle = new TarefaControle();
-                                                        $tarefas = $tarefaControle->list_tarefasProjeto($data['id']);
 
                                                         if($tarefas) foreach ($tarefas as $row) {
                                                             if ($row['status'] == 'b') {
@@ -263,9 +333,6 @@ if(!empty($_GET['id']))
 
                                                         <?php 
 
-                                                        $tarefaControle = new TarefaControle();
-                                                        $tarefas = $tarefaControle->list_tarefasProjeto($data['id']);
-
                                                         if($tarefas) foreach ($tarefas as $row) {
                                                             if ($row['status'] == 'c') {
                                                                 echo '<div class="portlet">';
@@ -285,18 +352,22 @@ if(!empty($_GET['id']))
                                     </table>
                                 </div>
                                     
+                                    <div class="form-actions" align="right">
+                                        <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?projeto_id='.$data['id'].'">Adicionar Tarefa</a>' ?>
+                                    </div>
                                     
-                            </div>
+                                </div>
 
 
 
-                            <div class="form-actions">
-                                <a href="../home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
-                                <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="form-actions">
+                <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
+                <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
             </div>
         </div>
         

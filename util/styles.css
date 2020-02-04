@@ -17,3 +17,15 @@ and open the template in the editor.
 label.control-label {
     font-weight: bold;
 }
+
+.info-detail {
+    font-size: medium;
+}
+
+.iteration {
+    max-width: 68%;
+    background-color: rgb(255,255,223);
+    border-radius: 16px 16px 16px 0px;
+    padding: 12px;
+    margin-bottom: 1em;
+}
