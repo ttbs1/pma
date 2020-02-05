@@ -79,14 +79,16 @@ and open the template in the editor.
             <fieldset>
                     <legend>Atualizar Modelo</legend>
 
-                    <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" /><br>
+                    <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" />
 
-                    <label for="descricao">Descrição: </label><br>
-                                <span id="descricao1" class="textfieldHintState">
-                                    <input style="width: 380px;" type="text" class="iDescricao" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'];?>" /><br>
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                                </span>
+                    <div class="form-group col-md-8">
+                        <label for="descricao">Descrição: </label><br>
+                            <span id="descricao1" class="textfieldHintState">
+                                <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'];?>" />
+                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                            </span>
+                    </div>
                     <script>
                         var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
                     </script>

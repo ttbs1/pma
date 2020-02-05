@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>PMA - Atualizar Tarefa</title>
+        <title>PMA - Atualizar Iteração</title>
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,34 +21,33 @@ and open the template in the editor.
     <body>
         <?php
                 
-            include_once '../../domain/Tarefa.php';
-            include_once '../../controller/TarefaControle.php';
+            include_once '../../controller/IteracaoControle.php';
             
             $id = null;
             if(!empty($_GET['id'])) 
             {
                 $id = $_REQUEST['id'];
             }
-            if(!empty($_GET['modelo_id'])) 
+            if(!empty($_GET['projeto'])) 
             {
-                $tipoProjeto_id = $_REQUEST['modelo_id'];
+                $projeto_id = $_REQUEST['projeto'];
             }
             if(!empty($_POST))
             {
-                $tarefa = new Tarefa();
-                
-                $tarefa->setDescricao($_POST['descricao']);
-                $tarefa->setPeso($_POST['peso']);
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $descricao = ($_POST['descricao']);
                 $id = $_POST['id'];
                 
-                $tarefaControle = new TarefaControle();
-                $tarefaControle->updateTarefa($id, $tarefa);
+                $iteracaoControle = new IteracaoControle();
+                $iteracaoControle->updateIteracao($id, $descricao, $dateTime);
                 
-                $tipoProjeto_id = $_REQUEST['modelo_id'];
-                header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
+                $projeto_id = $_REQUEST['projeto_id'];
+                header("Location: ../Projeto/detail_projeto.php?id=".$projeto_id);
             } else {
-                $tarefaControle = new TarefaControle();
-                $data = $tarefaControle->readTarefa($id);
+                $iteracaoControle = new IteracaoControle();
+                $data = $iteracaoControle->readIteracao($id);
             }
             
 
@@ -58,7 +57,7 @@ and open the template in the editor.
             
             <div class="jumbotron row">
                 <div>
-                    <h2>Atualização de Tarefas</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                    <h2>Atualização de Iterações</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
                 </div>
                 <div class="header-user">
                     <div class="dropdown show">
@@ -80,33 +79,21 @@ and open the template in the editor.
                 </div>
             </div>
     
-            <form class="form-horizontal" action="update_tarefa.php" method="post">
+            <form class="form-horizontal" action="update_iteracao.php" method="post">
 
                         <fieldset>
-                            <legend>Tarefa</legend>
+                            <legend>Iteração</legend>
                             <div id="tarefa">
 
-                                <input type="hidden" name="id" id="id" value="<?php echo $id ?>" /><br>
-                                <input type="hidden" name="modelo_id" id="modelo_id" value="<?php echo $tipoProjeto_id ?>" /><br>
+                                <input type="hidden" name="id" id="id" value="<?php echo $id ?>" />
+                                <input type="hidden" name="projeto_id" id="projeto_id" value="<?php echo $projeto_id ?>" />
                                 
-                                <label for="descricao">Descrição: </label><br>
-                                            <span id="descricao1" class="textfieldHintState">
-                                                <input style="width: 380px;" type="text" class="iDescricao" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'] ?>" /><br>
-                                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                                            </span>
-                                <script>
-                                    var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
-                                </script>
-                                <label for="peso">Peso: </label><br>
-                                            <span id="peso1" class="textfieldHintState">
-                                                <input style="width: 40px;" type="text" class="iDescricao" name="peso" id="peso" placeholder="Peso" value="<?php echo $data['peso'] ?>" /><br>
-                                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                                            </span>
-                                <script>
-                                    var user = new Spry.Widget.ValidationTextField("peso", "custom", {validateOn:["blur"], maxChars: 85});
-                                </script>
+                                <div class="form-group col-md-8">
+                                    <label for="descricao">Descrição: </label>
+                                    <textarea maxlength="450" class="form-control" rows="4" name="descricao" id="descricao" value=""><?php echo $data['descricao'] ?></textarea>
+                                </div>
+                                
+                            
                             </div>
                         </fieldset>
 
@@ -117,7 +104,7 @@ and open the template in the editor.
                 <div class="form-actions">
 
                     <button type="submit" class="btn btn-success">Atualizar</button>
-                    <?php echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Voltar</a>' ?>
+                    <?php echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Voltar</a>' ?>
 
                 </div>
             </form>

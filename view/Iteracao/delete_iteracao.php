@@ -1,26 +1,26 @@
 <?php
 
-include_once '../../controller/TarefaControle.php';
+include_once '../../controller/IteracaoControle.php';
 
-$id = 0;
+
 if(!empty($_GET['id']))
 {
     $id = $_REQUEST['id'];
 }
-if(!empty($_GET['modelo_id']))
+if(!empty($_GET['projeto']))
 {
-    $tipoProjeto_id = $_REQUEST['modelo_id'];
+    $projeto_id = $_REQUEST['projeto'];
 }
 if(!empty($_POST))
 {
     $id = $_POST['id'];
     
     //Delete do banco:
-    $tarefaControle = new TarefaControle();
-    $tarefaControle->deleteTarefa($id);
+    $iteracaoControle = new IteracaoControle();
+    $iteracaoControle->deleteIteracao($id);
     
-    $tipoProjeto_id = $_POST['modelo_id'];
-    header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
+    $projeto_id = $_POST['projeto_id'];
+    header("Location: ../Projeto/detail_projeto.php?id=".$projeto_id);
 }
 ?>
 
@@ -34,7 +34,7 @@ if(!empty($_POST))
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <title>PMA - Excluir Tarefa</title>
+        <title>PMA - Excluir Iteração</title>
         <link href="../../util/aligns.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
     </head>
@@ -43,7 +43,7 @@ if(!empty($_POST))
         <div class="container">
             <div class="jumbotron row">
                 <div>
-                    <h2>Exclusão de Tarefas</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                    <h2>Exclusão de Iterações</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
                 </div>
                 <div class="header-user">
                     <div class="dropdown show">
@@ -66,16 +66,16 @@ if(!empty($_POST))
             </div>
             <div class="span10 offset1">
                 <div class="row">
-                    <h3 class="well" id="plabel">Excluir Tarefa</h3>
+                    <h3 class="well" id="plabel">Excluir Iteração</h3>
                 </div>
-                <form class="form-horizontal" action="delete_tarefa.php" method="post">
+                <form class="form-horizontal" action="delete_iteracao.php" method="post">
                     <input type="hidden" name="id" value="<?php echo $id;?>" />
-                    <input type="hidden" name="modelo_id" value="<?php echo $tipoProjeto_id;?>" />
-                    <div class="alert alert-danger"> Deseja confirmar a exclusão da tarefa?
+                    <input type="hidden" name="projeto_id" value="<?php echo $projeto_id;?>" />
+                    <div class="alert alert-danger"> Deseja confirmar a exclusão da iteração?
                     </div>
                     <div class="form actions">
                         <button type="submit" class="btn btn-danger">Sim</button>
-                        <?php echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Não</a>'?>
+                        <?php echo '<a href="../TipoProjeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Não</a>'?>
                     </div>
                 </form>
             </div>

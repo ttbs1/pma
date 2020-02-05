@@ -105,7 +105,7 @@ if(!empty($_POST)) {
                 <legend>Nova Empresa</legend>
                 
                 <div class="form-group col-md-8">
-                <label for="nome">Nome: </label>
+                    <label for="nome">Nome: </label>
                         <span id="nome1" class="textfieldHintState">
                             <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="" />
                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>

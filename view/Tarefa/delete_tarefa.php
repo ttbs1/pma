@@ -10,6 +10,12 @@ if(!empty($_GET['id']))
 if(!empty($_GET['modelo_id']))
 {
     $tipoProjeto_id = $_REQUEST['modelo_id'];
+    $tipo = 'tipoProjeto';
+}
+if(!empty($_GET['projeto_id']))
+{
+    $projeto_id = $_REQUEST['projeto_id'];
+    $tipo = 'projeto';
 }
 if(!empty($_POST))
 {
@@ -19,8 +25,15 @@ if(!empty($_POST))
     $tarefaControle = new TarefaControle();
     $tarefaControle->deleteTarefa($id);
     
-    $tipoProjeto_id = $_POST['modelo_id'];
-    header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
+    $tipo = $_POST['tipo'];
+    
+    if ($tipo == 'tipoProjeto') {
+        $tipoProjeto_id = $_POST['modelo_id'];
+        header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
+    } elseif ($tipo == 'projeto') {
+        $projeto_id = $_POST['projeto_id'];
+        header("Location: ../Projeto/detail_projeto.php?id=".$projeto_id);
+    }
 }
 ?>
 
@@ -71,11 +84,14 @@ if(!empty($_POST))
                 <form class="form-horizontal" action="delete_tarefa.php" method="post">
                     <input type="hidden" name="id" value="<?php echo $id;?>" />
                     <input type="hidden" name="modelo_id" value="<?php echo $tipoProjeto_id;?>" />
+                    <input type="hidden" name="projeto_id" value="<?php echo $projeto_id;?>" />
+                    <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
                     <div class="alert alert-danger"> Deseja confirmar a exclusão da tarefa?
                     </div>
                     <div class="form actions">
                         <button type="submit" class="btn btn-danger">Sim</button>
-                        <?php echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Não</a>'?>
+                        <?php if ($tipo == 'tipoProjeto') { echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Não</a>'; }
+                        elseif ($tipo == 'projeto') { echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Não</a>'; } ?>
                     </div>
                 </form>
             </div>

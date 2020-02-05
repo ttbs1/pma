@@ -32,6 +32,12 @@ and open the template in the editor.
             if(!empty($_GET['modelo_id'])) 
             {
                 $tipoProjeto_id = $_REQUEST['modelo_id'];
+                $tipo = 'tipoProjeto';
+            }
+            if(!empty($_GET['projeto_id']))
+            {
+                $projeto_id = $_REQUEST['projeto_id'];
+                $tipo = 'projeto';
             }
             if(!empty($_POST))
             {
@@ -44,8 +50,15 @@ and open the template in the editor.
                 $tarefaControle = new TarefaControle();
                 $tarefaControle->updateTarefa($id, $tarefa);
                 
-                $tipoProjeto_id = $_REQUEST['modelo_id'];
-                header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
+                $tipo = $_POST['tipo'];
+    
+                if ($tipo == 'tipoProjeto') {
+                    $tipoProjeto_id = $_POST['modelo_id'];
+                    header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
+                } elseif ($tipo == 'projeto') {
+                    $projeto_id = $_POST['projeto_id'];
+                    header("Location: ../Projeto/detail_projeto.php?id=".$projeto_id);
+                }
             } else {
                 $tarefaControle = new TarefaControle();
                 $data = $tarefaControle->readTarefa($id);
@@ -86,24 +99,30 @@ and open the template in the editor.
                             <legend>Tarefa</legend>
                             <div id="tarefa">
 
-                                <input type="hidden" name="id" id="id" value="<?php echo $id ?>" /><br>
-                                <input type="hidden" name="modelo_id" id="modelo_id" value="<?php echo $tipoProjeto_id ?>" /><br>
+                                <input type="hidden" name="id" value="<?php echo $id;?>" />
+                                <input type="hidden" name="modelo_id" value="<?php echo $tipoProjeto_id;?>" />
+                                <input type="hidden" name="projeto_id" value="<?php echo $projeto_id;?>" />
+                                <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
                                 
-                                <label for="descricao">Descrição: </label><br>
-                                            <span id="descricao1" class="textfieldHintState">
-                                                <input style="width: 380px;" type="text" class="iDescricao" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'] ?>" /><br>
-                                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                                            </span>
+                                <div class="form-group col-md-8">
+                                    <label for="descricao">Descrição: </label><br>
+                                        <span id="descricao1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                        </span>
+                                </div>
                                 <script>
                                     var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
                                 </script>
-                                <label for="peso">Peso: </label><br>
-                                            <span id="peso1" class="textfieldHintState">
-                                                <input style="width: 40px;" type="text" class="iDescricao" name="peso" id="peso" placeholder="Peso" value="<?php echo $data['peso'] ?>" /><br>
-                                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                                            </span>
+                                <div class="form-group col-md-1">
+                                    <label for="peso">Peso: </label><br>
+                                        <span id="peso1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="peso" id="peso" placeholder="Peso" value="<?php echo $data['peso'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                        </span>
+                                </div>
                                 <script>
                                     var user = new Spry.Widget.ValidationTextField("peso", "custom", {validateOn:["blur"], maxChars: 85});
                                 </script>
@@ -117,7 +136,8 @@ and open the template in the editor.
                 <div class="form-actions">
 
                     <button type="submit" class="btn btn-success">Atualizar</button>
-                    <?php echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Voltar</a>' ?>
+                    <?php if ($tipo == 'tipoProjeto') { echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Não</a>'; }
+                    elseif ($tipo == 'projeto') { echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Não</a>'; } ?>
 
                 </div>
             </form>

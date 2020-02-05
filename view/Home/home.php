@@ -34,10 +34,14 @@ and open the template in the editor.
 
                 if (isset($_SESSION['usuario_id'])) {
                     include_once '../../controller/UsuarioControle.php';
+                    include_once '../../controller/PermissaoControle.php';
                     $usuarioControle = new UsuarioControle();
                     $user = $usuarioControle->readUsuario($_SESSION['usuario_id']);
+                    $permissaoControle = new PermissaoControle();
+                    $permissoes = $permissaoControle->readPermissao($user['permissao_id']);
                     
                     $_SESSION['usuario'] = $user['usuario'];
+                    $_SESSION['permissoes'] = $permissoes;
                 } else {
                     header("Location: ../login/login.php");
                 }
@@ -66,9 +70,13 @@ and open the template in the editor.
                         <td>
                             <label class="control-label">Projetos</label>
                         </td>
-                        <td>
-                            <label class="control-label">Usuários</label>
-                        </td>
+                            <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
+                                echo '<td>';
+                                    echo '<label class="control-label">Usuários</label>';
+                                echo '</td>';
+                            }
+                            ?>
+                        
                         <td>
                             <label class="control-label">Modelos de Projeto</label>
                         </td>
@@ -83,9 +91,12 @@ and open the template in the editor.
                         <td>
                             <a href="../Projeto/create_projeto.php">Cadastrar Projeto</a>
                         </td>
-                        <td>
-                            <a href="../Usuario/create_usuario.php">Cadastrar Usuário</a>
-                        </td>
+                        <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
+                        echo '<td>';
+                        echo    '<a href="../Usuario/create_usuario.php">Cadastrar Usuário</a>';
+                        echo '</td>';
+                        }
+                        ?>
                         <td>
                             <a href="../TipoProjeto/create_tipoProjeto.php">Cadastrar Modelo</a>
                         </td>
@@ -100,9 +111,12 @@ and open the template in the editor.
                         <td>
                             <a href="../Projeto/list_projeto.php">Listar Projetos</a>
                         </td>
-                        <td>
-                            <a href="../Usuario/list_usuario.php">Listar Usuários</a>
-                        </td>
+                        <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
+                        echo '<td>';
+                        echo    '<a href="../Usuario/list_usuario.php">Listar Usuários</a>';
+                        echo '</td>';
+                        }
+                        ?>
                         <td>
                             <a href="../TipoProjeto/list_tipoProjeto.php">Listar Modelos</a>
                         </td>
@@ -117,9 +131,12 @@ and open the template in the editor.
                         <td>
                             <a href="../Projeto/read_projeto.php">Pesquisar Projeto</a>
                         </td>
-                        <td>
-                            <a></a>
-                        </td>
+                        <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
+                        echo '<td>';
+                        echo     '<a></a>';
+                        echo '</td>';
+                        }
+                        ?>
                         <td>
                             <a></a>
                         </td>

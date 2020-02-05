@@ -26,6 +26,10 @@ label.control-label {
     max-width: 68%;
     background-color: rgb(255,255,223);
     border-radius: 16px 16px 16px 0px;
-    padding: 12px;
+    padding: 6px 16px;
     margin-bottom: 1em;
+}
+
+.iteration-content {
+    margin-bottom: 0.9em;
 }

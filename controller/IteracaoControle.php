@@ -43,4 +43,46 @@ class IteracaoControle {
             echo 'Erro: '. $ex->getMessage();
         }
     }
+    
+    function deleteIteracao ($id) {
+        //Delete do banco:
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "DELETE FROM iteracao WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($id));
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function readIteracao ($id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT * FROM iteracao WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($id));
+            $data = $q->fetch(PDO::FETCH_ASSOC);
+            conexao::desconectar();
+            return $data;
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function updateIteracao ($id, $descricao, $dataHora) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE iteracao SET descricao = ?, datahora = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($descricao, $dataHora, $id));
+            $pdo = conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
 }

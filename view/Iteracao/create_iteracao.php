@@ -88,16 +88,9 @@ and open the template in the editor.
                                 <input type="hidden" name="id" id="id" value="<?php echo $id ?>" />
                             
                                 <div class="form-group col-md-8">
-                                    <label for="descricao">Descrição: </label><br>
-                                        <span id="descricao1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                        </span>
+                                    <label for="descricao">Descrição: </label>
+                                    <textarea maxlength="450" class="form-control" rows="4" name="descricao" id="descricao"></textarea>
                                 </div>
-                                <script>
-                                    var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
-                                </script>
                                 
                             </div>
                             </fieldset>

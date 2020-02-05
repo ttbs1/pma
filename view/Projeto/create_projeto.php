@@ -114,7 +114,7 @@ if(!empty($_POST)) {
                     <div class="form-group col-md-6">
                         <label for="nome">Selecionar Cliente: </label><br>
                             <span id="nome1" class="textfieldHintState">
-                                <input class="form-control" type="text" class="iNome" name="nome" id="nome" placeholder="Nome" value="" />
+                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>

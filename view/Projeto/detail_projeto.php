@@ -40,6 +40,7 @@ if(!empty($_GET['id']))
         <link type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <script src="https://kit.fontawesome.com/c0930358e4.js" crossorigin="anonymous"></script>
 
     </head>
     <body>
@@ -85,9 +86,17 @@ if(!empty($_GET['id']))
                 $tarefas = $tarefaControle->list_tarefasProjeto($data['id']);
 
                 $peso_total = 0;
+                $peso_total_todo = 0;
+                $peso_total_doing = 0;
 
                 if ($tarefas) foreach($tarefas as $row) {
                     $peso_total = $peso_total + $row['peso'];
+                    if ($row['status'] == 'a') {
+                        $peso_total_todo = $peso_total_todo + $row['peso'];
+                    } else if ($row['status'] == 'b') {
+                        $peso_total_doing = $peso_total_doing + $row['peso'];
+                    }
+                        
                 }
 
                 ?>
@@ -96,7 +105,7 @@ if(!empty($_GET['id']))
                     
                     <?php 
                     if ($tarefas) foreach($tarefas as $row) {
-                        if ($row['status'] == 'a') { $cor = 'rgb(250,128,114)'; } elseif ($row['status'] == 'b') { $cor = 'rgb(255,210,150)'; } elseif ($row['status'] == 'c') { $cor = 'rgb(40,180,50)';}
+                        if ($row['status'] == 'a') { $cor = 'rgb(250,128,114)'; } elseif ($row['status'] == 'b') { $cor = 'rgb(255,247,190)'; } elseif ($row['status'] == 'c') { $cor = 'rgb(40,180,50)';}
                         echo '<div style="width: '.floor((($row['peso']/$peso_total)*100)-1) .'%; height: 25px; margin-right: 4px; background-color: '. $cor .'"></div>';
                     }
                     ?>
@@ -125,6 +134,49 @@ if(!empty($_GET['id']))
                                         <div class="controls">
                                             <label class="carousel-inner">
                                                 <?php echo $data['descricao']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="control-group">
+                                        <label class="control-label">Tempo decorrido: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php //DIA QUE FOI CADASTRADO NÃO ENTRA
+                                                $start = new DateTime($data['data_entrada']);
+                                                $end = new DateTime();
+                                                // otherwise the  end date is excluded (bug?)
+                                                $end->modify('+0 day');
+
+                                                $interval = $end->diff($start);
+
+                                                // total days
+                                                $days = $interval->days;
+
+                                                // create an iterateable period of date (P1D equates to 1 day)
+                                                $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+
+                                                // best stored as array, so you can add more than one
+                                                //$holidays = array('2012-09-07');
+
+                                                foreach($period as $dt) {
+                                                    $curr = $dt->format('D');
+
+                                                    // substract if Saturday or Sunday
+                                                    if ($curr == 'Sat' || $curr == 'Sun') {
+                                                        $days--;
+                                                    }
+
+                                                    /* (optional) for the updated question
+                                                    elseif (in_array($dt->format('Y-m-d'), $holidays)) {
+                                                        $days--;
+                                                    }*/
+                                                }
+
+                                                if ($days < 0)
+                                                    $days = 0;
+                                                echo $days . ' dia(s)';
+                                                ?>
                                             </label>
                                         </div>
                                     </div>
@@ -177,49 +229,6 @@ if(!empty($_GET['id']))
                                     </div>
 
                                     <div class="control-group">
-                                        <label class="control-label">Tempo decorrido: </label>
-                                        <div class="controls">
-                                            <label class="carousel-inner">
-                                                <?php //DIA QUE FOI CADASTRADO NÃO ENTRA
-                                                $start = new DateTime($data['data_entrada']);
-                                                $end = new DateTime();
-                                                // otherwise the  end date is excluded (bug?)
-                                                $end->modify('+0 day');
-
-                                                $interval = $end->diff($start);
-
-                                                // total days
-                                                $days = $interval->days;
-
-                                                // create an iterateable period of date (P1D equates to 1 day)
-                                                $period = new DatePeriod($start, new DateInterval('P1D'), $end);
-
-                                                // best stored as array, so you can add more than one
-                                                //$holidays = array('2012-09-07');
-
-                                                foreach($period as $dt) {
-                                                    $curr = $dt->format('D');
-
-                                                    // substract if Saturday or Sunday
-                                                    if ($curr == 'Sat' || $curr == 'Sun') {
-                                                        $days--;
-                                                    }
-
-                                                    /* (optional) for the updated question
-                                                    elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-                                                        $days--;
-                                                    }*/
-                                                }
-
-                                                if ($days < 0)
-                                                    $days = 0;
-                                                echo $days . ' dia(s)';
-                                                ?>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="control-group">
                                         <label class="control-label">Valor: </label>
                                         <div class="controls">
                                             <label class="carousel-inner">
@@ -227,6 +236,35 @@ if(!empty($_GET['id']))
                                             </label>
                                         </div>
                                     </div>
+                                    
+                                    <div class="control-group">
+                                        <label class="control-label">Coeficiente de urgência: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php 
+                                                
+                                                if ($days > 0) { 
+                                                    $coef = number_format((($peso_total_todo + ($peso_total_doing/2)) / $days ), 2, ',', ''); 
+                                                } elseif (($peso_total_todo + ($peso_total_doing/2)) > 0) {
+                                                    $coef = 'Atrasado';
+                                                } else {
+                                                    $coef = '0';
+                                                }
+                                                
+                                                echo $coef ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="control-group">
+                                        <label class="control-label">Percentual de conclusão: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php echo number_format((($peso_total - ($peso_total_todo + ($peso_total_doing/2))) / $peso_total * 100), 1, ',', '') .'%' ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card" style="margin-bottom: 1em">
@@ -246,8 +284,13 @@ if(!empty($_GET['id']))
                                                 $datahora = new DateTime($row['datahora']);
                                                 echo '<div class="iteration">';
                                                     echo '<input type="hidden" class="iteracao_id" value="'.$row['id'].'">';
-                                                    echo '<div class="">'.$row['descricao'].'</div>';
+                                                    echo '<div class="iteration-content">'.$row['descricao'].'</div>';
                                                     echo '<div class="" style="text-align: right; font-size: smaller">'.$usuario['usuario'].' às '.$datahora->format('H:i:s').' em '.$datahora->format('d/m/Y').'</div>';
+                                                    if ($usuario['usuario'] == $_SESSION['usuario']) {
+                                                        echo '<div style="text-align: right;">';
+                                                        echo '<a href="../Iteracao/update_iteracao.php?id='.$row['id'].'&projeto='.$data['id'].'" style="font-size: smaller">Atualizar</a> <a href="../Iteracao/delete_iteracao.php?id='.$row['id'].'&projeto='.$data['id'].'" style="font-size: smaller">Excluir</a>';
+                                                        echo '</div>';
+                                                    }
                                                 echo '</div>';
                                             }
 
@@ -297,6 +340,7 @@ if(!empty($_GET['id']))
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
+                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
                                                         }
@@ -318,6 +362,7 @@ if(!empty($_GET['id']))
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
+                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
                                                         }
@@ -340,6 +385,7 @@ if(!empty($_GET['id']))
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
+                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
                                                         }
