@@ -6,6 +6,7 @@ if(!empty($_POST)) {
     include_once '../../controller/ProjetoControle.php';
     include_once '../../controller/TipoProjetoControle.php';
     include_once '../../controller/TarefaControle.php';
+    include_once '../../controller/UsuarioControle.php';
     
     $projeto = new Projeto();
     
@@ -19,7 +20,10 @@ if(!empty($_POST)) {
     $projeto->setData_prevista($_POST['data_prevista']);
     $projeto->setDescricao($_POST['descricao']);
     $projeto->setValor($_POST['valor']);
-    $projeto->setUsuario_id(1);
+    
+    $usuarioControle = new UsuarioControle();
+    $usuario = $usuarioControle->readUsuarioByUserName($_POST['usuario']);
+    $projeto->setUsuario_id($usuario['id']);
     
     $projetoControle = new ProjetoControle();
     $id = $projetoControle->inserirProjeto($projeto);
@@ -153,6 +157,23 @@ if(!empty($_POST)) {
                     <div class="form-group col-md-8">
                         <label for="descricao">Descrição: </label>
                         <textarea maxlength="450" class="form-control" rows="3" name="descricao" id="descricao"></textarea>
+                    </div>
+                    
+                    <div class="form-group col-md-4">
+                        <label for="responsavel">Usuário responsável: </label><br>
+                        <select class="form-control" name="usuario" id="usuario">
+                            <option></option>
+                            <?php
+                                include_once '../../controller/UsuarioControle.php';
+
+                                $usuarioControle = new UsuarioControle();
+                                $data_fk = $usuarioControle->listUsuario();
+                                foreach($data_fk as $row) 
+                                {
+                                    echo '<option>'.$row['usuario'].'</option>';
+                                }
+                            ?>
+                        </select>
                     </div>
                     
                     <div class="form-group col-md-3">

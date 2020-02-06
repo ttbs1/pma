@@ -55,7 +55,7 @@ and open the template in the editor.
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="#"><?php echo 'Usuário: '. $_SESSION['usuario']; ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="logout.php">Sair</a>
                         </div>
                     </div>
@@ -129,7 +129,7 @@ and open the template in the editor.
                             <a href="../Cliente/read_cliente.php">Pesquisar por Clientes</a>
                         </td>
                         <td>
-                            <a href="../Projeto/read_projeto.php">Pesquisar Projeto</a>
+                            <a></a>
                         </td>
                         <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
                         echo '<td>';

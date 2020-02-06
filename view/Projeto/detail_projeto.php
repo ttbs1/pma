@@ -229,6 +229,34 @@ if(!empty($_GET['id']))
                                     </div>
 
                                     <div class="control-group">
+                                        <label class="control-label">Entrega: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php 
+                                                
+                                                $entrega = new DateTime($data['data_prevista']);
+                                                
+                                                
+                                                echo $entrega->format('d/m/Y'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="control-group">
+                                        <label class="control-label">Responsável: </label>
+                                        <div class="controls">
+                                            <label class="carousel-inner">
+                                                <?php 
+                                                
+                                                $usuarioControle = new UsuarioControle();
+                                                $user = $usuarioControle->readUsuario($data['usuario_id']);
+                                                
+                                                echo ($user['usuario']); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="control-group">
                                         <label class="control-label">Valor: </label>
                                         <div class="controls">
                                             <label class="carousel-inner">
@@ -357,11 +385,13 @@ if(!empty($_GET['id']))
 
                                                         if($tarefas) foreach ($tarefas as $row) {
                                                             if ($row['status'] == 'b') {
+                                                                $temp = $usuarioControle->readUsuario($row['usuario_id']);
                                                                 echo '<div class="portlet">';
                                                                     echo '<input type="hidden" class="tarefa_id" value="'.$row['id'].'">';
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
+                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding-right: 8px; font-size: small;">'.$temp['usuario'].'</div>';
                                                                     echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
@@ -380,11 +410,13 @@ if(!empty($_GET['id']))
 
                                                         if($tarefas) foreach ($tarefas as $row) {
                                                             if ($row['status'] == 'c') {
+                                                                $temp = $usuarioControle->readUsuario($row['usuario_id']);
                                                                 echo '<div class="portlet">';
                                                                     echo '<input type="hidden" class="tarefa_id" value="'.$row['id'].'">';
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
+                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding-right: 8px; font-size: small;">'.$temp['usuario'].'</div>';
                                                                     echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }

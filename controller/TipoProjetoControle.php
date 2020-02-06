@@ -18,9 +18,17 @@ class TipoProjetoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO tipoprojeto (descricao) VALUE (?)";
+            $sql = "INSERT INTO tipoprojeto (descricao, ativo) VALUES (?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($tipoProjeto->getDescricao()));
+            $q->execute(array($tipoProjeto->getDescricao(), TRUE));
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Modelo', $tipoProjeto->getDescricao(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -31,7 +39,7 @@ class TipoProjetoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = 'SELECT * FROM tipoprojeto';
+            $sql = 'SELECT * FROM tipoprojeto WHERE ativo = 1';
             $q = $pdo->prepare($sql);
             $q->execute();
             $data = NULL;
@@ -79,16 +87,24 @@ class TipoProjetoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE tipoprojeto SET descricao = ? WHERE id = ?";
+            $sql = "UPDATE tipoprojeto SET descricao = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($tipoProjeto->getDescricao(), $id));
+            $q->execute(array($tipoProjeto->getDescricao(), $id), TRUE);
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Modelo', $tipoProjeto->getDescricao(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
         }
     }
     
-    function deleteTipoProjeto ($id) {
+    function deletePermTipoProjeto ($id) {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -98,6 +114,28 @@ class TipoProjetoControle {
             $q->execute(array($id));
             $q = $pdo->prepare($sql);
             $q->execute(array($id));
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function deleteTipoProjeto ($id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE tipoprojeto SET ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array(FALSE, $id));
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $data = $this->readTipoProjeto($id);
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Modelo', $data['descricao'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();

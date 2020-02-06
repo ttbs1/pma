@@ -42,6 +42,15 @@ class ProjetoControle {
             $q->execute(array($projeto->getCliente_id(), $projeto->getUsuario_id(), $projeto->getTipoprojeto_id(), $projeto->getData_entrada(), $projeto->getData_prevista(), $projeto->getDescricao(), $projeto->getValor()));
             $id = $pdo->query("SELECT MAX(id) FROM projeto");
             $id = $id->fetchColumn();
+            
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Projeto', 'Id: '.$id, $dateTime));
             $pdo = conexao::desconectar();
             return $id;
         } catch (Exception $ex) {

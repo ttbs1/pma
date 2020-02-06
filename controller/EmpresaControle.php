@@ -19,9 +19,16 @@ class EmpresaControle {
             $pdo = conexao::conectar();
             $enderecoControle = new EnderecoControle();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO empresa (nome, cnpj, telefone) VALUES (?,?,?)";
+            $sql = "INSERT INTO empresa (nome, cnpj, telefone, ativo) VALUES (?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone()));
+            $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), TRUE));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Empresa', $empresa->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -32,7 +39,7 @@ class EmpresaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = 'SELECT * FROM empresa ORDER BY nome ASC';
+            $sql = 'SELECT * FROM empresa WHERE ativo = 1 ORDER BY nome ASC';
             $q = $pdo->prepare($sql);
             $q->execute();
             $data = NULL;
@@ -46,7 +53,7 @@ class EmpresaControle {
         }
     }
     
-    function deleteEmpresa ($id) {
+    function deletePermEmpresa ($id) {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -56,6 +63,27 @@ class EmpresaControle {
             $q->execute(array($id));
             $q = $pdo->prepare($sql);
             $q->execute(array($id));
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+
+    function deleteEmpresa ($id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE empresa SET ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array(FALSE,$id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            $empresa = $this->readEmpresa($id);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Empresa', $empresa->getNome(), $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -81,9 +109,16 @@ class EmpresaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE empresa SET nome = ?, cnpj = ?, telefone = ? WHERE id = ?";
+            $sql = "UPDATE empresa SET nome = ?, cnpj = ?, telefone = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), $id));
+            $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), TRUE, $id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Empresa', $empresa->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();

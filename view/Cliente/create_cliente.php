@@ -60,7 +60,7 @@ if(!empty($_POST)) {
     $clienteControle->inserirCliente($cliente);
     if (!empty($endereco->getRua())) {
         $enderecoControle = new EnderecoControle();
-        $enderecoControle->inserirEndereco($cliente, "cliente");
+        $enderecoControle->inserirEndereco($endereco, "cliente");
     }
     header("Location: list_cliente.php");
 }

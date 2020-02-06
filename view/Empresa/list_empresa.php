@@ -68,7 +68,7 @@
                         
                         $empresaControle = new EmpresaControle();
                         $data = $empresaControle->listEmpresa();
-                        foreach($data as $row) 
+                        foreach($data as $row)
                         {
                             echo '<tr>';
 			                      echo '<th scope="row">'. $row['id'] . '</th>';

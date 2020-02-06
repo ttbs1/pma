@@ -23,7 +23,6 @@ class EnderecoControle {
             $clienteControle = new ClienteControle();
             $result = $clienteControle->pesquisarPorNome($cliente->getNome());
             $q->execute(array($result['id'],$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
-            $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
         }
@@ -36,15 +35,37 @@ class EnderecoControle {
             if (strcmp($tipo, "empresa") == 0) {
                 $id = $pdo->query("SELECT MAX(id) FROM empresa");
                 $id = $id->fetchColumn();
-                $sql = "INSERT INTO endereco (empresa_id, rua, numero, bairro, CEP, cidade, estado) VALUES (?,?,?,?,?,?,?)";
+                $sql = "INSERT INTO endereco (empresa_id, rua, numero, bairro, CEP, cidade, estado, ativo) VALUES (?,?,?,?,?,?,?,?)";
                 $q = $pdo->prepare($sql);
-                $q->execute(array($id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
+                $q->execute(array($id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado(), TRUE));
+                
+                include_once 'EmpresaControle.php';
+                $empresaControle = new EmpresaControle();
+                $empresa = $empresaControle->readEmpresa($id);
+                $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql2);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Endereço-Empresa', $empresa['nome'], $dateTime));
             } else if (strcmp($tipo, "cliente") == 0) {
                 $id = $pdo->query("SELECT MAX(id) FROM cliente");
                 $id = $id->fetchColumn();
-                $sql = "INSERT INTO endereco (cliente_id, rua, numero, bairro, CEP, cidade, estado) VALUES (?,?,?,?,?,?,?)";
+                $sql = "INSERT INTO endereco (cliente_id, rua, numero, bairro, CEP, cidade, estado, ativo) VALUES (?,?,?,?,?,?,?,?)";
                 $q = $pdo->prepare($sql);
-                $q->execute(array($id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
+                $q->execute(array($id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado(), TRUE));
+                
+                include_once 'ClienteControle.php';
+                $clienteControle = new ClienteControle();
+                $cli = $clienteControle->readCliente($id);
+                $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql2);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Endereço-Cliente', $cli['nome'], $dateTime));
             }
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
@@ -59,6 +80,16 @@ class EnderecoControle {
             $sql = "INSERT INTO endereco (cliente_id, rua, numero, bairro, CEP, cidade, estado) VALUES (?,?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
             $q->execute(array($cliente_id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            include_once 'ClienteControle.php';
+            $clienteControle = new ClienteControle();
+            $cli = $clienteControle->readCliente($cliente_id);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Endereço-Cliente', $cli['nome'], $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -72,6 +103,16 @@ class EnderecoControle {
             $sql = "INSERT INTO endereco (empresa_id, rua, numero, bairro, CEP, cidade, estado) VALUES (?,?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
             $q->execute(array($empresa_id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            include_once 'EmpresaControle.php';
+            $empresaControle = new EmpresaControle();
+            $empresa = $empresaControle->readEmpresa($empresa_id);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Endereço-Empresa', $empresa['nome'], $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -82,9 +123,35 @@ class EnderecoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE endereco SET rua = ?, numero = ?, bairro = ?, CEP = ?, cidade = ?, estado = ? WHERE id = ?";
+            $sql = "UPDATE endereco SET rua = ?, numero = ?, bairro = ?, CEP = ?, cidade = ?, estado = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado(), $id));
+            $q->execute(array($endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado(), TRUE, $id));
+            
+            $data = $this->readEndereco($id);
+            if ($data['empresa_id']) {
+                include_once 'EmpresaControle.php';
+                $empresaControle = new EmpresaControle();
+                $empresa = $empresaControle->readEmpresa($data['empresa_id']);
+                $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql3);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Endereço-Empresa', $empresa['nome'], $dateTime));
+            } elseif($data['cliente_id']) {
+                $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql3);
+                include_once 'ClienteControle.php';
+                $clienteControle = new ClienteControle();
+                $cli = $clienteControle->readCliente($data['cliente_id']);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Endereço-Cliente', $cli['nome'], $dateTime));
+            }
+            
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -110,7 +177,7 @@ class EnderecoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "SELECT * FROM endereco WHERE cliente_id = ?";
+            $sql = "SELECT * FROM endereco WHERE cliente_id = ? AND ativo = 1";
             $q = $pdo->prepare($sql);
             $q->execute(array($cliente_id));
             $data = NULL;
@@ -142,13 +209,51 @@ class EnderecoControle {
         }
     }
     
-    function deleteEndereco ($id) {
+    function deletePermEndereco ($id) {
         try{
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = "DELETE FROM endereco WHERE id = ?";
             $q = $pdo->prepare($sql);
             $q->execute(array($id));
+            
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function deleteEndereco ($id) {
+        try{
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE endereco SET ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array(FALSE,$id));
+            $data = $this->readEndereco($id);
+            if ($data['empresa_id']) {
+                include_once 'EmpresaControle.php';
+                $empresaControle = new EmpresaControle();
+                $empresa = $empresaControle->readEmpresa($data['empresa_id']);
+                $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql3);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Endereço-Empresa', $empresa['nome'], $dateTime));
+            } elseif($data['cliente_id']) {
+                $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql3);
+                include_once 'ClienteControle.php';
+                $clienteControle = new ClienteControle();
+                $cli = $clienteControle->readCliente($data['cliente_id']);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Endereço-Cliente', $cli['nome'], $dateTime));
+            }
             conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();

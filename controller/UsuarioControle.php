@@ -23,11 +23,18 @@ class UsuarioControle {
             $permissao_id = $permissaoControle->inserirPermissao($pdo, $usuario->getPermissao_id());
             if ($permissao_id[0] != NULL) {
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $sql = "INSERT INTO usuario (permissao_id, usuario, senha) VALUES (?,?,?)";
+                $sql = "INSERT INTO usuario (permissao_id, usuario, senha, ativo) VALUES (?,?,?,?)";
                 $q2 = $pdo->prepare($sql);
                 
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
                 
-                $q2->execute(array($permissao_id[1], $usuario->getUsuario(), $usuario->getSenha()));
+                $q2->execute(array($permissao_id[1], $usuario->getUsuario(), $usuario->getSenha(), TRUE));
+                $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql2);
+                session_start();
+                $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Usuário', $usuario->getUsuario(), $dateTime));
             } else {
                 echo 'Erro ao inserir permissões de usuário: '. $permissao_id[1];
             }
@@ -55,7 +62,7 @@ class UsuarioControle {
         }
     }
     
-        function deleteUsuario ($id) {
+    function deletePermUsuario ($id) {
         try{
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -79,13 +86,45 @@ class UsuarioControle {
         }
     }
     
+    function deleteUsuario ($id) {
+        try{
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE usuario SET ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array(FALSE, $id));
+            
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            
+            $user = $this->readUsuario($id);
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Usuário', $user['usuario'], $dateTime));
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
     function updateUsuario ($usuario, $id) {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE usuario SET usuario = ?, senha = ? WHERE id = ?";
+            $sql = "UPDATE usuario SET usuario = ?, senha = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($usuario->getUsuario(), $usuario->getSenha(), $id));
+            $q->execute(array($usuario->getUsuario(), $usuario->getSenha(), TRUE, $id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Usuário', $usuario->getUsuario(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -99,6 +138,21 @@ class UsuarioControle {
             $sql = "SELECT * FROM usuario WHERE id = ?";
             $q = $pdo->prepare($sql);
             $q->execute(array($id));
+            $data = $q->fetch(PDO::FETCH_ASSOC);
+            conexao::desconectar();
+            return $data;
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function readUsuarioByUserName ($usuario) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT (id) FROM usuario WHERE usuario = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($usuario));
             $data = $q->fetch(PDO::FETCH_ASSOC);
             conexao::desconectar();
             return $data;

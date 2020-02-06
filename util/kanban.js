@@ -14,8 +14,8 @@
           }*/
           var coluna = $(this).attr('id');
           $(this).children('.portlet').children('.tarefa_id').each(function() {
-              $.post("updateStatus.php", {id: $(this).val(), status: coluna})
-          })
+              $.post("updateStatus.php", {id: $(this).val(), status: coluna});
+          });
       }
     });
  

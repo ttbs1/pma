@@ -236,7 +236,7 @@ and open the template in the editor.
                             $enderecoControle = new EnderecoControle();
                             $data_fk = $enderecoControle->list_enderecosCliente($data['id']);
                             if ($data_fk != NULL) {
-                                foreach($data_fk as $row) {
+                                foreach($data_fk as $row) if($row['ativo']) {
                                 //echo $row['rua'];
 
 

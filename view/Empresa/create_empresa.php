@@ -9,7 +9,9 @@ if(!empty($_POST)) {
     
     $empresa->setNome($_POST['nome']);
     $empresa->setCnpj($_POST['cnpj']);
-    $empresa->setTelefone($_POST['telefone']);
+    if (filter_has_var(INPUT_POST, "telefone1")){
+        $empresa->setTelefone($_POST['telefone1']);
+    }
 
     $endereco = new Endereco();
     if (filter_has_var(INPUT_POST, "cep")) {

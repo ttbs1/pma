@@ -17,7 +17,7 @@ class IteracaoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "SELECT * FROM iteracao WHERE projeto_id = ?";
+            $sql = "SELECT * FROM iteracao WHERE projeto_id = ? AND ativo = 1";
             $q = $pdo->prepare($sql);
             $q->execute(array($projeto_id));
             $data = NULL;
@@ -35,10 +35,31 @@ class IteracaoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO iteracao (usuario_id, projeto_id, descricao, datahora) VALUES (?,?,?,?)";
+            $sql = "INSERT INTO iteracao (usuario_id, projeto_id, descricao, datahora, ativo = ?) VALUES (?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($usuario_id, $projeto_id, $descricao, $dataHora));
+            $q->execute(array($usuario_id, $projeto_id, $descricao, $dataHora, TRUE));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Iteração', $descricao, $dateTime));
             $pdo = conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function deletePermIteracao ($id) {
+        //Delete do banco:
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "DELETE FROM iteracao WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($id));
+            conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
         }
@@ -49,9 +70,17 @@ class IteracaoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "DELETE FROM iteracao WHERE id = ?";
+            $sql = "UPDATE iteracao SET ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($id));
+            $q->execute(array(FALSE, $id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $data = $this->readIteracao($id);
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Iteração', $data['descricao'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -77,9 +106,16 @@ class IteracaoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE iteracao SET descricao = ?, datahora = ? WHERE id = ?";
+            $sql = "UPDATE iteracao SET descricao = ?, datahora = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($descricao, $dataHora, $id));
+            $q->execute(array($descricao, $dataHora, TRUE, $id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Iteração', $descricao, $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();

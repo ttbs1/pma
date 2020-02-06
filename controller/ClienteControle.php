@@ -18,9 +18,16 @@ class ClienteControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO cliente (nome, cpf_cnpj, telefone1, telefone2, email) VALUES (?,?,?,?,?)";
+            $sql = "INSERT INTO cliente (nome, cpf_cnpj, telefone1, telefone2, email, ativo) VALUES (?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($cliente->getNome(), $cliente->getCpf_cnpj(), $cliente->getTelefone1(), $cliente->getTelefone2(), $cliente->getEmail()));
+            $q->execute(array($cliente->getNome(), $cliente->getCpf_cnpj(), $cliente->getTelefone1(), $cliente->getTelefone2(), $cliente->getEmail(), TRUE));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Cliente', $cliente->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -31,9 +38,18 @@ class ClienteControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE cliente SET nome = ?, cpf_cnpj = ?, telefone1 = ?, telefone2 = ?, email = ? WHERE id = ?";
+            $sql = "UPDATE cliente SET nome = ?, cpf_cnpj = ?, telefone1 = ?, telefone2 = ?, email = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($cliente->getNome(), $cliente->getCpf_cnpj(), $cliente->getTelefone1(), $cliente->getTelefone2(), $cliente->getEmail(), $id));
+            $q->execute(array($cliente->getNome(), $cliente->getCpf_cnpj(), $cliente->getTelefone1(), $cliente->getTelefone2(), $cliente->getEmail(), TRUE, $id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Cliente', $cliente->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -111,7 +127,7 @@ class ClienteControle {
         }
     }
     
-    function deleteCliente ($id) {
+    function deletePermCliente ($id) {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -121,6 +137,29 @@ class ClienteControle {
             $q->execute(array($id));
             $q = $pdo->prepare($sql);
             $q->execute(array($id));
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function deleteCliente ($id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE cliente SET ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array(FALSE,$id));
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            
+            $cli = $this->readCliente($id);
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Cliente', $cli['nome'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -168,7 +207,7 @@ class ClienteControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = 'SELECT * FROM cliente ORDER BY nome ASC';
+            $sql = 'SELECT * FROM cliente WHERE ativo = 1 ORDER BY nome ASC';
             $q = $pdo->prepare($sql);
             $q->execute();
             $data = NULL;

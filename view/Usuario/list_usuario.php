@@ -69,7 +69,7 @@ and open the template in the editor.
 
                             $usuarioControle = new UsuarioControle();
                             $data = $usuarioControle->listUsuario();
-                            foreach($data as $row) 
+                            foreach($data as $row)
                             {
                                 echo '<tr>';
                                 echo '<td>'. $row['id'] . '</td>';

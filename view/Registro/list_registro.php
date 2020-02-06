@@ -35,7 +35,7 @@
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
@@ -49,16 +49,15 @@
                 </p>
             </div>
                 <table id="table" class="table table-striped" data-toggle="table" data-search="true" data-pagination="true"
-                        data-locale="pt-BR" data-sort-name="urgencia" data-sort-order="desc">
+                        data-locale="pt-BR" data-sort-name="id" data-sort-order="desc">
                     <thead>
                         <tr>
                             <th scope="col" data-field="id" data-sortable="true">Id</th>
-                            <th scope="col" data-field="cliente" data-sortable="true">Cliente</th>
-                            <th scope="col" data-field="descricao" data-sortable="true" width="135">Descrição</th>
-                            <th scope="col" data-field="descricao" data-sortable="true" width="135">Responsável</th>
-                            <th scope="col" data-field="estimativa" data-sortable="true" width="135">Estimativa</th>
-                            <th scope="col" data-field="urgencia" data-sortable="true" width="135">Urgência</th>
-                            <th scope="col" data-field="percentual" data-sortable="true">Percentual</th>
+                            <th scope="col" data-field="usuario" data-sortable="true">Usuário</th>
+                            <th scope="col" data-field="acao" data-sortable="true" width="135">Ação</th>
+                            <th scope="col" data-field="tabela" data-sortable="true" width="135">Tabela</th>
+                            <th scope="col" data-field="identificacao" data-sortable="true" width="135">Identificação</th>
+                            <th scope="col" data-field="datahora" data-sortable="true" width="135">Data/Hora</th>
                             <th scope="col">Detalhar</th>
                             <th scope="col">Atualizar</th>
                             <th scope="col">Excluir</th>
@@ -67,96 +66,29 @@
                     <tbody>
                         <?php
                         
-                        include_once '../../controller/ProjetoControle.php';
-                        include_once '../../controller/ClienteControle.php';
-                        include_once '../../controller/TarefaControle.php';
+                        include_once '../../controller/RegistroControle.php';
                         include_once '../../controller/UsuarioControle.php';
 
-                        $projetoControle = new ProjetoControle();
-                        $clienteControle = new ClienteControle();
+                        $registroControle = new RegistroControle();
                         $usuarioControle = new UsuarioControle();
-                        $data = $projetoControle->listProjeto();
+                        
+                        $data = $registroControle->list_Registros();
                         
                         foreach($data as $row) 
                         {
-                            $cli = $clienteControle->readCliente($row['cliente_id']);
                             $user = $usuarioControle->readUsuario($row['usuario_id']);
                             
                             echo '<tr>';
 			                      echo '<th scope="row">'. $row['id'] . '</th>';
-                            echo '<td>'. $cli['nome'] . '</td>';
-                            echo '<td>'. $row['descricao'] . '</td>';
                             echo '<td>'. $user['usuario'] . '</td>';
+                            echo '<td>'. $row['acao'] . '</td>';
+                            echo '<td>'. $row['tabela'] . '</td>';
+                            echo '<td>'. $row['identificacao'] . '</td>';
                             
-                            $start = new DateTime();
-                            $end = new DateTime($row['data_prevista']);
-                            // otherwise the  end date is excluded (bug?)
-                            $end->modify('+2 day');
-
-                            $interval = $end->diff($start);
-
-                            // total days
-                            $days = $interval->days;
-
-                            // create an iterateable period of date (P1D equates to 1 day)
-                            $period = new DatePeriod($start, new DateInterval('P1D'), $end);
-
-                            // best stored as array, so you can add more than one
-                            //$holidays = array('2012-09-07');
-
-                            foreach($period as $dt) {
-                                $curr = $dt->format('D');
-
-                                // substract if Saturday or Sunday
-                                if ($curr == 'Sat' || $curr == 'Sun') {
-                                    $days--;
-                                }
-
-                                /* (optional) for the updated question
-                                elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-                                    $days--;
-                                }*/
-                            }
-
-                            if ($days < 0)
-                                $days = 0;
-                            else if ($start > $end)
-                                $days = 0;
-                            if ($days == 1) {
-                                $palavra = 'dia';
-                            } else {
-                                $palavra = 'dias';
-                            }
+                            $date = new DateTime($row['datahora']);
                             
-                            echo '<td>'. $days . ' '. $palavra .'</td>';
+                            echo '<td>'. $date->format('d/m/Y H:i:s') . '</td>';
                             
-                            $tarefaControle = new TarefaControle();
-                            $tarefas = $tarefaControle->list_tarefasProjeto($row['id']);
-
-                            $peso_total = 0;
-                            $peso_total_todo = 0;
-                            $peso_total_doing = 0;
-
-                            if ($tarefas) foreach($tarefas as $aux) {
-                                $peso_total = $peso_total + $aux['peso'];
-                                if ($aux['status'] == 'a') {
-                                    $peso_total_todo = $peso_total_todo + $aux['peso'];
-                                } else if ($aux['status'] == 'b') {
-                                    $peso_total_doing = $peso_total_doing + $aux['peso'];
-                                }
-
-                            }
-                            
-                            if ($days > 0) { 
-                                $palavra = number_format((($peso_total_todo + ($peso_total_doing/2)) / $days ), 2, ',', ''); 
-                            } elseif (($peso_total_todo + ($peso_total_doing/2)) > 0) {
-                                $palavra = 'Atrasado';
-                            } else {
-                                $palavra = '0';
-                            }
-                            
-                            echo '<td>'. $palavra .'</td>';
-                            echo '<td><label>'. number_format((($peso_total - ($peso_total_todo + ($peso_total_doing/2))) / $peso_total * 100), 1, ',', '') .'</label>%</td>';
                             echo ' ';
                             echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_projeto.php?id='.$row['id'].'">Detalhar</a></td>';
                             echo ' ';
