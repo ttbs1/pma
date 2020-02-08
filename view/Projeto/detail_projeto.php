@@ -62,7 +62,7 @@ if(!empty($_GET['id']))
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
@@ -288,7 +288,8 @@ if(!empty($_GET['id']))
                                         <label class="control-label">Percentual de conclusão: </label>
                                         <div class="controls">
                                             <label class="carousel-inner">
-                                                <?php echo number_format((($peso_total - ($peso_total_todo + ($peso_total_doing/2))) / $peso_total * 100), 1, ',', '') .'%' ?>
+                                                <?php if($peso_total != 0) { echo number_format((($peso_total - ($peso_total_todo + ($peso_total_doing/2))) / $peso_total * 100), 1, ',', '')  .'%'; } 
+                                                    else { echo '0%'; } ?>
                                             </label>
                                         </div>
                                     </div>
@@ -314,7 +315,8 @@ if(!empty($_GET['id']))
                                                     echo '<input type="hidden" class="iteracao_id" value="'.$row['id'].'">';
                                                     echo '<div class="iteration-content">'.$row['descricao'].'</div>';
                                                     echo '<div class="" style="text-align: right; font-size: smaller">'.$usuario['usuario'].' às '.$datahora->format('H:i:s').' em '.$datahora->format('d/m/Y').'</div>';
-                                                    if ($usuario['usuario'] == $_SESSION['usuario']) {
+                                                    
+                                                    if (($usuario['usuario'] == $_SESSION['usuario']) || ($_SESSION["permissao"]['adm'])) {
                                                         echo '<div style="text-align: right;">';
                                                         echo '<a href="../Iteracao/update_iteracao.php?id='.$row['id'].'&projeto='.$data['id'].'" style="font-size: smaller">Atualizar</a> <a href="../Iteracao/delete_iteracao.php?id='.$row['id'].'&projeto='.$data['id'].'" style="font-size: smaller">Excluir</a>';
                                                         echo '</div>';

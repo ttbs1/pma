@@ -12,6 +12,7 @@
  * @author Thiago
  */
 class permissao {
+    private $adm;
     private $cliente;
     private $empresa;
     private $endereco;
@@ -21,6 +22,14 @@ class permissao {
     private $tipoprojeto;
     private $usuario;
     
+    function getAdm() {
+        return $this->adm;
+    }
+
+    function setAdm($adm) {
+        $this->adm = $adm;
+    }
+        
     function getCliente() {
         return $this->cliente;
     }

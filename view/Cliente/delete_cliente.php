@@ -1,5 +1,10 @@
 <?php
 
+session_start(); 
+if((substr_compare($_SESSION['permissao']['cliente'], '0', 3, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+
 include_once '../../controller/ClienteControle.php';
 
 $id = 0;
@@ -57,7 +62,7 @@ if(!empty($_POST))
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>

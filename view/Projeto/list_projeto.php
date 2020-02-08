@@ -35,7 +35,7 @@
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                             <th scope="col" data-field="id" data-sortable="true">Id</th>
                             <th scope="col" data-field="cliente" data-sortable="true">Cliente</th>
                             <th scope="col" data-field="descricao" data-sortable="true" width="135">Descrição</th>
-                            <th scope="col" data-field="descricao" data-sortable="true" width="135">Responsável</th>
+                            <th scope="col" data-field="responsavel" data-sortable="true" width="135">Responsável</th>
                             <th scope="col" data-field="estimativa" data-sortable="true" width="135">Estimativa</th>
                             <th scope="col" data-field="urgencia" data-sortable="true" width="135">Urgência</th>
                             <th scope="col" data-field="percentual" data-sortable="true">Percentual</th>

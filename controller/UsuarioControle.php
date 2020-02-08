@@ -48,7 +48,7 @@ class UsuarioControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = 'SELECT * FROM usuario ORDER BY usuario ASC';
+            $sql = 'SELECT * FROM usuario WHERE ativo = 1 ORDER BY usuario ASC';
             $q = $pdo->prepare($sql);
             $q->execute();
             $data = NULL;
@@ -116,6 +116,7 @@ class UsuarioControle {
             $sql = "UPDATE usuario SET usuario = ?, senha = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
             $q->execute(array($usuario->getUsuario(), $usuario->getSenha(), TRUE, $id));
+            
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
             session_start();

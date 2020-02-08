@@ -75,9 +75,9 @@ class TarefaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO tarefa (projeto_id, descricao, peso, status) VALUES (?,?,?,?)";
+            $sql = "INSERT INTO tarefa (projeto_id, descricao, peso, status, ativo) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($projeto_id,$tarefa['descricao'], $tarefa['peso'], 'a'));
+            $q->execute(array($projeto_id,$tarefa['descricao'], $tarefa['peso'], 'a', TRUE));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
             echo 'Erro: '. $ex->getMessage();
@@ -109,9 +109,9 @@ class TarefaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE tarefa SET descricao = ?, peso = ? WHERE id = ?";
+            $sql = "UPDATE tarefa SET descricao = ?, peso = ? , ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($tarefa->getDescricao(), $tarefa->getPeso(), $id));
+            $q->execute(array($tarefa->getDescricao(), $tarefa->getPeso(), TRUE, $id));
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);

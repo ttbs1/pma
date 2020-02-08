@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>PMA - Projetos</title>
+    <title>PMA - Registros</title>
     <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -19,7 +19,7 @@
         <div class="container">
           <div class="jumbotron row">
                 <div>
-                    <h2>Listagem de Projetos</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                    <h2>Listagem de Registros</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
                 </div>
                 
                 <div class="header-user">
@@ -42,12 +42,6 @@
                 </div>
                 
           </div>
-            </br>
-            <div style="text-align: right">
-                <p>
-                    <a href="create_projeto.php" class="btn btn-outline-success">Adicionar</a>
-                </p>
-            </div>
                 <table id="table" class="table table-striped" data-toggle="table" data-search="true" data-pagination="true"
                         data-locale="pt-BR" data-sort-name="id" data-sort-order="desc">
                     <thead>
@@ -58,9 +52,6 @@
                             <th scope="col" data-field="tabela" data-sortable="true" width="135">Tabela</th>
                             <th scope="col" data-field="identificacao" data-sortable="true" width="135">Identificação</th>
                             <th scope="col" data-field="datahora" data-sortable="true" width="135">Data/Hora</th>
-                            <th scope="col">Detalhar</th>
-                            <th scope="col">Atualizar</th>
-                            <th scope="col">Excluir</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +63,12 @@
                         $registroControle = new RegistroControle();
                         $usuarioControle = new UsuarioControle();
                         
-                        $data = $registroControle->list_Registros();
+                        $permissoes = $_SESSION['permissao'];
+                        if ($permissoes['adm']) {
+                            $data = $registroControle->list_Registros();
+                        } else {
+                            $data = $registroControle->list_RegistrosUsuario();
+                        }
                         
                         foreach($data as $row) 
                         {
@@ -89,12 +85,6 @@
                             
                             echo '<td>'. $date->format('d/m/Y H:i:s') . '</td>';
                             
-                            echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_projeto.php?id='.$row['id'].'">Detalhar</a></td>';
-                            echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_cliente.php?id='.$row['id'].'">Atualizar</a></td>';
-                            echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_cliente.php?id='.$row['id'].'">Excluir</a></td>';
                             echo ' ';
                             echo '</tr>';
                         }

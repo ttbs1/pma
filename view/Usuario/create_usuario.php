@@ -15,6 +15,15 @@ if(!empty($_POST)) {
     
     $usuario->setUsuario($_POST['usuario']);
     $usuario->setSenha($_POST['senha']);
+    
+    if (isset($_POST['adm'])) {
+        $permissao = "1";
+    } else {
+        $permissao = "0";
+    }
+    
+    $usuario->getPermissao_id()->setAdm($permissao);
+    
     if (isset($_POST['ler_usuario'])) {
         $permissao = "1";
     } else {
@@ -243,7 +252,7 @@ if(!empty($_POST)) {
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
@@ -288,7 +297,7 @@ if(!empty($_POST)) {
                                             var senha = new Spry.Widget.ValidationTextField("senha", "custom", {validateOn:["blur"], maxChars: 12});
                                         </script>
 
-
+                                        <label for="senha" style="margin-left: 15px">Administrador: </label> <input type="checkbox" name="adm" id="adm">
 
                                     </fieldset>
                                 </td>

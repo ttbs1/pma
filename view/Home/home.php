@@ -41,7 +41,7 @@ and open the template in the editor.
                     $permissoes = $permissaoControle->readPermissao($user['permissao_id']);
                     
                     $_SESSION['usuario'] = $user['usuario'];
-                    $_SESSION['permissoes'] = $permissoes;
+                    $_SESSION['permissao'] = $permissoes;
                 } else {
                     header("Location: ../login/login.php");
                 }
@@ -64,86 +64,125 @@ and open the template in the editor.
             <div class="row">
                 <table class="table table-striped">
                     <tr>
-                        <td>
-                            <label class="control-label">Clientes</label>
-                        </td>
-                        <td>
-                            <label class="control-label">Projetos</label>
-                        </td>
-                            <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
-                                echo '<td>';
-                                    echo '<label class="control-label">Usuários</label>';
-                                echo '</td>';
+                        <?php 
+                        
+                        if((substr_compare($permissoes['cliente'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<label class="control-label">Clientes</label>';
+                            '</td>';
+                        }
+                        if((substr_compare($permissoes['projeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                               echo '<label class="control-label">Projetos</label>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['usuario'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<label class="control-label">Usuários</label>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['tipoprojeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<label class="control-label">Modelos de Projeto</label>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['empresa'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<label class="control-label">Empresas</label>';
+                            echo '</td>';
+                        }
+                    echo '</tr>';
+                    echo '<tr>';
+                        if((substr_compare($permissoes['cliente'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a href="../Cliente/list_cliente.php">Listar Clientes</a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['projeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a href="../Projeto/list_projeto.php">Listar Projetos</a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['usuario'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a href="../Usuario/list_usuario.php">Listar Usuários</a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['tipoprojeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a href="../TipoProjeto/list_tipoProjeto.php">Listar Modelos</a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['empresa'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a href="../Empresa/list_empresa.php">Listar Empresas</a>';
+                            echo '</td>';
+                        }
+                    echo '</tr>';
+                    echo '<tr>';
+                        if((substr_compare($permissoes['cliente'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                            if((substr_compare($permissoes['cliente'], '11', 0,2)) == 0) {
+                                echo '<a href="../Cliente/create_cliente.php">Cadastrar Cliente</a>';
                             }
-                            ?>
-                        
-                        <td>
-                            <label class="control-label">Modelos de Projeto</label>
-                        </td>
-                        <td>
-                            <label class="control-label">Empresas</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="../Cliente/create_cliente.php">Cadastrar Cliente</a><br>
-                        </td>
-                        <td>
-                            <a href="../Projeto/create_projeto.php">Cadastrar Projeto</a>
-                        </td>
-                        <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
-                        echo '<td>';
-                        echo    '<a href="../Usuario/create_usuario.php">Cadastrar Usuário</a>';
                         echo '</td>';
                         }
-                        ?>
-                        <td>
-                            <a href="../TipoProjeto/create_tipoProjeto.php">Cadastrar Modelo</a>
-                        </td>
-                        <td>
-                            <a href="../Empresa/create_empresa.php">Cadastrar Empresa</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="../Cliente/list_cliente.php">Listar Clientes</a>
-                        </td>
-                        <td>
-                            <a href="../Projeto/list_projeto.php">Listar Projetos</a>
-                        </td>
-                        <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
-                        echo '<td>';
-                        echo    '<a href="../Usuario/list_usuario.php">Listar Usuários</a>';
-                        echo '</td>';
+                        if((substr_compare($permissoes['projeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                            if((substr_compare($permissoes['projeto'], '11', 0,2)) == 0) {
+                                echo '<a href="../Projeto/create_projeto.php">Cadastrar Projeto</a>';
+                            }
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['usuario'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                if((substr_compare($permissoes['usuario'], '11', 0,2)) == 0) {
+                                    echo '<a href="../Usuario/create_usuario.php">Cadastrar Usuário</a>';
+                                }
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['tipoprojeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                            if((substr_compare($permissoes['tipoprojeto'], '11', 0,2)) == 0) {
+                                echo '<a href="../TipoProjeto/create_tipoProjeto.php">Cadastrar Modelo</a>';
+                            }
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['empresa'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                            if((substr_compare($permissoes['empresa'], '11', 0,2)) == 0) {
+                                echo '<a href="../Empresa/create_empresa.php">Cadastrar Empresa</a>';
+                            }
+                            echo '</td>';
+                        }
+                    echo '</tr>';
+                    echo '<tr>';
+                        if((substr_compare($permissoes['cliente'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a href="../Cliente/read_cliente.php">Pesquisar por Clientes</a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['projeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a></a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['usuario'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a></a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['tipoprojeto'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a></a>';
+                            echo '</td>';
+                        }
+                        if((substr_compare($permissoes['empresa'], '1', 0,1)) == 0) {
+                            echo '<td>';
+                                echo '<a></a>';
+                            echo '</td>';
                         }
                         ?>
-                        <td>
-                            <a href="../TipoProjeto/list_tipoProjeto.php">Listar Modelos</a>
-                        </td>
-                        <td>
-                            <a href="../Empresa/list_empresa.php">Listar Empresas</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="../Cliente/read_cliente.php">Pesquisar por Clientes</a>
-                        </td>
-                        <td>
-                            <a></a>
-                        </td>
-                        <?php if((substr_compare($permissoes['usuario'], '1', 1,1)) == 0) {
-                        echo '<td>';
-                        echo     '<a></a>';
-                        echo '</td>';
-                        }
-                        ?>
-                        <td>
-                            <a></a>
-                        </td>
-                        <td>
-                            <a></a>
-                        </td>
-                        
                     </tr>
                     
                 </table>

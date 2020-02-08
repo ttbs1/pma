@@ -35,7 +35,7 @@ class IteracaoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO iteracao (usuario_id, projeto_id, descricao, datahora, ativo = ?) VALUES (?,?,?,?)";
+            $sql = "INSERT INTO iteracao (usuario_id, projeto_id, descricao, datahora, ativo) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql);
             $q->execute(array($usuario_id, $projeto_id, $descricao, $dataHora, TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";

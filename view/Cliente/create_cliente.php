@@ -1,4 +1,11 @@
 <?php
+
+
+session_start(); 
+if((substr_compare($_SESSION['permissao']['cliente'], '0', 1, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+
 if(!empty($_POST)) {
     include_once '../../domain/cliente.php';
     include_once '../../domain/endereco.php';
@@ -94,13 +101,13 @@ if(!empty($_POST)) {
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" href="#"><?php session_start(); 
+                        <a class="dropdown-item" href="#"><?php
                                                                 if(isset($_SESSION['usuario'])) {
                                                                     echo 'Usuário: '. $_SESSION['usuario'];
                                                                 } else {
                                                                     header("Location: ../login/login.php");
                                                                 } ?></a>
-                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                         <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                     </div>
                 </div>

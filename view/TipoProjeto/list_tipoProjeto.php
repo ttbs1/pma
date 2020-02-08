@@ -39,13 +39,12 @@ and open the template in the editor.
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
               </div>
-                </br>
                 <div style="text-align: right;">
                     <p>
                         <a href="create_tipoProjeto.php" class="btn btn-outline-success">Adicionar</a>

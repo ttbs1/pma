@@ -1,4 +1,12 @@
 <!DOCTYPE html>
+
+<?php
+session_start(); 
+if((substr_compare($_SESSION['permissao']['cliente'], '0', 0, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+?>
+
 <html lang="pt-br">
 
 <head>
@@ -29,23 +37,26 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php 
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {
                                                                         header("Location: ../login/login.php");
                                                                     } ?></a>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="../Registro/list_registro.php">Log de registros</a>
                             <a class="dropdown-item" href="../Home/logout.php">Sair</a>
                         </div>
                     </div>
                 </div>
                 
           </div>
-            </br>
-            <div class="row">
+            <div style="text-align: right;">
                 <p>
-                    <a href="create_cliente.php" class="btn btn-outline-success">Adicionar</a>
+                    <?php
+                    if((substr_compare($_SESSION['permissao']['cliente'], '1', 1,1)) == 0) {
+                        echo '<a href="create_cliente.php" class="btn btn-outline-success">Adicionar</a>';
+                    }
+                    ?>
                     <a href="read_cliente.php" class="btn btn-outline-primary">Pesquisar</a>
                 </p>
             </div>
@@ -60,8 +71,14 @@
                             <th scope="col" data-field="telefone2" data-sortable="true" width="135">Telefone 02</th>
                             <th scope="col" data-field="email" data-sortable="true">Email</th>
                             <th scope="col">Detalhar</th>
-                            <th scope="col">Atualizar</th>
-                            <th scope="col">Excluir</th>
+                            <?php
+                            if ((substr_compare($_SESSION['permissao']['cliente'], '1', 2, 1)) == 0) {
+                                echo '<th scope="col">Atualizar</th>';
+                            }
+                            if ((substr_compare($_SESSION['permissao']['cliente'], '1', 3, 1)) == 0) {
+                                echo '<th scope="col">Excluir</th>';
+                            }
+                            ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,9 +99,13 @@
                             echo ' ';
                             echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_cliente.php?id='.$row['id'].'">Detalhar</a></td>';
                             echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_cliente.php?id='.$row['id'].'">Atualizar</a></td>';
+                            if ((substr_compare($_SESSION['permissao']['cliente'], '1', 2, 1)) == 0) {
+                                echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_cliente.php?id='.$row['id'].'">Atualizar</a></td>';
+                            }
                             echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_cliente.php?id='.$row['id'].'">Excluir</a></td>';
+                            if ((substr_compare($_SESSION['permissao']['cliente'], '1', 3, 1)) == 0) {
+                                echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_cliente.php?id='.$row['id'].'">Excluir</a></td>';
+                            }
                             echo ' ';
                             echo '</tr>';
                         }
