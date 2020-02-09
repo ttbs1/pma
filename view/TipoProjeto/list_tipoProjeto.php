@@ -4,6 +4,14 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+
+<?php
+session_start(); 
+if((substr_compare($_SESSION['permissao']['tipoprojeto'], '0', 0, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+?>
+
 <html>
     <head>
         <!-- Required meta tags -->
@@ -33,7 +41,7 @@ and open the template in the editor.
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {
@@ -47,7 +55,11 @@ and open the template in the editor.
               </div>
                 <div style="text-align: right;">
                     <p>
-                        <a href="create_tipoProjeto.php" class="btn btn-outline-success">Adicionar</a>
+                        <?php
+                        if ((substr_compare($_SESSION['permissao']['tipoprojeto'], '1', 1, 1)) == 0) {
+                            echo '<a href="create_tipoProjeto.php" class="btn btn-outline-success">Adicionar</a>';
+                        }
+                        ?>
                     </p>
                 </div>
                         <table style="width: 100%;" id="table" class="table table-striped" data-toggle="table" data-search="true" data-pagination="true"
@@ -57,8 +69,14 @@ and open the template in the editor.
                                 <th scope="col" data-field="id" data-sortable="true">Id</th>
                                 <th scope="col" data-field="descricao" data-sortable="true">Descrição</th>
                                 <th scope="col">Detalhar</th>
-                                <th scope="col">Atualizar</th>
-                                <th scope="col">Excluir</th>
+                                <?php
+                                if ((substr_compare($_SESSION['permissao']['tipoprojeto'], '1', 2, 1)) == 0) {
+                                    echo '<th scope="col">Atualizar</th>';
+                                }
+                                if ((substr_compare($_SESSION['permissao']['tipoprojeto'], '1', 3, 1)) == 0) {
+                                    echo '<th scope="col">Excluir</th>';
+                                }
+                                ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,9 +93,13 @@ and open the template in the editor.
                                 echo ' ';
                                 echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_tipoProjeto.php?id='.$row['id'].'">Detalhar </a></td>';
                                 echo ' ';
-                                echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_tipoProjeto.php?id='.$row['id'].'">Atualizar</a></td>';
+                                if ((substr_compare($_SESSION['permissao']['tipoprojeto'], '1', 2, 1)) == 0) {
+                                    echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_tipoProjeto.php?id='.$row['id'].'">Atualizar</a></td>';
+                                }
                                 echo ' ';
-                                echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_tipoProjeto.php?id='.$row['id'].'"> Excluir </a></td>';
+                                if ((substr_compare($_SESSION['permissao']['tipoprojeto'], '1', 3, 1)) == 0) {
+                                    echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_tipoProjeto.php?id='.$row['id'].'"> Excluir </a></td>';
+                                }
                                 echo ' ';
                                 echo '</tr>';
                             }

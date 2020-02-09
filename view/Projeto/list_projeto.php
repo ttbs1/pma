@@ -1,3 +1,11 @@
+
+<?php
+session_start(); 
+if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -29,7 +37,7 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {
@@ -60,8 +68,14 @@
                             <th scope="col" data-field="urgencia" data-sortable="true" width="135">Urgência</th>
                             <th scope="col" data-field="percentual" data-sortable="true">Percentual</th>
                             <th scope="col">Detalhar</th>
-                            <th scope="col">Atualizar</th>
-                            <th scope="col">Excluir</th>
+                            <?php
+                            if ((substr_compare($_SESSION['permissao']['projeto'], '1', 2, 1)) == 0) {
+                                echo '<th scope="col">Atualizar</th>';
+                            }
+                            if ((substr_compare($_SESSION['permissao']['projeto'], '1', 3, 1)) == 0) {
+                                echo '<th scope="col">Excluir</th>';
+                            }
+                            ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -160,9 +174,13 @@
                             echo ' ';
                             echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_projeto.php?id='.$row['id'].'">Detalhar</a></td>';
                             echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_cliente.php?id='.$row['id'].'">Atualizar</a></td>';
+                            if ((substr_compare($_SESSION['permissao']['projeto'], '1', 2, 1)) == 0) {
+                                echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_projeto.php?id='.$row['id'].'">Atualizar</a></td>';
+                            }
                             echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_cliente.php?id='.$row['id'].'">Excluir</a></td>';
+                            if ((substr_compare($_SESSION['permissao']['projeto'], '1', 3, 1)) == 0) {
+                                echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_projeto.php?id='.$row['id'].'">Excluir</a></td>';
+                            }
                             echo ' ';
                             echo '</tr>';
                         }

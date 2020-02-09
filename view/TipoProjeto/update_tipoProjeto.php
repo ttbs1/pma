@@ -4,6 +4,14 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+
+<?php
+session_start(); 
+if((substr_compare($_SESSION['permissao']['tipoprojeto'], '0', 2, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+?>
+
 <html>
     <head>
         <title>PMA - Atualizar Modelo</title>
@@ -63,7 +71,7 @@ and open the template in the editor.
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {

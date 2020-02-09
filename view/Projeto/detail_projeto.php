@@ -1,5 +1,10 @@
 <?php
 
+session_start(); 
+if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+
 include_once '../../controller/ProjetoControle.php';
 include_once '../../controller/ClienteControle.php';
 include_once '../../controller/TarefaControle.php';
@@ -56,7 +61,7 @@ if(!empty($_GET['id']))
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {

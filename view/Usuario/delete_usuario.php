@@ -1,5 +1,10 @@
 <?php
 
+session_start(); 
+if((substr_compare($_SESSION['permissao']['usuario'], '0', 3, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+
 include_once '../../controller/UsuarioControle.php';
 
 $id = 0;
@@ -47,7 +52,7 @@ if(!empty($_POST))
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {

@@ -7,6 +7,11 @@ and open the template in the editor.
 
 <?php
 
+session_start(); 
+if((substr_compare($_SESSION['permissao']['usuario'], '0', 2, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+
 include_once '../../domain/usuario.php';
 include_once '../../domain/permissao.php';
 include_once '../../controller/usuariocontrole.php';
@@ -259,7 +264,7 @@ if(!empty($_POST)) {
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php 
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {

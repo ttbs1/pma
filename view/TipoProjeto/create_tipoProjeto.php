@@ -5,6 +5,12 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
+
+session_start(); 
+if((substr_compare($_SESSION['permissao']['tipoprojeto'], '0', 1, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+
 if(!empty($_POST)) {
     include_once '../../domain/tipoProjeto.php';
     include_once '../../controller/TipoProjetoControle.php';
@@ -44,7 +50,7 @@ if(!empty($_POST)) {
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {

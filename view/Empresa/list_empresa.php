@@ -1,4 +1,12 @@
 <!DOCTYPE html>
+
+<?php
+session_start(); 
+if((substr_compare($_SESSION['permissao']['empresa'], '0', 0, 1)) == 0) {
+    header("Location: ../Erro/permissao.php");
+}
+?>
+
 <html lang="pt-br">
 
 <head>
@@ -31,7 +39,7 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php session_start(); 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {
@@ -46,7 +54,11 @@
             </br>
             <div style="text-align: right;">
                     <p>
-                        <a href="create_empresa.php" class="btn btn-outline-success">Adicionar</a>
+                        <?php
+                        if((substr_compare($_SESSION['permissao']['empresa'], '1', 1,1)) == 0) {
+                            echo '<a href="create_empresa.php" class="btn btn-outline-success">Adicionar</a>';
+                        }
+                        ?>
                     </p>
             </div>
                 <table id="table" class="table table-striped" data-toggle="table" data-search="true" data-pagination="true"
@@ -58,8 +70,14 @@
                             <th scope="col" data-field="cpf_cnpj" data-sortable="true" width="135">CNPJ</th>
                             <th scope="col" data-field="telefone1" data-sortable="true" width="135">Telefone</th>
                             <th scope="col">Detalhar</th>
-                            <th scope="col">Atualizar</th>
-                            <th scope="col">Excluir</th>
+                            <?php
+                            if ((substr_compare($_SESSION['permissao']['empresa'], '1', 2, 1)) == 0) {
+                                echo '<th scope="col">Atualizar</th>';
+                            }
+                            if ((substr_compare($_SESSION['permissao']['empresa'], '1', 3, 1)) == 0) {
+                                echo '<th scope="col">Excluir</th>';
+                            }
+                            ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,9 +96,13 @@
                             echo ' ';
                             echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_empresa.php?id='.$row['id'].'">Detalhar</a></td>';
                             echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_empresa.php?id='.$row['id'].'">Atualizar</a></td>';
+                            if ((substr_compare($_SESSION['permissao']['empresa'], '1', 2, 1)) == 0) {
+                                echo '<td width="80"><a class="btn btn-outline-warning btn-sm" href="update_empresa.php?id='.$row['id'].'">Atualizar</a></td>';
+                            }
                             echo ' ';
-                            echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_empresa.php?id='.$row['id'].'">Excluir</a></td>';
+                            if ((substr_compare($_SESSION['permissao']['empresa'], '1', 3, 1)) == 0) {
+                                echo '<td width="80"><a class="btn btn-outline-danger btn-sm" href="delete_empresa.php?id='.$row['id'].'">Excluir</a></td>';
+                            }
                             echo ' ';
                             echo '</tr>';
                         }
