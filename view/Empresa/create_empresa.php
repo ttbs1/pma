@@ -64,12 +64,13 @@ if(!empty($_POST)) {
 <html>
     <head>
         <title>PMA - Cadastrar Empresa</title>
+        <link rel="icon" href="../../util/icon.png" type="image/icon type">
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
@@ -295,7 +296,7 @@ if(!empty($_POST)) {
                             <span id="rua1" class="textfieldHintState">
                                 <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
+                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>
                         </div>
                         <div class="form-group col-md-2">
@@ -319,7 +320,7 @@ if(!empty($_POST)) {
                                 <span id="cidade1" class="textfieldHintState">
                                     <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
+                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                 </span>
                         </div>
                     
@@ -328,7 +329,7 @@ if(!empty($_POST)) {
                                 <span id="uf1" class="textfieldHintState">
                                     <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
+                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                 </span>
                         </div>
                     </div>
@@ -382,13 +383,9 @@ if(!empty($_POST)) {
         </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    
-    
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <p></p>
   </body>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="assets/js/bootstrap.min.js"></script>
-    </body>
 </html>

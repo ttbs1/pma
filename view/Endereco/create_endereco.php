@@ -7,12 +7,13 @@ and open the template in the editor.
 <html>
     <head>
         <title>PMA - Cadastrar Endereço</title>
+        <link rel="icon" href="../../util/icon.png" type="image/icon type">
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
@@ -207,46 +208,60 @@ and open the template in the editor.
                 <legend>Endereço</legend>
                 <div id="endereco">
                     
-                    <input type="hidden" name="id" id="id" value="<?php echo $id ?>" /><br>
-                    <input type="hidden" name="tipo" id="tipo" value="<?php echo $tipo ?>" /><br>
+                    <input type="hidden" name="id" id="id" value="<?php echo $id ?>" />
+                    <input type="hidden" name="tipo" id="tipo" value="<?php echo $tipo ?>" />
                     
-                <label for="cep">CEP: </label>
-                    <span id="cep1" class="textfieldHintState">
-                        <input type="text" class="iCEP" name="cep" id="cep" placeholder="CEP" value="" />
-                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
-                    </span>
-                <label for="rua">Rua: </label>
-                    <span id="rua1" class="textfieldHintState">
-                        <input type="text" class="iRua" name="rua" id="rua" placeholder="Rua" value="" />
-                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                    </span>
-
-                <label for="numero">Numero: </label>
-                    <span id="numero1" class="textfieldHintState">
-                        <input type="text" class="iNumero" name="numero" id="numero" placeholder="Numero" value="" />
-                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
-                    </span>
-
-                <label for="bairro">Bairro: </label>
-                    <span id="bairro1" class="textfieldHintState">
-                        <input type="text" class="iBairro" name="bairro" id="bairro" placeholder="Bairro" value="" />
-                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                    </span>
-
-                <label for="cidade">Cidade: </label>
-                    <span id="cidade1" class="textfieldHintState">
-                        <input type="text" class="iCidade" name="cidade" id="cidade" placeholder="Cidade" value="" />
-                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                    </span>
-
-                <label for="uf">Estado: </label>
-                    <span id="uf1" class="textfieldHintState">
-                        <input type="text" class="iEstado" name="uf" id="uf" placeholder="UF" value="" />
-                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
-                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span><br>
-                    </span>
+                    <div class="form-group row" style="margin-left: 3px">
+                        <div class="form-group col-md-2">
+                            <label for="cep">CEP: </label>
+                                <span id="cep1" class="textfieldHintState">
+                                    <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="" />
+                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
+                                </span>
+                        </div>
+                        <div class="form-group col-md-6">
+                        <label for="rua">Rua: </label>
+                            <span id="rua1" class="textfieldHintState">
+                                <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="" />
+                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="numero">Numero: </label>
+                                <span id="numero1" class="textfieldHintState">
+                                    <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="" />
+                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
+                                </span>
+                        </div>
+                          
+                        <div class="form-group col-md-5"> 
+                            <label for="bairro">Bairro: </label>
+                                <span id="bairro1" class="textfieldHintState">
+                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="" />
+                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
+                                </span>
+                        </div>
+                        
+                        <div class="form-group col-md-5">
+                            <label for="cidade">Cidade: </label>
+                                <span id="cidade1" class="textfieldHintState">
+                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="" />
+                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
+                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                </span>
+                        </div>
+                    
+                        <div class="form-group col-md-1">
+                            <label for="uf">Estado: </label>
+                                <span id="uf1" class="textfieldHintState">
+                                    <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="" />
+                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
+                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                </span>
+                        </div>
+                    </div>
+                    
                 <script>
                     var cep1 = new Spry.Widget.ValidationTextField("cep1", "custom", {format:"custom", pattern: "00000-000", validateOn:["blur"], useCharacterMasking: true, isRequired: false});
                     var rua1 = new Spry.Widget.ValidationTextField("rua1", "custom", {validateOn:["blur"], maxChars: 85});
@@ -279,8 +294,8 @@ and open the template in the editor.
                 </div>
             </form>
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>

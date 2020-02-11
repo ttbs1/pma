@@ -77,9 +77,9 @@ class EnderecoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO endereco (cliente_id, rua, numero, bairro, CEP, cidade, estado) VALUES (?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO endereco (cliente_id, rua, numero, bairro, CEP, cidade, estado, ativo) VALUES (?,?,?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($cliente_id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
+            $q->execute(array($cliente_id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado(), TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
             include_once 'ClienteControle.php';
@@ -100,9 +100,9 @@ class EnderecoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO endereco (empresa_id, rua, numero, bairro, CEP, cidade, estado) VALUES (?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO endereco (empresa_id, rua, numero, bairro, CEP, cidade, estado, ativo) VALUES (?,?,?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($empresa_id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado()));
+            $q->execute(array($empresa_id,$endereco->getRua(), $endereco->getNumero(), $endereco->getBairro(), $endereco->getCEP(), $endereco->getCidade(), $endereco->getEstado(), TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
             include_once 'EmpresaControle.php';
