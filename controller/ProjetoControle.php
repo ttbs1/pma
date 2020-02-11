@@ -19,7 +19,7 @@ class ProjetoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = 'SELECT * FROM projeto';
+            $sql = 'SELECT * FROM projeto WHERE ativo = 1';
             $q = $pdo->prepare($sql);
             $q->execute();
             $data = NULL;
@@ -37,9 +37,9 @@ class ProjetoControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO projeto (cliente_id, usuario_id, tipoprojeto_id, data_entrada, data_prevista, descricao, valor) VALUES (?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO projeto (cliente_id, usuario_id, tipoprojeto_id, data_entrada, data_prevista, descricao, valor, ativo) VALUES (?,?,?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($projeto->getCliente_id(), $projeto->getUsuario_id(), $projeto->getTipoprojeto_id(), $projeto->getData_entrada(), $projeto->getData_prevista(), $projeto->getDescricao(), $projeto->getValor()));
+            $q->execute(array($projeto->getCliente_id(), $projeto->getUsuario_id(), $projeto->getTipoprojeto_id(), $projeto->getData_entrada(), $projeto->getData_prevista(), $projeto->getDescricao(), $projeto->getValor(), TRUE));
             $id = $pdo->query("SELECT MAX(id) FROM projeto");
             $id = $id->fetchColumn();
             
@@ -73,4 +73,54 @@ class ProjetoControle {
         }
     }
     
+    function deleteProjeto ($id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE projeto SET ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array(FALSE,$id));
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            
+            $data = $this->readProjeto($id);
+            
+            include_once 'ClienteControle.php';
+            $clienteControle = new ClienteControle();
+            $cli = $clienteControle->readCliente($data['cliente_id']);
+            
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Projeto', $cli['nome'], $dateTime));
+            conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function updateProjeto ($projeto, $id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE projeto SET cliente_id = ?, usuario_id = ?, tipoprojeto_id = ?, data_entrada = ?, data_prevista = ?, descricao = ?, valor = ?, ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($projeto->getCliente_id(), $projeto->getUsuario_id(), $projeto->getTipoprojeto_id(), $projeto->getData_entrada(), $projeto->getData_prevista(), $projeto->getDescricao(), $projeto->getValor(), TRUE, $id));
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            session_start();
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Projeto', 'Id: '.$id, $dateTime));
+            $pdo = conexao::desconectar();
+            return $id;
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
 }

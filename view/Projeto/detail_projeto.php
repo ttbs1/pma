@@ -439,11 +439,13 @@ if(!empty($_GET['id']))
                             
                         </div>
                     </div>
+                        
+                    
+                    <div class="form-actions">
+                        <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
+                        <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
+                    </div>
                 </div>
-            </div>
-            <div class="form-actions">
-                <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
-                <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
             </div>
         </div>
         
@@ -453,7 +455,7 @@ if(!empty($_GET['id']))
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script type="text/javascript" src="../../util/links/jquery-ui.js"></script>
         <script src="../../util/links/c0930358e4.js" crossorigin="anonymous"></script>
-        
         <script src="../../util/kanban.js"></script>
+        <p></p>
     </body>
 </html>

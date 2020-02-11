@@ -93,58 +93,65 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
-    
-            <form class="form-horizontal" action="update_tarefa.php" method="post">
+            <div class="card">
+            <div class="card-header">
+                <h3 class="well"> Atualizar Tarefa </h3>
+            </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="update_tarefa.php" method="post">
 
-                        <fieldset>
-                            <legend>Tarefa</legend>
-                            <div id="tarefa">
+                                <fieldset>
+                                    <legend>Tarefa</legend>
+                                    <div id="tarefa">
 
-                                <input type="hidden" name="id" value="<?php echo $id;?>" />
-                                <input type="hidden" name="modelo_id" value="<?php echo $tipoProjeto_id;?>" />
-                                <input type="hidden" name="projeto_id" value="<?php echo $projeto_id;?>" />
-                                <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
-                                
-                                <div class="form-group col-md-8">
-                                    <label for="descricao">Descrição: </label><br>
-                                        <span id="descricao1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                        </span>
-                                </div>
-                                <script>
-                                    var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
-                                </script>
-                                <div class="form-group col-md-1">
-                                    <label for="peso">Peso: </label><br>
-                                        <span id="peso1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="peso" id="peso" placeholder="Peso" value="<?php echo $data['peso'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                        </span>
-                                </div>
-                                <script>
-                                    var user = new Spry.Widget.ValidationTextField("peso", "custom", {validateOn:["blur"], maxChars: 85});
-                                </script>
-                            </div>
-                        </fieldset>
+                                        <input type="hidden" name="id" value="<?php echo $id;?>" />
+                                        <input type="hidden" name="modelo_id" value="<?php echo $tipoProjeto_id;?>" />
+                                        <input type="hidden" name="projeto_id" value="<?php echo $projeto_id;?>" />
+                                        <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
 
-                
+                                        <div class="form-group col-md-8">
+                                            <label for="descricao">Descrição: </label><br>
+                                                <span id="descricao1" class="textfieldHintState">
+                                                    <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'] ?>" />
+                                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                                </span>
+                                        </div>
+                                        <script>
+                                            var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
+                                        </script>
+                                        <div class="form-group col-md-1">
+                                            <label for="peso">Peso: </label><br>
+                                                <span id="peso1" class="textfieldHintState">
+                                                    <input type="text" class="form-control" name="peso" id="peso" placeholder="Peso" value="<?php echo $data['peso'] ?>" />
+                                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                                </span>
+                                        </div>
+                                        <script>
+                                            var user = new Spry.Widget.ValidationTextField("peso", "custom", {validateOn:["blur"], maxChars: 85});
+                                        </script>
+                                    </div>
+                                </fieldset>
 
 
 
-                <div class="form-actions">
 
-                    <button type="submit" class="btn btn-success">Atualizar</button>
-                    <?php if ($tipo == 'tipoProjeto') { echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Não</a>'; }
-                    elseif ($tipo == 'projeto') { echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Não</a>'; } ?>
 
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn btn-success">Atualizar</button>
+                            <?php if ($tipo == 'tipoProjeto') { echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Voltar</a>'; }
+                            elseif ($tipo == 'projeto') { echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Voltar</a>'; } ?>
+
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <p></p>
     </body>
 </html>

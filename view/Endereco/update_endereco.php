@@ -96,212 +96,219 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
-    
-            <form class="form-horizontal" action="update_endereco.php" method="post">
+            <div class="card">
+            <div class="card-header">
+                <h3 class="well"> Atualizar Endereço </h3>
+            </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="update_endereco.php" method="post">
 
 
 
-                <!-- Adicionando JQuery -->
-                <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-                        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-                        crossorigin="anonymous"></script>
+                        <!-- Adicionando JQuery -->
+                        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                                crossorigin="anonymous"></script>
 
-                <!-- Adicionando Javascript -->
-                <script type="text/javascript" >
+                        <!-- Adicionando Javascript -->
+                        <script type="text/javascript" >
 
-                    $(document).ready(function() {
+                            $(document).ready(function() {
 
-                        function limpa_formulário_cep() {
-                            // Limpa valores do formulário de cep.
-                            $("#rua").val("");
-                            $("#bairro").val("");
-                            $("#cidade").val("");
-                            $("#uf").val("");
-                            $("#rua").removeAttr("readonly");
-                            $("#bairro").removeAttr("readonly");
-                            $("#cidade").removeAttr("readonly");
-                            $("#uf").removeAttr("readonly");
-                            $("#rua").focus();
-                            $("#rua").blur();
-                            $("#cidade").focus();
-                            $("#cidade").blur();
-                            $("#uf").focus();
-                            $("#uf").blur();
-                        }
+                                function limpa_formulário_cep() {
+                                    // Limpa valores do formulário de cep.
+                                    $("#rua").val("");
+                                    $("#bairro").val("");
+                                    $("#cidade").val("");
+                                    $("#uf").val("");
+                                    $("#rua").removeAttr("readonly");
+                                    $("#bairro").removeAttr("readonly");
+                                    $("#cidade").removeAttr("readonly");
+                                    $("#uf").removeAttr("readonly");
+                                    $("#rua").focus();
+                                    $("#rua").blur();
+                                    $("#cidade").focus();
+                                    $("#cidade").blur();
+                                    $("#uf").focus();
+                                    $("#uf").blur();
+                                }
 
-                        //Quando o campo cep perde o foco.
+                                //Quando o campo cep perde o foco.
 
-                        $("#cep").blur(function() {
+                                $("#cep").blur(function() {
 
-                            //Nova variável "cep" somente com dígitos.
-                            var cep = $(this).val().replace(/\D/g, '');
+                                    //Nova variável "cep" somente com dígitos.
+                                    var cep = $(this).val().replace(/\D/g, '');
 
-                            //Verifica se campo cep possui valor informado.
-                            if (cep != "") {
+                                    //Verifica se campo cep possui valor informado.
+                                    if (cep != "") {
 
-                                //Expressão regular para validar o CEP.
-                                var validacep = /^[0-9]{8}$/;
+                                        //Expressão regular para validar o CEP.
+                                        var validacep = /^[0-9]{8}$/;
 
-                                //Valida o formato do CEP.
-                                if(validacep.test(cep)) {
+                                        //Valida o formato do CEP.
+                                        if(validacep.test(cep)) {
 
-                                    //Preenche os campos com "..." enquanto consulta webservice.
-                                    $("#rua").val("...");
-                                    $("#bairro").val("...");
-                                    $("#cidade").val("...");
-                                    $("#uf").val("...");
+                                            //Preenche os campos com "..." enquanto consulta webservice.
+                                            $("#rua").val("...");
+                                            $("#bairro").val("...");
+                                            $("#cidade").val("...");
+                                            $("#uf").val("...");
 
-                                    //Consulta o webservice viacep.com.br/
-                                    $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+                                            //Consulta o webservice viacep.com.br/
+                                            $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
 
-                                        if (!("erro" in dados)) {
-                                            //Atualiza os campos com os valores da consulta.
-                                            $("#rua").val(dados.logradouro);
-                                            $("#bairro").val(dados.bairro);
-                                            $("#cidade").val(dados.localidade);
-                                            $("#uf").val(dados.uf);
+                                                if (!("erro" in dados)) {
+                                                    //Atualiza os campos com os valores da consulta.
+                                                    $("#rua").val(dados.logradouro);
+                                                    $("#bairro").val(dados.bairro);
+                                                    $("#cidade").val(dados.localidade);
+                                                    $("#uf").val(dados.uf);
 
-                                            //Campos encontrados deixam de ser editáveis
-                                            if(dados.logradouro.toString()=="")
-                                                 $("#rua").removeAttr("readonly");
-                                            else {
-                                                $("#rua").focus();
-                                                $("#rua").blur();
-                                                $("#rua").attr("readonly", "true");
-                                            }
-                                            if(dados.bairro.toString()=="")
-                                                 $("#bairro").removeAttr("readonly");
-                                            else {
-                                                $("#bairro").focus();
-                                                $("#bairro").blur();
-                                                $("#bairro").attr("readonly", "true");
-                                            }
-                                            if(dados.localidade.toString()=="")
-                                                 $("#cidade").removeAttr("readonly");
-                                            else {
-                                                $("#cidade").focus();
-                                                $("#cidade").blur();
-                                                $("#cidade").attr("readonly", "true");
-                                            }
-                                            if(dados.uf.toString()=="")
-                                                 $("#uf").removeAttr("readonly");
-                                            else {
-                                                $("#uf").focus();
-                                                $("#uf").blur();
-                                                $("#uf").attr("readonly", "true");
-                                            }
+                                                    //Campos encontrados deixam de ser editáveis
+                                                    if(dados.logradouro.toString()=="")
+                                                         $("#rua").removeAttr("readonly");
+                                                    else {
+                                                        $("#rua").focus();
+                                                        $("#rua").blur();
+                                                        $("#rua").attr("readonly", "true");
+                                                    }
+                                                    if(dados.bairro.toString()=="")
+                                                         $("#bairro").removeAttr("readonly");
+                                                    else {
+                                                        $("#bairro").focus();
+                                                        $("#bairro").blur();
+                                                        $("#bairro").attr("readonly", "true");
+                                                    }
+                                                    if(dados.localidade.toString()=="")
+                                                         $("#cidade").removeAttr("readonly");
+                                                    else {
+                                                        $("#cidade").focus();
+                                                        $("#cidade").blur();
+                                                        $("#cidade").attr("readonly", "true");
+                                                    }
+                                                    if(dados.uf.toString()=="")
+                                                         $("#uf").removeAttr("readonly");
+                                                    else {
+                                                        $("#uf").focus();
+                                                        $("#uf").blur();
+                                                        $("#uf").attr("readonly", "true");
+                                                    }
+                                                } //end if.
+                                                else {
+                                                    //CEP pesquisado não foi encontrado.
+                                                    limpa_formulário_cep();
+                                                    alert("CEP não encontrado.");
+                                                }
+                                            });
                                         } //end if.
                                         else {
-                                            //CEP pesquisado não foi encontrado.
+                                            //cep é inválido.
                                             limpa_formulário_cep();
-                                            alert("CEP não encontrado.");
+                                            alert("Formato de CEP inválido.");
                                         }
-                                    });
-                                } //end if.
-                                else {
-                                    //cep é inválido.
-                                    limpa_formulário_cep();
-                                    alert("Formato de CEP inválido.");
-                                }
-                            } //end if.
-                            else {
-                                //cep sem valor, limpa formulário.
-                                limpa_formulário_cep();
-                            }
-                        });
-                    });
+                                    } //end if.
+                                    else {
+                                        //cep sem valor, limpa formulário.
+                                        limpa_formulário_cep();
+                                    }
+                                });
+                            });
 
-                </script>
-                <fieldset>
-                <legend>Endereço</legend>
-                <div id="endereco">
-                    
-                    <input type="hidden" name="cliente" id="cliente" value="<?php echo $cliente_id ?>" />
-                    <input type="hidden" name="empresa" id="empresa" value="<?php echo $empresa_id ?>" />
-                    <input type="hidden" name="id" value="<?php echo $id;?>" />
-                    <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
-                
-                    <div class="form-group row" style="margin-left: 3px">
-                        <div class="form-group col-md-2">
-                            <label for="cep">CEP: </label>
-                                <span id="cep1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="<?php echo $data['CEP'] ?>" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
-                                </span>
+                        </script>
+                        <fieldset>
+                        <legend>Endereço</legend>
+                        <div id="endereco">
+
+                            <input type="hidden" name="cliente" id="cliente" value="<?php echo $cliente_id ?>" />
+                            <input type="hidden" name="empresa" id="empresa" value="<?php echo $empresa_id ?>" />
+                            <input type="hidden" name="id" value="<?php echo $id;?>" />
+                            <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
+
+                            <div class="form-group row" style="margin-left: 3px">
+                                <div class="form-group col-md-2">
+                                    <label for="cep">CEP: </label>
+                                        <span id="cep1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="<?php echo $data['CEP'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
+                                        </span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                <label for="rua">Rua: </label>
+                                    <span id="rua1" class="textfieldHintState">
+                                        <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="<?php echo $data['rua'] ?>" />
+                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                    </span>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="numero">Numero: </label>
+                                        <span id="numero1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="<?php echo $data['numero'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
+                                        </span>
+                                </div>
+
+                                <div class="form-group col-md-5"> 
+                                    <label for="bairro">Bairro: </label>
+                                        <span id="bairro1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php echo $data['bairro'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
+                                        </span>
+                                </div>
+
+                                <div class="form-group col-md-5">
+                                    <label for="cidade">Cidade: </label>
+                                        <span id="cidade1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="<?php echo $data['cidade'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
+                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                        </span>
+                                </div>
+
+                                <div class="form-group col-md-1">
+                                    <label for="uf">Estado: </label>
+                                        <span id="uf1" class="textfieldHintState">
+                                            <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="<?php echo $data['estado'] ?>" />
+                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
+                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                        </span>
+                                </div>
+                            </div>
+
+                        <script>
+                            var cep1 = new Spry.Widget.ValidationTextField("cep1", "custom", {format:"custom", pattern: "00000-000", validateOn:["blur"], useCharacterMasking: true, isRequired: false});
+                            var rua1 = new Spry.Widget.ValidationTextField("rua1", "custom", {validateOn:["blur"], maxChars: 85});
+                            var numero1 = new Spry.Widget.ValidationTextField("numero1", "custom", {validateOn:["blur"], maxChars: 7, isRequired: false});
+                            var bairro1 = new Spry.Widget.ValidationTextField("bairro1", "custom", {validateOn:["blur"], maxChars: 40, isRequired: false});
+                            var cidade1 = new Spry.Widget.ValidationTextField("cidade1", "custom", {validateOn:["blur"], maxChars: 40});
+                            var uf1 = new Spry.Widget.ValidationTextField("uf1", "custom", {format:"custom", pattern: "AA", validateOn:["blur"], useCharacterMasking: true});
+                        </script>
                         </div>
-                        <div class="form-group col-md-6">
-                        <label for="rua">Rua: </label>
-                            <span id="rua1" class="textfieldHintState">
-                                <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="<?php echo $data['rua'] ?>" />
-                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                            </span>
+                        </fieldset>
+
+
+
+
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn btn-success">Atualizar</button>
+                            <?php 
+                                if($tipo=="cliente") {
+                                    echo '<a href="../Cliente/detail_cliente.php?id='.$cliente_id.'" type="btn" class="btn btn-default">Não</a>';
+                                } else if ($tipo=="empresa") {
+                                    echo '<a href="../Empresa/detail_empresa.php?id='.$empresa_id.'" type="btn" class="btn btn-default">Não</a>';
+                                }   
+                            ?>
+
                         </div>
-                        <div class="form-group col-md-2">
-                            <label for="numero">Numero: </label>
-                                <span id="numero1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="<?php echo $data['numero'] ?>" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
-                                </span>
-                        </div>
-                          
-                        <div class="form-group col-md-5"> 
-                            <label for="bairro">Bairro: </label>
-                                <span id="bairro1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php echo $data['bairro'] ?>" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                </span>
-                        </div>
-                        
-                        <div class="form-group col-md-5">
-                            <label for="cidade">Cidade: </label>
-                                <span id="cidade1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="<?php echo $data['cidade'] ?>" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                </span>
-                        </div>
-                    
-                        <div class="form-group col-md-1">
-                            <label for="uf">Estado: </label>
-                                <span id="uf1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="<?php echo $data['estado'] ?>" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                </span>
-                        </div>
-                    </div>
-                    
-                <script>
-                    var cep1 = new Spry.Widget.ValidationTextField("cep1", "custom", {format:"custom", pattern: "00000-000", validateOn:["blur"], useCharacterMasking: true, isRequired: false});
-                    var rua1 = new Spry.Widget.ValidationTextField("rua1", "custom", {validateOn:["blur"], maxChars: 85});
-                    var numero1 = new Spry.Widget.ValidationTextField("numero1", "custom", {validateOn:["blur"], maxChars: 7, isRequired: false});
-                    var bairro1 = new Spry.Widget.ValidationTextField("bairro1", "custom", {validateOn:["blur"], maxChars: 40, isRequired: false});
-                    var cidade1 = new Spry.Widget.ValidationTextField("cidade1", "custom", {validateOn:["blur"], maxChars: 40});
-                    var uf1 = new Spry.Widget.ValidationTextField("uf1", "custom", {format:"custom", pattern: "AA", validateOn:["blur"], useCharacterMasking: true});
-                </script>
+                    </form>
                 </div>
-                </fieldset>
-
-
-
-
-                <div class="form-actions">
-
-                    <button type="submit" class="btn btn-success">Atualizar</button>
-                    <?php 
-                        if($tipo=="cliente") {
-                            echo '<a href="../Cliente/detail_cliente.php?id='.$cliente_id.'" type="btn" class="btn btn-default">Não</a>';
-                        } else if ($tipo=="empresa") {
-                            echo '<a href="../Empresa/detail_empresa.php?id='.$empresa_id.'" type="btn" class="btn btn-default">Não</a>';
-                        }   
-                    ?>
-
-                </div>
-            </form>
+            </div>
         </div>
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <p></p>
     </body>
 </html>

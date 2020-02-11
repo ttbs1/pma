@@ -79,36 +79,42 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
-    
-            <form class="form-horizontal" action="update_iteracao.php" method="post">
+            <div class="card">
+            <div class="card-header">
+                <h3 class="well"> Atualizar Iteração </h3>
+            </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="update_iteracao.php" method="post">
 
-                        <fieldset>
-                            <legend>Iteração</legend>
-                            <div id="tarefa">
+                                <fieldset>
+                                    <legend>Iteração</legend>
+                                    <div id="tarefa">
 
-                                <input type="hidden" name="id" id="id" value="<?php echo $id ?>" />
-                                <input type="hidden" name="projeto_id" id="projeto_id" value="<?php echo $projeto_id ?>" />
-                                
-                                <div class="form-group col-md-8">
-                                    <label for="descricao">Descrição: </label>
-                                    <textarea maxlength="450" class="form-control" rows="4" name="descricao" id="descricao" value=""><?php echo $data['descricao'] ?></textarea>
-                                </div>
-                                
-                            
-                            </div>
-                        </fieldset>
+                                        <input type="hidden" name="id" id="id" value="<?php echo $id ?>" />
+                                        <input type="hidden" name="projeto_id" id="projeto_id" value="<?php echo $projeto_id ?>" />
 
-                
+                                        <div class="form-group col-md-8">
+                                            <label for="descricao">Descrição: </label>
+                                            <textarea maxlength="450" class="form-control" rows="4" name="descricao" id="descricao" value=""><?php echo $data['descricao'] ?></textarea>
+                                        </div>
 
 
+                                    </div>
+                                </fieldset>
 
-                <div class="form-actions">
 
-                    <button type="submit" class="btn btn-success">Atualizar</button>
-                    <?php echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Voltar</a>' ?>
 
+
+
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn btn-success">Atualizar</button>
+                            <?php echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Voltar</a>' ?>
+
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

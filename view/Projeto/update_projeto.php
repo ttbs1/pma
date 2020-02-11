@@ -5,14 +5,21 @@ if((substr_compare($_SESSION['permissao']['projeto'], '0', 1, 1)) == 0) {
     header("Location: ../Erro/permissao.php");
 }
 
+
+include_once '../../domain/Projeto.php';
+include_once '../../controller/clientecontrole.php';
+include_once '../../controller/enderecocontrole.php';
+include_once '../../controller/ProjetoControle.php';
+include_once '../../controller/TipoProjetoControle.php';
+include_once '../../controller/UsuarioControle.php';
+
+if (!empty($_GET['id'])) 
+{
+    $id = $_REQUEST['id'];
+} else {
+    header("Location: list_projeto.php");
+}
 if(!empty($_POST)) {
-    include_once '../../domain/Projeto.php';
-    include_once '../../controller/clientecontrole.php';
-    include_once '../../controller/enderecocontrole.php';
-    include_once '../../controller/ProjetoControle.php';
-    include_once '../../controller/TipoProjetoControle.php';
-    include_once '../../controller/TarefaControle.php';
-    include_once '../../controller/UsuarioControle.php';
     
     $projeto = new Projeto();
     
@@ -31,17 +38,24 @@ if(!empty($_POST)) {
     $usuario = $usuarioControle->readUsuarioByUserName($_POST['usuario']);
     $projeto->setUsuario_id($usuario['id']);
     
-    $projetoControle = new ProjetoControle();
-    $id = $projetoControle->inserirProjeto($projeto);
+    $id = $_POST['id'];
     
-    $tarefaControle = new TarefaControle();
-    $tarefas = $tarefaControle->list_tarefasTipoProjeto($tipoProjeto['id']);
-    foreach ($tarefas as $row)
-    {
-        $tarefaControle->novaTarefa_Projeto($row, $id);
-    }
+    $projetoControle = new ProjetoControle();
+    $id = $projetoControle->updateProjeto($projeto, $id);
     
     header("Location: list_projeto.php");
+} else {
+    $projetoControle = new ProjetoControle();
+    $clienteControle = new ClienteControle();
+    $usuarioControle = new UsuarioControle();
+    $tipoProjetoControle = new TipoProjetoControle();
+    $data = $projetoControle->readProjeto($id);
+    $data_cli = $clienteControle->readCliente($data['cliente_id']);
+    $data_user = "";
+    if ($data['usuario_id']) {
+        $data_user = $usuarioControle->readUsuario($data['usuario_id']);
+    }
+    $data_tipo = $tipoProjetoControle->readTipoProjeto($data['tipoprojeto_id']);
 }
 ?>
 
@@ -100,14 +114,15 @@ if(!empty($_POST)) {
         <div clas="span10 offset1">
           <div class="card">
             <div class="card-header">
-                <h3 class="well"> Adicionar Projeto </h3>
+                <h3 class="well"> Atualizar Projeto </h3>
             </div>
             <div class="card-body">
-                <form class="form-horizontal" action="create_projeto.php" method="post">
+                <form class="form-horizontal" action="update_projeto.php" method="post">
 
                 <fieldset>
-                <legend>Novo Projeto</legend>
-                
+                <legend>Projeto</legend>
+                    <input type="hidden" name="id" id="id" value="<?php echo $id ?>" /><br>
+                    
                     <script type="text/javascript">
                         $(document).ready(function() {
 
@@ -129,7 +144,7 @@ if(!empty($_POST)) {
                     <div class="form-group col-md-6">
                         <label for="nome">Selecionar Cliente: </label><br>
                             <span id="nome1" class="textfieldHintState">
-                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="" />
+                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php echo $data_cli['nome'] ?>" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>
@@ -146,10 +161,14 @@ if(!empty($_POST)) {
                                 include_once '../../controller/TipoProjetoControle.php';
 
                                 $tipoProjetoControle = new TipoProjetoControle();
-                                $data = $tipoProjetoControle->listTipoProjeto();
-                                foreach($data as $row) 
+                                $data_fk = $tipoProjetoControle->listTipoProjeto();
+                                foreach($data_fk as $row) 
                                 {
-                                    echo '<option>'.$row['descricao'].'</option>';
+                                    if ($row['descricao'] == $data_tipo['descricao']) {
+                                        echo '<option selected>'.$row['descricao'].'</option>';
+                                    } else {
+                                        echo '<option>'.$row['descricao'].'</option>';
+                                    }
                                 }
                             ?>
                         </select>
@@ -157,17 +176,17 @@ if(!empty($_POST)) {
                     
                     <div class="form-group col-md-3">
                         <label for="data_entrada">Data de entrada: </label>
-                        <input class="form-control" type="date" name="data_entrada" id="data_entrada" value="<?php echo date('Y-m-d') ?>">
+                        <input class="form-control" type="date" name="data_entrada" id="data_entrada" value="<?php echo date($data['data_entrada']) ?>">
                     </div>
                     
                     <div class="form-group col-md-3">
                         <label for="data_prevista">Estimativa de Conclusão: </label>
-                        <input class="form-control" type="date" name="data_prevista" id="data_prevista" value="<?php echo date('Y-m-d') ?>">
+                        <input class="form-control" type="date" name="data_prevista" id="data_prevista" value="<?php echo date($data['data_prevista']) ?>">
                     </div>
                     
                     <div class="form-group col-md-8">
                         <label for="descricao">Descrição: </label>
-                        <textarea maxlength="450" class="form-control" rows="3" name="descricao" id="descricao"></textarea>
+                        <textarea maxlength="450" class="form-control" rows="3" name="descricao" id="descricao"><?php echo $data['descricao'] ?></textarea>
                     </div>
                     
                     <div class="form-group col-md-4">
@@ -178,10 +197,14 @@ if(!empty($_POST)) {
                                 include_once '../../controller/UsuarioControle.php';
 
                                 $usuarioControle = new UsuarioControle();
-                                $data_fk = $usuarioControle->listUsuario();
-                                foreach($data_fk as $row) 
+                                $data_fk2 = $usuarioControle->listUsuario();
+                                foreach($data_fk2 as $row) 
                                 {
-                                    echo '<option>'.$row['usuario'].'</option>';
+                                    if ($row['usuario'] == $data_user['usuario']) {
+                                        echo '<option selected>'.$row['usuario'].'</option>';
+                                    } else {
+                                        echo '<option>'.$row['usuario'].'</option>';
+                                    }
                                 }
                             ?>
                         </select>
@@ -193,7 +216,7 @@ if(!empty($_POST)) {
                             <div class="input-group-prepend">
                               <span class="input-group-text">R$</span>
                             </div>
-                            <input name="valor" id="valor" class="valor currency" type="text">
+                            <input name="valor" id="valor" class="valor currency" type="text" value="<?php echo $data['valor'] ?>">
                         </div>
                     </div>
                     
@@ -203,7 +226,7 @@ if(!empty($_POST)) {
                 <div class="form-actions">
                     <br/>
 
-                    <button type="submit" class="btn btn-success">Adicionar</button>
+                    <button type="submit" class="btn btn-success">Atualizar</button>
                     <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                     <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
 

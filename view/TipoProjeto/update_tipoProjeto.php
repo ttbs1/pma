@@ -84,89 +84,99 @@ if((substr_compare($_SESSION['permissao']['tipoprojeto'], '0', 2, 1)) == 0) {
                     </div>
                 </div>
             </div>
-            <form class="form-horizontal" action="update_tipoProjeto.php" method="post">
-            <fieldset>
-                    <legend>Atualizar Modelo</legend>
+            
+            <div class="card">
+            <div class="card-header">
+                <h3 class="well"> Atualizar Modelo </h3>
+            </div>
+                <div class="card-body">
+            
+                    <form class="form-horizontal" action="update_tipoProjeto.php" method="post">
+                    <fieldset>
+                            <legend>Modelo</legend>
 
-                    <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" />
+                            <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" />
 
-                    <div class="form-group col-md-8">
-                        <label for="descricao">Descrição: </label><br>
-                            <span id="descricao1" class="textfieldHintState">
-                                <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'];?>" />
-                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                            </span>
-                    </div>
-                    <script>
-                        var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
-                    </script>
-
-                    
-
-
-                    </fieldset>
-
-
-
-                    <div class="control-group">
-                            <label class="control-label">Tarefa(s):</label>
-                            <div class="controls">
-                                <label class="carousel-inner">
-                        <?php
-
-                            echo '<table class="table table-striped">';
-                                    echo '<thead>';
-                                        echo '<tr>';
-                                            echo '<th scope="col"></th>';
-                                            echo '<th scope="col">Descrição</th>';
-                                            echo '<th scope="col">Peso</th>';
-                                            echo '<th scope="col">Opções</th>';
-                                        echo '</tr>';
-                                    echo '</thead>';
-
-                            include_once '../../controller/TarefaControle.php';
-                            $tarefaControle = new TarefaControle();
-                            $data_fk = $tarefaControle->list_tarefasTipoProjeto($data['id']);
-                            if ($data_fk != NULL) {
-                                foreach($data_fk as $row) {
-
-                                    echo '<tbody>';
-                                        echo '<tr>';
-                                                          echo '<th scope="row">'. $row['id'] . '</th>';
-                                        echo '<td>'. $row['descricao'] . '</td>';
-                                        echo '<td>'. $row['peso'] . '</td>';
-                                        echo '<td width=250>';
-                                        echo '<a class="btn btn-outline-warning" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&modelo_id='.$id.'">Atualizar</a>';
-                                        echo ' ';
-                                        echo '<a class="btn btn-outline-danger" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&modelo_id='.$id.'">Excluir</a>';
-                                        echo '</td>';
-                                        echo '</tr>';        
-                                    echo '</tbody>';
-
-                                }
-                            }
+                            <div class="form-group col-md-8">
+                                <label for="descricao">Descrição: </label><br>
+                                    <span id="descricao1" class="textfieldHintState">
+                                        <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php echo $data['descricao'];?>" />
+                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
+                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                    </span>
+                            </div>
+                            <script>
+                                var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
+                            </script>
 
 
-                                echo '</table>';
 
-                        ?>
-                                </label>
-                        <div class="form-actions" align="right">
-                            <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?tipoTarefa_id='.$data['id'].'">Adicionar Tarefa</a>' ?>
+
+                            </fieldset>
+
+
+
+                            <div class="control-group">
+                                    <label class="control-label">Tarefa(s):</label>
+                                    <div class="controls">
+                                        <label class="carousel-inner">
+                                <?php
+
+                                    echo '<table class="table table-striped">';
+                                            echo '<thead>';
+                                                echo '<tr>';
+                                                    echo '<th scope="col"></th>';
+                                                    echo '<th scope="col">Descrição</th>';
+                                                    echo '<th scope="col">Peso</th>';
+                                                    echo '<th scope="col">Opções</th>';
+                                                echo '</tr>';
+                                            echo '</thead>';
+
+                                    include_once '../../controller/TarefaControle.php';
+                                    $tarefaControle = new TarefaControle();
+                                    $data_fk = $tarefaControle->list_tarefasTipoProjeto($data['id']);
+                                    if ($data_fk != NULL) {
+                                        foreach($data_fk as $row) {
+
+                                            echo '<tbody>';
+                                                echo '<tr>';
+                                                                  echo '<th scope="row">'. $row['id'] . '</th>';
+                                                echo '<td>'. $row['descricao'] . '</td>';
+                                                echo '<td>'. $row['peso'] . '</td>';
+                                                echo '<td width=250>';
+                                                echo '<a class="btn btn-outline-warning" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&modelo_id='.$id.'">Atualizar</a>';
+                                                echo ' ';
+                                                echo '<a class="btn btn-outline-danger" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&modelo_id='.$id.'">Excluir</a>';
+                                                echo '</td>';
+                                                echo '</tr>';        
+                                            echo '</tbody>';
+
+                                        }
+                                    }
+
+
+                                        echo '</table>';
+
+                                ?>
+                                        </label>
+                                <div class="form-actions" align="right">
+                                    <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?tipoTarefa_id='.$data['id'].'">Adicionar Tarefa</a>' ?>
+                                </div>
+
+                                <br/>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-success">Atualizar</button>
+                                    <a href="detail_tipoProjeto.php?id=<?php echo $id; ?>" type="btn" class="btn btn-default">Voltar</a>
+                                </div>
+                            </div>
                         </div>
-
-                        <br/>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-success">Atualizar</button>
-                            <a href="detail_tipoProjeto.php?id=<?php echo $id; ?>" type="btn" class="btn btn-default">Voltar</a>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <p></p>
     </body>
 </html>

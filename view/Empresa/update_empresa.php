@@ -85,145 +85,152 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                     </div>
                 </div>
             </div>
-            <form class="form-horizontal" action="update_empresa.php" method="post">
-            <fieldset>
-                    <legend>Atualizar Empresa</legend>
+            <div class="card">
+            <div class="card-header">
+                <h3 class="well"> Atualizar Empresa </h3>
+            </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="update_empresa.php" method="post">
+                    <fieldset>
+                            <legend>Empresa</legend>
 
-                    <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" /><br>
+                            <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" /><br>
 
-                    <div class="form-group col-md-6">
-                        <label for="nome">Nome: </label>
-                            <span id="nome1" class="textfieldHintState">
-                                <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" />
-                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
-                                   <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                            </span>
-                    </div>
+                            <div class="form-group col-md-6">
+                                <label for="nome">Nome: </label>
+                                    <span id="nome1" class="textfieldHintState">
+                                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" />
+                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
+                                           <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
+                                    </span>
+                            </div>
 
-                    <script>
-                        var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
-                    </script>
+                            <script>
+                                var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
+                            </script>
 
-                    <div class="form-group col-md-3">
-                        <label for="cnpj">CNPJ: </label>
-                        <span id="cnpj1" class="textfieldHintState">
-                            <input class="form-control" name="cnpj" id="cnpj" type="text" placeholder="00.000.000/0000-00" value="<?php echo $data ['cnpj']?>">
-                            <span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>
-                        </span>
-                    </div>
-                    
-                    <script>
-                        var cnpj1 = new Spry.Widget.ValidationTextField("cnpj1", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                    </script>
+                            <div class="form-group col-md-3">
+                                <label for="cnpj">CNPJ: </label>
+                                <span id="cnpj1" class="textfieldHintState">
+                                    <input class="form-control" name="cnpj" id="cnpj" type="text" placeholder="00.000.000/0000-00" value="<?php echo $data ['cnpj']?>">
+                                    <span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>
+                                </span>
+                            </div>
 
-                    <div class="form-group col-md-2">
-                        <label for="telefone">Telefone: </label>
-                        <select id=tipo1 onchange="changeTelType(1)">
-                            <option> </option>
-                            <option>Celular</option>
-                            <option>Fixo</option>
-                        </select>
-                        <div id="tel1field"></div>
-                    </div>
+                            <script>
+                                var cnpj1 = new Spry.Widget.ValidationTextField("cnpj1", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                            </script>
 
-                    <script type="text/javascript">
+                            <div class="form-group col-md-2">
+                                <label for="telefone">Telefone: </label>
+                                <select id=tipo1 onchange="changeTelType(1)">
+                                    <option> </option>
+                                    <option>Celular</option>
+                                    <option>Fixo</option>
+                                </select>
+                                <div id="tel1field"></div>
+                            </div>
 
-                        if (<?php echo strlen($data['telefone']) ?> >= 13) {
-                            if (<?php echo strlen($data['telefone']) ?> > 13)
-                                document.getElementById("tipo1").value = "Celular";
-                            else
-                                document.getElementById("tipo1").value = "Fixo";
-                            changeTelType(1);
-                            document.getElementById("telefone1").value = "<?php echo $data['telefone'] ?>";
-                        }
+                            <script type="text/javascript">
 
-                        function changeTelType(i) {
-
-                            var tipo = document.getElementById("tipo"+i).value;
-
-                            document.getElementById("tel"+i+"field").innerHTML = '<span id="telefone1'+i+'" class="textfieldHintState">'
-                            +       '<input class="form-control" type="text" name="telefone'+i+'" id="telefone'+i+'" />'
-                            +       '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
-                            +'</span>';
-
-                            if(tipo == 'Celular'){
-                                document.getElementById("telefone"+i+"").placeholder = "(00)00000-0000";
-                                var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)90000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                            }else if(tipo == 'Fixo') {
-                                document.getElementById("telefone"+i+"").placeholder = "(00)0000-0000";
-                                var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)0000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                            } else document.getElementById("tel"+i+"field").innerHTML = "";
-                        }
-                    </script>
-
-
-                    </fieldset>
-
-
-
-                    <div class="control-group">
-                            <label class="control-label">Endereço(s):</label>
-                            <div class="controls">
-                                <label class="carousel-inner">
-                        <?php
-
-                            echo '<table class="table table-striped">';
-                                    echo '<thead>';
-                                        echo '<tr>';
-                                            echo '<th scope="col"></th>';
-                                            echo '<th scope="col">Rua</th>';
-                                            echo '<th scope="col">Número</th>';
-                                            echo '<th scope="col">Bairro</th>';
-                                            echo '<th scope="col">Cidade</th>';
-                                            echo '<th scope="col">Estado</th>';
-                                            echo '<th scope="col">CEP</th>';
-                                            echo '<th scope="col"></th>';
-                                        echo '</tr>';
-                                    echo '</thead>';
-
-                                    include_once '../../controller/enderecocontrole.php';
-                            $enderecoControle = new EnderecoControle();
-                            $data_fk = $enderecoControle->list_enderecosEmpresa($data['id']);
-                            if ($data_fk != NULL) {
-                                foreach($data_fk as $row) if($row['ativo']) {
-                                //echo $row['rua'];
-
-
-                                    echo '<tbody>';
-                                        echo '<tr>';
-                                                          echo '<th scope="row">'. $row['id'] . '</th>';
-                                        echo '<td>'. $row['rua'] . '</td>';
-                                        echo '<td>'. $row['numero'] . '</td>';
-                                        echo '<td>'. $row['bairro'] . '</td>';
-                                        echo '<td>'. $row['cidade'] . '</td>';
-                                        echo '<td>'. $row['estado'] . '</td>';
-                                        echo '<td>'. $row['CEP'] . '</td>';
-                                        echo '<td width=250>';
-                                        echo '<a class="btn btn-warning" href="../Endereco/update_endereco.php?id='.$row['id'].'&empresa='.$data['id'].'">Atualizar</a>';
-                                        echo ' ';
-                                        echo '<a class="btn btn-danger" href="../Endereco/delete_endereco.php?id='.$row['id'].'&empresa='.$data['id'].'">Excluir</a>';
-                                        echo '</td>';
-                                        echo '</tr>';        
-                                    echo '</tbody>';
-
+                                if (<?php echo strlen($data['telefone']) ?> >= 13) {
+                                    if (<?php echo strlen($data['telefone']) ?> > 13)
+                                        document.getElementById("tipo1").value = "Celular";
+                                    else
+                                        document.getElementById("tipo1").value = "Fixo";
+                                    changeTelType(1);
+                                    document.getElementById("telefone1").value = "<?php echo $data['telefone'] ?>";
                                 }
-                            }
+
+                                function changeTelType(i) {
+
+                                    var tipo = document.getElementById("tipo"+i).value;
+
+                                    document.getElementById("tel"+i+"field").innerHTML = '<span id="telefone1'+i+'" class="textfieldHintState">'
+                                    +       '<input class="form-control" type="text" name="telefone'+i+'" id="telefone'+i+'" />'
+                                    +       '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
+                                    +'</span>';
+
+                                    if(tipo == 'Celular'){
+                                        document.getElementById("telefone"+i+"").placeholder = "(00)00000-0000";
+                                        var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)90000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                                    }else if(tipo == 'Fixo') {
+                                        document.getElementById("telefone"+i+"").placeholder = "(00)0000-0000";
+                                        var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)0000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                                    } else document.getElementById("tel"+i+"field").innerHTML = "";
+                                }
+                            </script>
 
 
-                                echo '</table>';
+                            </fieldset>
 
-                        ?>
-                                </label>
 
-                                
-                        <div class="form-actions" align="right">
-                            <?php echo '<a class="btn btn-default" href="../Endereco/create_endereco.php?empresa='.$data['id'].'">Adicionar Endereço</a>' ?>
-                        </div>
 
-                        <br/>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-success">Atualizar</button>
-                            <a href="list_empresa.php" type="btn" class="btn btn-default">Voltar</a>
+                            <div class="control-group">
+                                    <label class="control-label">Endereço(s):</label>
+                                    <div class="controls">
+                                        <label class="carousel-inner">
+                                <?php
+
+                                    echo '<table class="table table-striped">';
+                                            echo '<thead>';
+                                                echo '<tr>';
+                                                    echo '<th scope="col"></th>';
+                                                    echo '<th scope="col">Rua</th>';
+                                                    echo '<th scope="col">Número</th>';
+                                                    echo '<th scope="col">Bairro</th>';
+                                                    echo '<th scope="col">Cidade</th>';
+                                                    echo '<th scope="col">Estado</th>';
+                                                    echo '<th scope="col">CEP</th>';
+                                                    echo '<th scope="col"></th>';
+                                                echo '</tr>';
+                                            echo '</thead>';
+
+                                            include_once '../../controller/enderecocontrole.php';
+                                    $enderecoControle = new EnderecoControle();
+                                    $data_fk = $enderecoControle->list_enderecosEmpresa($data['id']);
+                                    if ($data_fk != NULL) {
+                                        foreach($data_fk as $row) if($row['ativo']) {
+                                        //echo $row['rua'];
+
+
+                                            echo '<tbody>';
+                                                echo '<tr>';
+                                                                  echo '<th scope="row">'. $row['id'] . '</th>';
+                                                echo '<td>'. $row['rua'] . '</td>';
+                                                echo '<td>'. $row['numero'] . '</td>';
+                                                echo '<td>'. $row['bairro'] . '</td>';
+                                                echo '<td>'. $row['cidade'] . '</td>';
+                                                echo '<td>'. $row['estado'] . '</td>';
+                                                echo '<td>'. $row['CEP'] . '</td>';
+                                                echo '<td width=250>';
+                                                echo '<a class="btn btn-warning" href="../Endereco/update_endereco.php?id='.$row['id'].'&empresa='.$data['id'].'">Atualizar</a>';
+                                                echo ' ';
+                                                echo '<a class="btn btn-danger" href="../Endereco/delete_endereco.php?id='.$row['id'].'&empresa='.$data['id'].'">Excluir</a>';
+                                                echo '</td>';
+                                                echo '</tr>';        
+                                            echo '</tbody>';
+
+                                        }
+                                    }
+
+
+                                        echo '</table>';
+
+                                ?>
+                                        </label>
+
+
+                                <div class="form-actions" align="right">
+                                    <?php echo '<a class="btn btn-default" href="../Endereco/create_endereco.php?empresa='.$data['id'].'">Adicionar Endereço</a>' ?>
+                                </div>
+
+                                <br/>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-success">Atualizar</button>
+                                    <a href="list_empresa.php" type="btn" class="btn btn-default">Voltar</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -232,5 +239,6 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <p></p>
     </body>
 </html>
