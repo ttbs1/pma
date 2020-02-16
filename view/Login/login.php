@@ -8,6 +8,7 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title>PMA - Login</title>
+        <link rel="icon" href="../../util/icon.png" type="image/icon type">
         
         
         <link href="login.css" rel="stylesheet" type="text/css" />

@@ -5,6 +5,13 @@ if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
     header("Location: ../Erro/permissao.php");
 }
 
+$permissoes = $_SESSION['permissao'];
+if ($permissoes['adm']) {
+    echo '<input type="hidden" id="admin" value="s" />';
+} else {
+    echo '<input type="hidden" id="admin" value="n" />';
+}
+
 include_once '../../controller/ProjetoControle.php';
 include_once '../../controller/ClienteControle.php';
 include_once '../../controller/TarefaControle.php';
@@ -302,7 +309,6 @@ if(!empty($_GET['id']))
 
                                             $iteracaoControle = new IteracaoControle();
                                             $iteracoes = $iteracaoControle->list_iteracoesProjeto($data['id']);
-                                            $usuarioControle = new UsuarioControle();
 
                                             if($iteracoes) foreach ($iteracoes as $row) {
                                                 $usuario = $usuarioControle->readUsuario($row['usuario_id']);
@@ -439,16 +445,56 @@ if(!empty($_GET['id']))
                             
                         </div>
                     </div>
-                        
+                    
+                    
                     
                     <div class="form-actions">
                         <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                         <a href="list_projeto.php" type="btn" class="btn btn-default">Voltar</a>
+                        <form action="contrato.php" method="post" target="_blank">
+                            <input type="hidden" name="contrato_cliente" value="<?php echo $cliente['nome'] ?>" />
+                            <input type="hidden" name="contrato_valor" value="<?php echo $data['valor'] ?>" />
+                            
+                            <button type="submit" class="btn btn-default">Gerar Contrato</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
         
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Designar tarefa: </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group col-md-8">
+                          <label for="responsavel">Usuário responsável: </label><br>
+                          <select class="form-control" name="usuario" id="usuario">
+                                <option></option>
+                                <?php
+                                    include_once '../../controller/UsuarioControle.php';
+
+                                    $data_fk2 = $usuarioControle->listUsuario();
+                                    foreach($data_fk2 as $row) 
+                                    {
+                                        echo '<option>'.$row['usuario'].'</option>';
+                                    }
+                                ?>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                      <button type="button" class="btn btn-primary" id="designar">Salvar</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
         
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

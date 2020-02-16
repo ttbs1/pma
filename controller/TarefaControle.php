@@ -153,6 +153,32 @@ class TarefaControle {
         }
     }
     
+        function updateStatus_designar ($id, $status, $usuario) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            $data = $this->readTarefa($id);
+            
+            if (strcmp($data['status'], $status) != 0) {
+                $sql = "UPDATE tarefa SET status = ?, usuario_id = ? WHERE id = ?";
+                $q = $pdo->prepare($sql);
+                $q->execute(array($status, $usuario, $id));
+                
+                $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+                $q = $pdo->prepare($sql3);
+                session_start();
+                $date = new DateTime();
+                $date->modify('-4 hours');
+                $dateTime = $date->format("Y-m-d H:i:s");
+                $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Tarefa-Status', 'Projeto '.$data['projeto_id'].'->'.$data['descricao'], $dateTime));
+            }
+            $pdo = conexao::desconectar();
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
     function deletePermTarefa ($id) {
         //Delete do banco:
         try {

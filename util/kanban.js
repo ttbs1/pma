@@ -12,17 +12,41 @@
                 $.post("updateStatus.php", {id: id, status: $(this).attr('id')})
                 alert('ID: '+ id +'\nColuna: '+$(this).attr('id'));
           }*/
-          var coluna = $(this).attr('id');
-          $(this).children('.portlet').children('.tarefa_id').each(function() {
-              $.post("updateStatus.php", {id: $(this).val(), status: coluna});
-          });
+          if ($('#admin').val() == 'n') {
+            var coluna = $(this).attr('id');
+            $(this).children('.portlet').children('.tarefa_id').each(function() {
+                $.post("updateStatus.php", {id: $(this).val(), status: coluna});
+            });
+            setTimeout(function (){
+                location.reload(true);
+            }, 500);
+          } else {
+            $('#exampleModalCenter').modal('toggle');
+          }
       }
+    });
+    
+    document.getElementById("designar").addEventListener('click',function () {
+        $('.tarefa_id').each(function() {
+            $.post("updateStatus.php", {id: $(this).val(), status: $(this).closest(".column").attr('id'), usuario: $('#usuario').children("option:selected"). val()});
+           //alert($(this).val()); 
+           //alert($('#usuario').children("option:selected"). val());
+           //alert($(this).closest(".column").attr('id'));
+        });
+        $('#exampleModalCenter').modal('toggle');
+        setTimeout(function (){
+            location.reload(true);
+        }, 500);
+    });
+    
+    $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
+        location.reload(true);
     });
  
     $( ".portlet" )
       .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
       .find( ".portlet-header" )
-        .addClass( "ui-widget-header ui-corner-all" )
+        .addClass( "ui-widget-header ui-corner-all" );
        
  
     $( ".portlet-toggle" ).click(function() {
