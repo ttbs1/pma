@@ -49,6 +49,24 @@ class TarefaControle {
         }
     }
     
+        function list_tarefasUsuario ($usuario_id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT * FROM tarefa WHERE usuario_id = ? AND ativo = 1 ORDER BY projeto_id";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($usuario_id));
+            $data = NULL;
+            while($row = $q->fetch(PDO::FETCH_ASSOC)){
+                $data[] = $row;
+            }
+            conexao::desconectar();
+            return $data;
+        } catch (Exception $ex) {
+            echo 'Erro: '. $ex->getMessage();
+        }
+    }
+    
     function novaTarefa_TipoProjeto ($tarefa,$tipoProjeto_id) {
         try {
             $pdo = conexao::conectar();

@@ -80,6 +80,9 @@ class ProjetoControle {
             $sql = "UPDATE projeto SET ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
             $q->execute(array(FALSE,$id));
+            $sql3 = "UPDATE tarefa SET ativo = ? WHERE projeto_id = ?";
+            $q = $pdo->prepare($sql3);
+            $q->execute(array(FALSE,$id));
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);

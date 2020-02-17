@@ -163,7 +163,7 @@ and open the template in the editor.
                         }
                         if((substr_compare($permissoes['projeto'], '1', 0,1)) == 0) {
                             echo '<td>';
-                                echo '<a></a>';
+                                echo '<a href="../Tarefa/list_tarefa.php">Minhas Tarefas</a>';
                             echo '</td>';
                         }
                         if((substr_compare($permissoes['usuario'], '1', 0,1)) == 0) {

@@ -15,7 +15,7 @@
           if ($('#admin').val() == 'n') {
             var coluna = $(this).attr('id');
             $(this).children('.portlet').children('.tarefa_id').each(function() {
-                $.post("updateStatus.php", {id: $(this).val(), status: coluna});
+                $.post("../Projeto/updateStatus.php", {id: $(this).val(), status: coluna});
             });
             setTimeout(function (){
                 location.reload(true);

@@ -5,13 +5,6 @@ if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
     header("Location: ../Erro/permissao.php");
 }
 
-$permissoes = $_SESSION['permissao'];
-if ($permissoes['adm']) {
-    echo '<input type="hidden" id="admin" value="s" />';
-} else {
-    echo '<input type="hidden" id="admin" value="n" />';
-}
-
 include_once '../../controller/ProjetoControle.php';
 include_once '../../controller/ClienteControle.php';
 include_once '../../controller/TarefaControle.php';
@@ -43,7 +36,6 @@ if(!empty($_GET['id']))
         <link href="../../util/projectTable.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="../../util/styles.css">
         <link rel="stylesheet" href="../../util/kanban.css">
-        <link type="text/css" href="../../util/links/jquery-ui.css" rel="stylesheet"/>
 
     </head>
     <body>
@@ -85,6 +77,13 @@ if(!empty($_GET['id']))
                 
                 <?php 
 
+                $permissoes = $_SESSION['permissao'];
+                if ($permissoes['adm']) {
+                    echo '<input type="hidden" id="admin" value="s" />';
+                } else {
+                    echo '<input type="hidden" id="admin" value="n" />';
+                }
+                
                 $tarefaControle = new TarefaControle();
                 $tarefas = $tarefaControle->list_tarefasProjeto($data['id']);
 
@@ -333,32 +332,27 @@ if(!empty($_GET['id']))
                                         </div>
                                     </div>
                             </div>
-                                <div class="card" style="width: 95%; margin-left: 2.5%">
+                                <div class="card" style="width: 95%; margin-left: 2.5%; overflow: auto;">
                                 <div class="card-header">
                                     <h3 class="well">Kanban de Tarefas</h3> 
                                 </div>
                                 
-                                <div class="scrumboard row">
-                                    <table>
-                                        <tr>
-                                            <td>
+                                <div class="scrumboard">
+                                    <div class="row">
                                                 <div class="header">
                                                     <h5>A fazer</h5>
                                                 </div>
-                                            </td>
-                                            <td>
+                                                
                                                 <div class="header">
                                                     <h5>Em andamento</h5>
                                                 </div>
-                                            </td>
-                                            <td>
+                                                
                                                 <div class="header">
                                                     <h5>Concluído</h5>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
+                                    </div>
+                                    
+                                    <div class="row">
                                                 <div class="column flex" id="a">
                                                  <!-- todo -->
 
@@ -372,15 +366,14 @@ if(!empty($_GET['id']))
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
-                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
+                                                                    echo '<div class="portlet-footer"><a class="portlet-icon" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a class="portlet-icon" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
                                                         }
 
                                                         ?>
                                                 </div>
-                                            </td>
-                                            <td>
+                                                
                                                 <div class="column flex" id="b">
                                                   <!-- ongoing -->
 
@@ -395,8 +388,8 @@ if(!empty($_GET['id']))
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
-                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding-right: 8px; font-size: small;">'.$temp['usuario'].'</div>';
-                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
+                                                                    echo '<div class="portlet-footer">'.$temp['usuario'].'</div>';
+                                                                    echo '<div class="portlet-footer"><a class="portlet-icon" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a class="portlet-icon" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
                                                         }
@@ -404,8 +397,7 @@ if(!empty($_GET['id']))
                                                         ?>
 
                                                 </div>
-                                            </td>
-                                            <td>
+                                                
                                                 <div class="column flex" id="c">
                                                    <!-- done -->
 
@@ -420,8 +412,8 @@ if(!empty($_GET['id']))
                                                                     echo '';
                                                                     echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
                                                                     echo '<div class="portlet-content">'.$row['descricao'].'</div>';
-                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding-right: 8px; font-size: small;">'.$temp['usuario'].'</div>';
-                                                                    echo '<div style="text-align: right; background-color: rgb(255,255,218); padding: 8px;"><a href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
+                                                                    echo '<div class="portlet-footer">'.$temp['usuario'].'</div>';
+                                                                    echo '<div class="portlet-footer"><a class="portlet-icon" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-edit"></i></a> <a class="portlet-icon" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$data['id'].'"><i class="fas fa-trash"></i></a></div>';
                                                                 echo '</div>';
                                                             }
                                                         }
@@ -429,9 +421,7 @@ if(!empty($_GET['id']))
                                                         ?>
 
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    </div>
                                 </div>
                                     
                                     <div class="form-actions" align="right">
