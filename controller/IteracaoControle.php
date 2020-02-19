@@ -40,7 +40,7 @@ class IteracaoControle {
             $q->execute(array($usuario_id, $projeto_id, $descricao, $dataHora, TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -75,7 +75,7 @@ class IteracaoControle {
             $q->execute(array(FALSE, $id));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $data = $this->readIteracao($id);
@@ -111,7 +111,7 @@ class IteracaoControle {
             $q->execute(array($descricao, $dataHora, TRUE, $id));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");

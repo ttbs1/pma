@@ -23,14 +23,14 @@ class ClienteControle {
             $q->execute(array($cliente->getNome(), $cliente->getCpf_cnpj(), $cliente->getTelefone1(), $cliente->getTelefone2(), $cliente->getEmail(), TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Cliente', $cliente->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -43,7 +43,7 @@ class ClienteControle {
             $q->execute(array($cliente->getNome(), $cliente->getCpf_cnpj(), $cliente->getTelefone1(), $cliente->getTelefone2(), $cliente->getEmail(), TRUE, $id));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             
             $date = new DateTime();
             $date->modify('-4 hours');
@@ -152,7 +152,7 @@ class ClienteControle {
             $q->execute(array(FALSE,$id));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             
             $date = new DateTime();
             $date->modify('-4 hours');

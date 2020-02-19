@@ -24,7 +24,7 @@ class EmpresaControle {
             $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -79,7 +79,7 @@ class EmpresaControle {
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
             $empresa = $this->readEmpresa($id);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -114,7 +114,7 @@ class EmpresaControle {
             $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), TRUE, $id));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");

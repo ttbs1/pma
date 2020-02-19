@@ -44,7 +44,7 @@ class EnderecoControle {
                 $empresa = $empresaControle->readEmpresa($id);
                 $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql2);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -61,7 +61,7 @@ class EnderecoControle {
                 $cli = $clienteControle->readCliente($id);
                 $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql2);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -85,7 +85,7 @@ class EnderecoControle {
             include_once 'ClienteControle.php';
             $clienteControle = new ClienteControle();
             $cli = $clienteControle->readCliente($cliente_id);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -108,7 +108,7 @@ class EnderecoControle {
             include_once 'EmpresaControle.php';
             $empresaControle = new EmpresaControle();
             $empresa = $empresaControle->readEmpresa($empresa_id);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -134,7 +134,7 @@ class EnderecoControle {
                 $empresa = $empresaControle->readEmpresa($data['empresa_id']);
                 $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql3);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -145,7 +145,7 @@ class EnderecoControle {
                 include_once 'ClienteControle.php';
                 $clienteControle = new ClienteControle();
                 $cli = $clienteControle->readCliente($data['cliente_id']);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -237,7 +237,7 @@ class EnderecoControle {
                 $empresa = $empresaControle->readEmpresa($data['empresa_id']);
                 $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql3);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -248,7 +248,7 @@ class EnderecoControle {
                 include_once 'ClienteControle.php';
                 $clienteControle = new ClienteControle();
                 $cli = $clienteControle->readCliente($data['cliente_id']);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");

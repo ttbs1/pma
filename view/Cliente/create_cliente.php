@@ -64,12 +64,15 @@ if(!empty($_POST)) {
     }
 
     $clienteControle = new ClienteControle();
-    $clienteControle->inserirCliente($cliente);
-    if (!empty($endereco->getRua())) {
-        $enderecoControle = new EnderecoControle();
-        $enderecoControle->inserirEndereco($endereco, "cliente");
+    $try = $clienteControle->inserirCliente($cliente);
+    
+    
+    if(empty($try)) {
+        if (!empty($endereco->getRua())) {
+            $enderecoControle = new EnderecoControle();
+            $try2 = $enderecoControle->inserirEndereco($endereco, "cliente");
+        }
     }
-    header("Location: list_cliente.php");
 }
 ?>
 
@@ -129,7 +132,7 @@ if(!empty($_POST)) {
                 <div class="form-group col-md-8">
                 <label for="nome">Nome: </label>
                         <span id="nome1" class="textfieldHintState">
-                            <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="" />
+                            <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($try)) echo $cliente->getNome(); ?>" />
                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                         </span>
@@ -139,12 +142,18 @@ if(!empty($_POST)) {
                 </script>
                 
                 <div class="form-group col-md-3">
-                    <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()"> CPF 
-                    <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()"> CNPJ <br>
+                    <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(!empty($try)) if(!empty($cliente->getCpf_cnpj())) if(strlen($cliente->getCpf_cnpj())==14){echo 'checked';} ?>> CPF 
+                    <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(!empty($try)) if(!empty($cliente->getCpf_cnpj())) if(strlen($cliente->getCpf_cnpj())>14){echo 'checked';} ?>> CNPJ <br>
                     <div id="documentfield"></div>
-
+                    
                     <script type="text/javascript">
-
+                        var radio = document.getElementsByName("document");
+                        if (radio[0].checked || radio[1].checked) { 
+                            changeDocType();
+                            document.getElementById("cpf_cnpj_field").value= "<?php if(!empty($try)) echo $cliente->getCpf_cnpj()?>";
+                        };
+                                
+                                
                         function changeDocType() {
                             var cpf = document.getElementById("cpf").checked;
                             var cnpj = document.getElementById("cnpj").checked;
@@ -187,6 +196,24 @@ if(!empty($_POST)) {
                 </div>
                 
                 <script type="text/javascript">
+                    
+                    if (<?php if(!empty($try)) { if(!empty($cliente->getTelefone1())) { echo strlen($cliente->getTelefone1()); } else echo 0;} else echo 0; ?> >= 13) {
+                        if (<?php if(!empty($try)) { if(!empty($cliente->getTelefone1())) { echo strlen($cliente->getTelefone1()); } else echo 0;} else echo 0; ?> > 13)
+                            document.getElementById("tipo1").value = "Celular";
+                        else
+                            document.getElementById("tipo1").value = "Fixo";
+                        changeTelType(1);
+                        document.getElementById("telefone1").value = "<?php if(!empty($try)) echo $cliente->getTelefone1() ?>";
+                    }
+                    if (<?php if(!empty($try)) { if(!empty($cliente->getTelefone2())) { echo strlen($cliente->getTelefone2()); } else echo 0;} else echo 0; ?> >= 13) {
+                        if (<?php if(!empty($try)) { if(!empty($cliente->getTelefone2())) { echo strlen($cliente->getTelefone2()); } else echo 0;} else echo 0; ?> > 13)
+                            document.getElementById("tipo2").value = "Celular";
+                        else
+                            document.getElementById("tipo2").value = "Fixo";
+                        changeTelType(2);
+                        document.getElementById("telefone2").value = "<?php if(!empty($try)) echo $cliente->getTelefone2() ?>";
+                    }
+                    
                     function changeTelType(i) {
                         var tipo = document.getElementById("tipo"+i).value;
                         
@@ -208,7 +235,7 @@ if(!empty($_POST)) {
                 <div class="form-group col-md-6">
                     <label for="email">E-Mail: </label>
                             <span id="email1" class="textfieldHintState">
-                                <input type="text" class="form-control" name="email" id="email" placeholder="exemplo@meudominio.com" value="" /><br>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="exemplo@meudominio.com" value="<?php if(!empty($try)) echo $cliente->getEmail()?>" /><br>
                                 <span class="textfieldInvalidFormatMsg">Endereço de e-mail inválido</span>
                             </span>
                 </div>
@@ -342,14 +369,14 @@ if(!empty($_POST)) {
                         <div class="form-group col-md-2">
                             <label for="cep">CEP: </label>
                                 <span id="cep1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="" />
+                                    <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="<?php if(!empty($try)) if(!empty($endereco->getCEP())) echo $endereco->getCEP() ?>" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
                                 </span>
                         </div>
                         <div class="form-group col-md-6">
                         <label for="rua">Rua: </label>
                             <span id="rua1" class="textfieldHintState">
-                                <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="" />
+                                <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($try)) if(!empty($endereco->getRua())) echo $endereco->getRua() ?>" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
                                 <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>
@@ -357,7 +384,7 @@ if(!empty($_POST)) {
                         <div class="form-group col-md-2">
                             <label for="numero">Numero: </label>
                                 <span id="numero1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="" />
+                                    <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="<?php if(!empty($try)) if(!empty($endereco->getNumero())) echo $endereco->getNumero() ?>" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
                                 </span>
                         </div>
@@ -365,7 +392,7 @@ if(!empty($_POST)) {
                         <div class="form-group col-md-5"> 
                             <label for="bairro">Bairro: </label>
                                 <span id="bairro1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="" />
+                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($try)) if(!empty($endereco->getBairro())) echo $endereco->getBairro() ?>" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
                                 </span>
                         </div>
@@ -373,7 +400,7 @@ if(!empty($_POST)) {
                         <div class="form-group col-md-5">
                             <label for="cidade">Cidade: </label>
                                 <span id="cidade1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="" />
+                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($try)) if(!empty($endereco->getCidade())) echo $endereco->getCidade() ?>" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
                                     <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                 </span>
@@ -382,7 +409,7 @@ if(!empty($_POST)) {
                         <div class="form-group col-md-1">
                             <label for="uf">Estado: </label>
                                 <span id="uf1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="" />
+                                    <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="<?php if(!empty($try)) if(!empty($endereco->getEstado())) echo $endereco->getEstado() ?>" />
                                     <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
                                     <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                 </span>
@@ -401,10 +428,11 @@ if(!empty($_POST)) {
                     </div>
                     <button type="button" style="min-width: 200px;" class="btn btn-outline-secondary" onclick="toogleAdress()" id='toogle' nome='toogle'> Não cadastrar endereço </button>
                     </fieldset>
+                    
+                    
                     <script>
                         function toogleAdress () {
                             x = document.getElementById("endereco");
-                            
                             if (x.style.display == 'none') {
                                 x.style.display = 'block';
                                 document.getElementById("toogle").innerHTML = 'Não cadastrar endereço';
@@ -424,7 +452,15 @@ if(!empty($_POST)) {
                         }
                     </script>
                     
-                
+                    <?php 
+                    if (!empty($try))
+                        if(empty ($endereco->getRua()))
+                            echo '<script>
+                            setTimeout(function (){
+                                document.getElementById("toogle").click();
+                            }, 250); 
+                            </script>';
+                    ?>
                 
                 <div class="form-actions">
                     <br/>
@@ -439,6 +475,84 @@ if(!empty($_POST)) {
         </div>
         </div>
     </div>
+        
+        <?php 
+        
+        
+        if(!empty($_POST))
+            if(!empty($try))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#exampleModalCenter").modal("toggle");
+                    });
+                </script>';
+            else 
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
+                            window.location.href = "list_cliente.php";
+                        })
+                        $("#confirmModal").modal("toggle");
+                    });
+                </script>';
+        
+        ?>
+        
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Erro: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                      <label for="erro">Erro nos dados: </label><br>
+                            <?php if (strpos($try, 'Duplicate')) { 
+                                
+                                if (strpos($try, "'nome'"))
+                                    echo 'O nome inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+                                elseif (strpos($try, "'cpf_cnpj'"))
+                                    echo 'O campo CPF/CNPJ inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+                                
+                            } else { echo $try; } ?>
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <!--<button type="button" class="btn btn-primary" id="designar">Salvar</button>-->
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados adicionados: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-8">
+                            O cliente foi cadastrado com sucesso!
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <a href="create_cliente.php" type="button" class="btn btn-primary" id="designar">Cadastrar Outro</a>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        
     <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

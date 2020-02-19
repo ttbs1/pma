@@ -78,7 +78,7 @@ class TarefaControle {
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -112,7 +112,7 @@ class TarefaControle {
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -133,7 +133,7 @@ class TarefaControle {
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
@@ -154,12 +154,12 @@ class TarefaControle {
             if (strcmp($data['status'], $status) != 0) {
                 $sql = "UPDATE tarefa SET status = ?, usuario_id = ? WHERE id = ?";
                 $q = $pdo->prepare($sql);
-                session_start();
+                
                 $q->execute(array($status, $_SESSION['usuario_id'], $id));
                 
                 $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql3);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -185,7 +185,7 @@ class TarefaControle {
                 
                 $sql3 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql3);
-                session_start();
+                
                 $date = new DateTime();
                 $date->modify('-4 hours');
                 $dateTime = $date->format("Y-m-d H:i:s");
@@ -224,7 +224,7 @@ class TarefaControle {
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");

@@ -33,7 +33,7 @@ class UsuarioControle {
                 $q2->execute(array($permissao_id[1], $usuario->getUsuario(), $usuario->getSenha(), TRUE));
                 $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
                 $q = $pdo->prepare($sql2);
-                session_start();
+                
                 $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Usuário', $usuario->getUsuario(), $dateTime));
             } else {
                 echo 'Erro ao inserir permissões de usuário: '. $permissao_id[1];
@@ -101,7 +101,7 @@ class UsuarioControle {
             $user = $this->readUsuario($id);
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Usuário', $user['usuario'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
@@ -119,7 +119,7 @@ class UsuarioControle {
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
-            session_start();
+            
             
             $date = new DateTime();
             $date->modify('-4 hours');
