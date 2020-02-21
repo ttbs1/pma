@@ -190,7 +190,7 @@ if(!empty($_POST)) {
                     </div>
                     
                     <div class="form-group col-md-4">
-                        <label for="responsavel">Usuário responsável: </label><br>
+                        <label for="responsavel">Usuário responsável: </label>
                         <select class="form-control" name="usuario" id="usuario">
                             <option></option>
                             <?php

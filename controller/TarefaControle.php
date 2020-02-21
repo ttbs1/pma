@@ -89,10 +89,12 @@ class TarefaControle {
         }
     }
     
-    function novaTarefa_Projeto ($tarefa,$projeto_id) {
+    function novaTarefa_Projeto ($tarefa) {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $projeto_id = $pdo->query("SELECT MAX(id) FROM projeto");
+            $projeto_id = $projeto_id->fetchColumn();
             $sql = "INSERT INTO tarefa (projeto_id, descricao, peso, status, ativo) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql);
             $q->execute(array($projeto_id,$tarefa['descricao'], $tarefa['peso'], 'a', TRUE));
@@ -148,7 +150,7 @@ class TarefaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
+            session_start();
             $data = $this->readTarefa($id);
             
             if (strcmp($data['status'], $status) != 0) {
@@ -231,7 +233,7 @@ class TarefaControle {
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Tarefa', $data['descricao'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     

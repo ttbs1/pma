@@ -32,9 +32,8 @@ and open the template in the editor.
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <link type="text/css" href="../../util/links/jquery-ui.css" rel="stylesheet"/>
-        <script type="text/javascript" src="../../util/links/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="../../util/links/jquery-ui.js"></script>
+        <link type="text/css" href="../../util/links/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet"/>
+        <script type="text/javascript" src="../../util/links/jquery-ui-1.12.1/jquery-ui.js"></script>
         
         
     </head>

@@ -52,9 +52,9 @@ class ProjetoControle {
             $dateTime = $date->format("Y-m-d H:i:s");
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Projeto', 'Id: '.$id, $dateTime));
             $pdo = conexao::desconectar();
-            return $id;
+            //return $id;
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -101,7 +101,7 @@ class ProjetoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Projeto', $cli['nome'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     

@@ -69,7 +69,7 @@ class EnderecoControle {
             }
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -92,7 +92,7 @@ class EnderecoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Endereço-Cliente', $cli['nome'], $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -115,7 +115,7 @@ class EnderecoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Endereço-Empresa', $empresa['nome'], $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -154,7 +154,7 @@ class EnderecoControle {
             
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -256,7 +256,7 @@ class EnderecoControle {
             }
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
 }

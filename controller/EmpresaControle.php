@@ -19,9 +19,9 @@ class EmpresaControle {
             $pdo = conexao::conectar();
             $enderecoControle = new EnderecoControle();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO empresa (nome, cnpj, telefone, ativo) VALUES (?,?,?,?)";
+            $sql = "INSERT INTO empresa (nome, cpf_cnpj, telefone, ativo) VALUES (?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), TRUE));
+            $q->execute(array($empresa->getNome(), $empresa->getCpf_cnpj(), $empresa->getTelefone(), TRUE));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
             
@@ -31,7 +31,7 @@ class EmpresaControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Empresa', $empresa->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -83,10 +83,10 @@ class EmpresaControle {
             $date = new DateTime();
             $date->modify('-4 hours');
             $dateTime = $date->format("Y-m-d H:i:s");
-            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Empresa', $empresa->getNome(), $dateTime));
+            $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Empresa', $empresa['nome'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -109,9 +109,9 @@ class EmpresaControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE empresa SET nome = ?, cnpj = ?, telefone = ?, ativo = ? WHERE id = ?";
+            $sql = "UPDATE empresa SET nome = ?, cpf_cnpj = ?, telefone = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($empresa->getNome(), $empresa->getCnpj(), $empresa->getTelefone(), TRUE, $id));
+            $q->execute(array($empresa->getNome(), $empresa->getCpf_cnpj(), $empresa->getTelefone(), TRUE, $id));
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
             
@@ -121,7 +121,7 @@ class EmpresaControle {
             $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Empresa', $empresa->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
 }

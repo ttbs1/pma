@@ -32,16 +32,15 @@ if(!empty($_POST)) {
     $projeto->setUsuario_id($usuario['id']);
     
     $projetoControle = new ProjetoControle();
-    $id = $projetoControle->inserirProjeto($projeto);
+    $try = $projetoControle->inserirProjeto($projeto);
     
-    $tarefaControle = new TarefaControle();
-    $tarefas = $tarefaControle->list_tarefasTipoProjeto($tipoProjeto['id']);
-    foreach ($tarefas as $row)
-    {
-        $tarefaControle->novaTarefa_Projeto($row, $id);
+    if (empty($try)) {
+        $tarefaControle = new TarefaControle();
+        $tarefas = $tarefaControle->list_tarefasTipoProjeto($tipoProjeto['id']);
+        foreach ($tarefas as $row) {
+            $tarefaControle->novaTarefa_Projeto($row);
+        }
     }
-    
-    header("Location: list_projeto.php");
 }
 ?>
 
@@ -65,9 +64,8 @@ if(!empty($_POST)) {
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <link type="text/css" href="../../util/links/jquery-ui.css" rel="stylesheet"/>
-        <script type="text/javascript" src="../../util/links/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="../../util/links/jquery-ui.js"></script>
+        <link type="text/css" href="../../util/links/jquery-ui-themes-1.12.1/jquery-ui.css" rel="stylesheet"/>
+        <script type="text/javascript" src="../../util/links/jquery-ui-1.12.1/jquery-ui.js"></script>
         
         <script type="text/javascript" src="../../util/jquery.mask.js"></script>
     </head>
@@ -129,7 +127,7 @@ if(!empty($_POST)) {
                     <div class="form-group col-md-6">
                         <label for="nome">Selecionar Cliente: </label><br>
                             <span id="nome1" class="textfieldHintState">
-                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="" />
+                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $_POST['nome'] ?>" />
                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                             </span>
@@ -171,7 +169,7 @@ if(!empty($_POST)) {
                     </div>
                     
                     <div class="form-group col-md-4">
-                        <label for="responsavel">Usuário responsável: </label><br>
+                        <label for="responsavel">Usuário responsável: </label>
                         <select class="form-control" name="usuario" id="usuario">
                             <option></option>
                             <?php
@@ -214,14 +212,86 @@ if(!empty($_POST)) {
         </div>
     </div>
         
-        
-        
-        
                     <script type="text/javascript">
                         $(document).ready(function() {
                             $('.valor').mask('000.000.000.000.000,00', {reverse: true});
                         });
                     </script>
+                    
+        <?php 
+        
+        if(!empty($_POST))
+            if(!empty ($try))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#errorModal").modal("toggle");
+                    });
+                </script>';
+            else 
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
+                            window.location.href = "list_projeto.php";
+                        });
+                        $("#confirmModal").modal("toggle");
+                    });
+                </script>';
+        
+        ?>
+        
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Erro: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                      <label for="erro">Erro na inserção de dados: </label><br>
+                            <?php if (strpos($try, 'cannot be null')) { 
+                                
+                                if (strpos($try, "'cliente_id'"))
+                                    echo 'O nome inserido não pertence a nenhum cliente! Insira um nome válido utilizando a função de preenchimento automático! Em caso de dúvidas, entre em contato com o suporte.';
+                                elseif (strpos($try, "'tipoprojeto_id'"))
+                                    echo 'Selecione um modelo de projeto válido! Em caso de dúvidas, entre em contato com o suporte.';
+                                
+                            } else { echo $try; } ?>
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <!--<button type="button" class="btn btn-primary" id="designar">Salvar</button>-->
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados adicionados: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-8">
+                            O projeto foi cadastrado com sucesso!
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <a href="create_projeto.php" type="button" class="btn btn-primary" id="designar">Cadastrar Outro</a>
+                </div>
+              </div>
+            </div>
+        </div>
         
 
     <p></p>

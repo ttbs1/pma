@@ -14,7 +14,8 @@ if(!empty($_POST)) {
     $empresa = new Empresa();
     
     $empresa->setNome($_POST['nome']);
-    $empresa->setCnpj($_POST['cnpj']);
+    if (!empty($_POST['cpf_cnpj']))
+        $empresa->setCpf_cnpj($_POST['cpf_cnpj']);
     if (filter_has_var(INPUT_POST, "telefone1")){
         $empresa->setTelefone($_POST['telefone1']);
     }
@@ -52,12 +53,12 @@ if(!empty($_POST)) {
     }
 
     $empresaControle = new EmpresaControle();
-    $empresaControle->inserirEmpresa($empresa);
+    $try = $empresaControle->inserirEmpresa($empresa);
     if (!empty($endereco->getRua())) {
         $enderecoControle = new EnderecoControle();
-        $enderecoControle->inserirEndereco($endereco, "empresa");
+        $try = $enderecoControle->inserirEndereco($endereco, "empresa");
     }
-    header("Location: list_empresa.php");
+    //header("Location: list_empresa.php");
 }
 ?>
 
@@ -116,7 +117,7 @@ if(!empty($_POST)) {
                 <div class="form-group col-md-8">
                     <label for="nome">Nome: </label>
                         <span id="nome1" class="textfieldHintState">
-                            <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="" />
+                            <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if (!empty($_POST['nome'])) echo $_POST['nome'] ?>" />
                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                         </span>
@@ -126,16 +127,37 @@ if(!empty($_POST)) {
                 </script>
                 
                 <div class="form-group col-md-3">
-                    <label for="cnpj">CNPJ: </label>
-                        <span id="cnpj1" class="textfieldHintState">
-                            <input class="form-control" name="cnpj" id="cnpj" type="text" placeholder="00.000.000/0000-00" value="">
-                            <span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>
-                    </span>
-                </div>
+                    <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(!empty($_POST)) if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())==14){echo 'checked';} ?>> CPF 
+                    <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(!empty($_POST)) if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())>14){echo 'checked';} ?>> CNPJ <br>
+                    <div id="documentfield"></div>
                     
-                <script>
-                    var cnpj1 = new Spry.Widget.ValidationTextField("cnpj1", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                </script>
+                    <script type="text/javascript">
+                        var radio = document.getElementsByName("document");
+                        if (radio[0].checked || radio[1].checked) { 
+                            changeDocType();
+                            document.getElementById("cpf_cnpj_field").value= "<?php if(!empty($_POST)) echo $empresa->getCpf_cnpj()?>";
+                        };
+                                
+                                
+                        function changeDocType() {
+                            var cpf = document.getElementById("cpf").checked;
+                            var cnpj = document.getElementById("cnpj").checked;
+
+                            document.getElementById("documentfield").innerHTML = '<span id="cpf_cnpj" class="textfieldHintState">'
+                        +    '<input class="form-control" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" value="">'
+                        +    '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
+                        +'</span>';
+
+                            if (cpf) {
+                                document.getElementById("cpf_cnpj_field").placeholder = "000.000.000-00";
+                                var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "000.000.000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                            } if (cnpj) {
+                                document.getElementById("cpf_cnpj_field").placeholder = "00.000.000/0000-00";
+                                var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                            }
+                        }
+                    </script>
+                </div>
                 
                <div class="form-group col-md-2">
                     <label for="telefone">Telefone: </label>
@@ -368,7 +390,15 @@ if(!empty($_POST)) {
                         }
                     </script>
                     
-                
+                    <?php 
+                    if (!empty($_POST))
+                        if(empty ($endereco->getRua()))
+                            echo '<script>
+                            setTimeout(function (){
+                                document.getElementById("toogle").click();
+                            }, 250); 
+                            </script>';
+                    ?>
                 
                 <div class="form-actions">
                     <br/>
@@ -386,6 +416,100 @@ if(!empty($_POST)) {
     <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <?php 
+        
+        
+        if(!empty($_POST))
+            if(!empty($try))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#exampleModalCenter").modal("toggle");
+                    });
+                </script>';
+            elseif (!empty ($try2))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#exampleModalCenter").modal().on("hidden.bs.modal", function (e) {
+                            window.location.href = "list_cliente.php";
+                        })
+                        $("#exampleModalCenter").modal("toggle");
+                    });
+                </script>';
+            else
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
+                            window.location.href = "list_cliente.php";
+                        })
+                        $("#confirmModal").modal("toggle");
+                    });
+                </script>';
+        
+        ?>
+        
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Erro: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                      <label for="erro">Erro na inserção de dados: </label><br>
+                            <?php 
+                            
+                            if (!empty($try)) {
+                                if (strpos($try, 'Duplicate')) { 
+
+                                if (strpos($try, "'nome'"))
+                                    echo 'O nome inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+                                elseif (strpos($try, "'cpf_cnpj'"))
+                                    echo 'O campo CPF/CNPJ inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+
+                                } else { echo $try; }
+                            } elseif (!empty($try2)) {
+                                echo 'Dados inválidos ao cadastrar endereço. '.$try2;
+                            }
+
+                            ?>
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <!--<button type="button" class="btn btn-primary" id="designar">Salvar</button>-->
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados adicionados: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-8">
+                            A empresa foi cadastrada com sucesso!
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <a href="create_empresa.php" type="button" class="btn btn-primary" id="designar">Cadastrar Outra</a>
+                </div>
+              </div>
+            </div>
+        </div>
+    
     <p></p>
   </body>
 </html>

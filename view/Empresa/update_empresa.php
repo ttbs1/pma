@@ -36,24 +36,21 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
             include '../../controller/enderecocontrole.php';
             
             
-	$id = null;
 	if ( !empty($_GET['id']))
             {
 		$id = $_REQUEST['id'];
-            }
-        if ( null==$id )
-            {
-		header("Location: list_empresa.php");
             }
 	if (!empty($_POST)) {
             $empresa = new Empresa();
             $id = ($_POST['id']);
             $empresa->setNome($_POST['nome']);
-            $empresa->setCnpj($_POST['cnpj']);
-            $empresa->setTelefone($_POST['telefone']);
+            if (!empty($_POST['cpf_cnpj']))
+                $empresa->setCpf_cnpj($_POST['cpf_cnpj']);
+            if (!empty($_POST['telefone1']))
+                $empresa->setTelefone($_POST['telefone1']);
             
             $empresaControle = new EmpresaControle();
-            $empresaControle->updateEmpresa($empresa, $id);
+            $try = $empresaControle->updateEmpresa($empresa, $id);
             
 	} else {
             $empresaControle = new EmpresaControle();
@@ -99,7 +96,7 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                             <div class="form-group col-md-6">
                                 <label for="nome">Nome: </label>
                                     <span id="nome1" class="textfieldHintState">
-                                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php echo $data['nome']?>" />
+                                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $empresa->getNome(); else echo $data['nome']?>" />
                                         <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                     </span>
@@ -110,16 +107,51 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                             </script>
 
                             <div class="form-group col-md-3">
-                                <label for="cnpj">CNPJ: </label>
-                                <span id="cnpj1" class="textfieldHintState">
-                                    <input class="form-control" name="cnpj" id="cnpj" type="text" placeholder="00.000.000/0000-00" value="<?php echo $data ['cnpj']?>">
-                                    <span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>
-                                </span>
+                                <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(empty($_POST)) { if(strlen($data['cpf_cnpj'])==14){echo 'checked';} } else { if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())==14){echo 'checked';} } ?>> CPF 
+                                <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(empty($_POST)) { if(strlen($data['cpf_cnpj'])>14){echo 'checked';} } else { if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())>14){echo 'checked';} } ?>> CNPJ <br>
+                                <div id="documentfield"></div>
                             </div>
 
-                            <script>
-                                var cnpj1 = new Spry.Widget.ValidationTextField("cnpj1", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                            <script type="text/javascript">
+                                
+
+                                function changeDocType() {
+                                    var cpf = document.getElementById("cpf").checked;
+                                    var cnpj = document.getElementById("cnpj").checked;
+
+                                    document.getElementById("documentfield").innerHTML = '<span id="cpf_cnpj" class="textfieldHintState">'
+                                +    '<input class="form-control" size="20" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" >'
+                                +    '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
+                                +'</span>';
+
+                                    if (cpf) {
+                                        document.getElementById("cpf_cnpj_field").placeholder = "000.000.000-00";
+                                        var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "000.000.000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                                    } if (cnpj) {
+                                        document.getElementById("cpf_cnpj_field").placeholder = "00.000.000/0000-00";
+                                        var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                                    }
+                                }
                             </script>
+                            <?php if(!empty($_POST)) {
+                                echo '<script>
+                                var radio = document.getElementsByName("document");
+                                if (radio[0].checked || radio[1].checked) { 
+                                    changeDocType();
+                                    document.getElementById("cpf_cnpj_field").value= "'.$empresa->getCpf_cnpj().'";
+                                }
+                                </script>';
+                            } else {
+                                echo '<script>
+                                var radio = document.getElementsByName("document");
+                                if (radio[0].checked || radio[1].checked) { 
+                                    changeDocType();
+                                    document.getElementById("cpf_cnpj_field").value= "'.$data['cpf_cnpj'].'";
+                                }
+                                </script>';
+                            }
+                            
+                            ?>
 
                             <div class="form-group col-md-2">
                                 <label for="telefone">Telefone: </label>
@@ -128,18 +160,18 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                                     <option>Celular</option>
                                     <option>Fixo</option>
                                 </select>
-                                <div id="tel1field"></div>
+                                <div id="tel1field"></div>    
                             </div>
 
                             <script type="text/javascript">
 
-                                if (<?php echo strlen($data['telefone']) ?> >= 13) {
-                                    if (<?php echo strlen($data['telefone']) ?> > 13)
+                                if (<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo strlen($empresa->getTelefone()); else echo 0; } else { echo strlen($data['telefone']); } ?> >= 13) {
+                                    if (<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo strlen($empresa->getTelefone()); else echo 0; } else { echo strlen($data['telefone']); } ?> > 13)
                                         document.getElementById("tipo1").value = "Celular";
                                     else
                                         document.getElementById("tipo1").value = "Fixo";
                                     changeTelType(1);
-                                    document.getElementById("telefone1").value = "<?php echo $data['telefone'] ?>";
+                                    document.getElementById("telefone1").value = "<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo $empresa->getTelefone(); } else { echo $data['telefone']; } ?>";
                                 }
 
                                 function changeTelType(i) {
@@ -188,7 +220,7 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
 
                                             include_once '../../controller/enderecocontrole.php';
                                     $enderecoControle = new EnderecoControle();
-                                    $data_fk = $enderecoControle->list_enderecosEmpresa($data['id']);
+                                    $data_fk = $enderecoControle->list_enderecosEmpresa($id);
                                     if ($data_fk != NULL) {
                                         foreach($data_fk as $row) if($row['ativo']) {
                                         //echo $row['rua'];
@@ -204,9 +236,9 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                                                 echo '<td>'. $row['estado'] . '</td>';
                                                 echo '<td>'. $row['CEP'] . '</td>';
                                                 echo '<td width=250>';
-                                                echo '<a class="btn btn-warning" href="../Endereco/update_endereco.php?id='.$row['id'].'&empresa='.$data['id'].'">Atualizar</a>';
+                                                echo '<a class="btn btn-warning" href="../Endereco/update_endereco.php?id='.$row['id'].'&empresa='.$id.'">Atualizar</a>';
                                                 echo ' ';
-                                                echo '<a class="btn btn-danger" href="../Endereco/delete_endereco.php?id='.$row['id'].'&empresa='.$data['id'].'">Excluir</a>';
+                                                echo '<a class="btn btn-danger" href="../Endereco/delete_endereco.php?id='.$row['id'].'&empresa='.$id.'">Excluir</a>';
                                                 echo '</td>';
                                                 echo '</tr>';        
                                             echo '</tbody>';
@@ -222,7 +254,7 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
 
 
                                 <div class="form-actions" align="right">
-                                    <?php echo '<a class="btn btn-default" href="../Endereco/create_endereco.php?empresa='.$data['id'].'">Adicionar Endereço</a>' ?>
+                                    <?php echo '<a class="btn btn-default" href="../Endereco/create_endereco.php?empresa='.$id.'">Adicionar Endereço</a>' ?>
                                 </div>
 
                                 <br/>
@@ -239,6 +271,86 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        
+        <?php 
+        
+        
+        if(!empty($_POST))
+            if(!empty($try))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#exampleModalCenter").modal("toggle");
+                    });
+                </script>';
+            else
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
+                            window.location.href = "list_empresa.php";
+                        })
+                        $("#confirmModal").modal("toggle");
+                    });
+                </script>';
+        
+        ?>
+        
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Erro: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                      <label for="erro">Erro na inserção de dados: </label><br>
+                            <?php 
+                            
+                            if (strpos($try, 'Duplicate')) { 
+
+                            if (strpos($try, "'nome'"))
+                                echo 'O nome inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+                            elseif (strpos($try, "'cpf_cnpj'"))
+                                echo 'O campo CPF/CNPJ inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+
+                            } else { echo $try; }
+
+                            ?>
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <!--<button type="button" class="btn btn-primary" id="designar">Salvar</button>-->
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados atualizados: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-8">
+                            A empresa foi atualizada com sucesso!
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/update.png" height="175px" width="175px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        
         <p></p>
     </body>
 </html>

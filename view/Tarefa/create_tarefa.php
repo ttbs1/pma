@@ -20,46 +20,6 @@ and open the template in the editor.
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <?php
-            if(!empty($_GET['tipoProjeto_id']))
-            {
-                $tipoProjeto_id = $_REQUEST['tipoProjeto_id'];
-                $tipo = 'tipoProjeto';
-            }
-            if(!empty($_GET['projeto_id']))
-            {
-                $projeto_id = $_REQUEST['projeto_id'];
-                $tipo = 'projeto';
-            }
-            if(!empty($_POST))
-            {
-                include_once '../../domain/tarefa.php';
-                include_once '../../controller/TarefaControle.php';
-                $tarefa = new Tarefa();
-                
-                $tarefa->setDescricao($_POST['descricao']);
-                $tarefa->setPeso($_POST['peso']);
-                
-                $tarefaControle = new TarefaControle();
-                $tipo = $_POST['tipo'];
-                
-                if($tipo == 'tipoProjeto') {
-                    $tipoProjeto_id = $_POST['tipoProjeto_id'];
-                    $tarefaControle->novaTarefa_TipoProjeto($tarefa, $tipoProjeto_id);
-                    
-                    header("Location: ../TipoProjeto/detail_tipoProjeto.php?id=".$tipoProjeto_id);
-                } elseif ($tipo == 'projeto') {
-                    $projeto_id = $_POST['projeto_id'];
-                    $tarefaControle->novaTarefa_Projeto2($tarefa, $projeto_id);
-                    
-                    header("Location: ../Projeto/detail_projeto.php?id=".$projeto_id);
-                }
-                
-                
-            }
-
-        ?>
-        
         <div class="container">
             
             <div class="jumbotron row">
@@ -85,6 +45,36 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
+            
+            <?php
+            
+            if(!empty($_GET['tipoProjeto_id']))
+            {
+                $tipoProjeto_id = $_REQUEST['tipoProjeto_id'];
+            }
+            if(!empty($_GET['projeto_id']))
+            {
+                $projeto_id = $_REQUEST['projeto_id'];
+            }
+            if(!empty($_POST))
+            {
+                include_once '../../domain/tarefa.php';
+                include_once '../../controller/TarefaControle.php';
+                $tarefa = new Tarefa();
+                
+                $tarefa->setDescricao($_POST['descricao']);
+                $tarefa->setPeso($_POST['peso']);
+                
+                $tarefaControle = new TarefaControle();
+                
+                if(!empty($_POST['tipoProjeto_id']))
+                    $try = $tarefaControle->novaTarefa_TipoProjeto($tarefa, $_POST['tipoProjeto_id']);
+                elseif (!empty($_POST['projeto_id'])) 
+                    $try = $tarefaControle->novaTarefa_Projeto2($tarefa, $_POST['projeto_id']);
+                
+            }
+
+            ?>
     
             <div clas="span10 offset1">
                 <div class="card">
@@ -102,7 +92,6 @@ and open the template in the editor.
                             <legend>Tarefa</legend>
                             <div id="tarefa">
 
-                                <input type="hidden" name="tipo" value="<?php echo $tipo ?>" />
                                 <input type="hidden" name="tipoProjeto_id" id="tipoProjeto_id" value="<?php echo $tipoProjeto_id ?>" />
                                 <input type="hidden" name="projeto_id" id="projeto_id" value="<?php echo $projeto_id ?>" />
                             
@@ -138,8 +127,12 @@ and open the template in the editor.
 
                                 <button type="submit" class="btn btn-success">Adicionar</button>
                                 <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
-                                <?php if ($tipo == 'tipoProjeto') {echo '<a href="../TipoProjeto/detail_tipoProjeto.php?id='.$tipoProjeto_id.'" type="btn" class="btn btn-default">Voltar</a>'; }
-                                else if ($tipo == 'projeto') { echo '<a href="../Projeto/detail_projeto.php?id='.$projeto_id.'" type="btn" class="btn btn-default">Voltar</a>'; } ?>
+                                <a href="#" type="btn" class="btn btn-default" onclick="goBack();">Voltar</a>
+                                <script>
+                                    function goBack () {
+                                        window.history.back();
+                                    }
+                                </script>
 
                             </div>
                         </form>
@@ -152,6 +145,78 @@ and open the template in the editor.
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        
+        <?php
+        
+        if(!empty($_POST))
+            if(!empty ($try))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#errorModal").modal("toggle");
+                    });
+                </script>';
+            else 
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
+                            window.history.go(-2);
+                        });
+                        $("#confirmModal").modal("toggle");
+                    });
+                </script>';
+        
+        ?>
+        
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Erro: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                      <label for="erro">Erro na inserção de dados: </label><br>
+                            <?php 
+                            
+                            { echo $try; }
+                            
+                            ?>
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <!--<button type="button" class="btn btn-primary" id="designar">Salvar</button>-->
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados adicionados: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-8">
+                            A tarefa foi adicionada com sucesso!
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        
         <p></p>
         
     </body>

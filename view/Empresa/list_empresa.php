@@ -65,7 +65,7 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 0, 1)) == 0) {
                         <tr>
                             <th scope="col" data-field="id" data-sortable="true">Id</th>
                             <th scope="col" data-field="nome" data-sortable="true">Nome</th>
-                            <th scope="col" data-field="cpf_cnpj" data-sortable="true" width="135">CNPJ</th>
+                            <th scope="col" data-field="cpf_cnpj" data-sortable="true" width="135">CPF/CNPJ</th>
                             <th scope="col" data-field="telefone1" data-sortable="true" width="135">Telefone</th>
                             <th scope="col">Detalhar</th>
                             <?php
@@ -89,7 +89,7 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 0, 1)) == 0) {
                             echo '<tr>';
 			                      echo '<th scope="row">'. $row['id'] . '</th>';
                             echo '<td>'. $row['nome'] . '</td>';
-                            echo '<td>'. $row['cnpj'] . '</td>';
+                            echo '<td>'. $row['cpf_cnpj'] . '</td>';
                             echo '<td>'. $row['telefone'] . '</td>';
                             echo ' ';
                             echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_empresa.php?id='.$row['id'].'">Detalhar</a></td>';

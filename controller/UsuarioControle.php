@@ -105,7 +105,7 @@ class UsuarioControle {
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Usuário', $user['usuario'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     

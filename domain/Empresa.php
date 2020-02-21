@@ -13,15 +13,11 @@
  */
 class Empresa {
     private $nome;
-    private $cnpj;
+    private $cpf_cnpj;
     private $telefone;
     
     function getNome() {
         return $this->nome;
-    }
-
-    function getCnpj() {
-        return $this->cnpj;
     }
 
     function getTelefone() {
@@ -32,12 +28,15 @@ class Empresa {
         $this->nome = $nome;
     }
 
-    function setCnpj($cnpj) {
-        $this->cnpj = $cnpj;
-    }
-
     function setTelefone($telefone) {
         $this->telefone = $telefone;
+    }
+    function getCpf_cnpj() {
+        return $this->cpf_cnpj;
+    }
+
+    function setCpf_cnpj($cpf_cnpj) {
+        $this->cpf_cnpj = $cpf_cnpj;
     }
     
 }

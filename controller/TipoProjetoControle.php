@@ -31,7 +31,7 @@ class TipoProjetoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Modelo', $tipoProjeto->getDescricao(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -89,7 +89,7 @@ class TipoProjetoControle {
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = "UPDATE tipoprojeto SET descricao = ?, ativo = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($tipoProjeto->getDescricao(), $id), TRUE);
+            $q->execute(array($tipoProjeto->getDescricao(), TRUE, $id));
             
             $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
             $q = $pdo->prepare($sql2);
@@ -100,7 +100,7 @@ class TipoProjetoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Modelo', $tipoProjeto->getDescricao(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -138,7 +138,7 @@ class TipoProjetoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Modelo', $data['descricao'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     

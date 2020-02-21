@@ -52,7 +52,7 @@ class ClienteControle {
             $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Cliente', $cliente->getNome(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -162,7 +162,7 @@ class ClienteControle {
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Cliente', $cli['nome'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     

@@ -209,7 +209,7 @@ if(!empty($_GET['id']))
                                                     $curr = $dt->format('D');
 
                                                     // substract if Saturday or Sunday
-                                                    if ($curr == 'Sat' || $curr == 'Sun') {
+                                                    if ($curr == 'Sun' || $curr == 'Mon') {
                                                         $days--;
                                                     }
 
@@ -253,7 +253,11 @@ if(!empty($_GET['id']))
                                                 $usuarioControle = new UsuarioControle();
                                                 $user = $usuarioControle->readUsuario($data['usuario_id']);
                                                 
-                                                echo ($user['usuario']); ?>
+                                                if (!empty($user['usuario']))
+                                                    echo ($user['usuario']); 
+                                                else 
+                                                    echo 'Não designado';
+                                                ?>
                                             </label>
                                         </div>
                                     </div>

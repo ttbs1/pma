@@ -98,10 +98,10 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 0, 1)) == 0) {
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label">CNPJ</label>
+                    <label class="control-label">CPF/CNPJ</label>
                     <div class="controls">
                         <label class="carousel-inner">
-                            <?php echo $data['cnpj'];?>
+                            <?php echo $data['cpf_cnpj'];?>
                         </label>
                     </div>
                 </div>

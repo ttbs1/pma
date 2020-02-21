@@ -99,7 +99,7 @@ if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
 			                      echo '<th scope="row">'. $row['id'] . '</th>';
                             echo '<td>'. $cli['nome'] . '</td>';
                             echo '<td>'. $row['descricao'] . '</td>';
-                            echo '<td>'. $user['usuario'] . '</td>';
+                            echo '<td>'; if (!empty($user['usuario'])) echo $user['usuario']; echo '</td>';
                             
                             $start = new DateTime();
                             $end = new DateTime($row['data_prevista']);
@@ -121,7 +121,7 @@ if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
                                 $curr = $dt->format('D');
 
                                 // substract if Saturday or Sunday
-                                if ($curr == 'Sat' || $curr == 'Sun') {
+                                if ($curr == 'Sun' || $curr == 'Mon') {
                                     $days--;
                                 }
 
@@ -169,7 +169,7 @@ if((substr_compare($_SESSION['permissao']['projeto'], '0', 0, 1)) == 0) {
                             }
                             
                             echo '<td>'. $palavra .'</td>';
-                            echo '<td><label>'. number_format((($peso_total - ($peso_total_todo + ($peso_total_doing/2))) / $peso_total * 100), 1, ',', '') .'</label>%</td>';
+                            echo '<td><label>'; if($peso_total != 0) { echo number_format((($peso_total - ($peso_total_todo + ($peso_total_doing/2))) / $peso_total * 100), 1, ',', ''); } else { echo 0; } echo '</label>%</td>';
                             echo ' ';
                             echo '<td width="80"><a class="btn btn-outline-secondary btn-sm" href="detail_projeto.php?id='.$row['id'].'">Detalhar</a></td>';
                             echo ' ';

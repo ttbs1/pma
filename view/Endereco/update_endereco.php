@@ -20,57 +20,6 @@ and open the template in the editor.
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <?php
-                
-            include_once '../../domain/Endereco.php';
-            include_once '../../controller/EnderecoControle.php';
-            
-            $id = null;
-            if(!empty($_GET['id'])) 
-            {
-                $id = $_REQUEST['id'];
-            }
-            if(!empty($_GET['cliente'])) 
-            {
-                $cliente_id = $_REQUEST['cliente'];
-                $tipo = "cliente";
-            }
-            if(!empty($_GET['empresa'])) 
-            {
-                $empresa_id = $_REQUEST['empresa'];
-                $tipo = "empresa";
-            }
-            if(!empty($_POST))
-            {
-                $endereco = new Endereco();
-                
-                $endereco->setCEP($_POST['cep']);
-                $endereco->setRua($_POST['rua']);
-                $endereco->setNumero($_POST['numero']);
-                $endereco->setBairro($_POST['bairro']);
-                $endereco->setCidade($_POST['cidade']);
-                $endereco->setEstado($_POST['uf']);
-                $id = $_POST['id'];
-                $tipo = $_POST['tipo'];
-                
-                $enderecoControle = new EnderecoControle();
-                $enderecoControle->updateEndereco($id, $endereco);
-                
-                if ($tipo == "cliente") {
-                    $cliente_id = $_POST['cliente'];
-                    header("Location: ../Cliente/detail_cliente.php?id=".$cliente_id);
-                } else if ($tipo == "empresa") {
-                    $empresa_id = $_POST['empresa'];
-                    header("Location: ../Empresa/detail_empresa.php?id=".$empresa_id);
-                }
-            } else {
-                $enderecoControle = new EnderecoControle();
-                $data = $enderecoControle->readEndereco($id);
-            }
-            
-
-        ?>
-        
         <div class="container">
             
             <div class="jumbotron row">
@@ -96,6 +45,39 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
+            
+            <?php
+                
+            include_once '../../domain/Endereco.php';
+            include_once '../../controller/EnderecoControle.php';
+            
+            $id = null;
+            if(!empty($_GET['id'])) 
+            {
+                $id = $_REQUEST['id'];
+            }
+            if(!empty($_POST))
+            {
+                $endereco = new Endereco();
+                
+                $endereco->setCEP($_POST['cep']);
+                $endereco->setRua($_POST['rua']);
+                $endereco->setNumero($_POST['numero']);
+                $endereco->setBairro($_POST['bairro']);
+                $endereco->setCidade($_POST['cidade']);
+                $endereco->setEstado($_POST['uf']);
+                $id = $_POST['id'];
+                
+                $enderecoControle = new EnderecoControle();
+                $try = $enderecoControle->updateEndereco($id, $endereco);
+                
+            } else {
+                $enderecoControle = new EnderecoControle();
+                $data = $enderecoControle->readEndereco($id);
+            }
+            
+            ?>
+            
             <div class="card">
             <div class="card-header">
                 <h3 class="well"> Atualizar Endereço </h3>
@@ -220,23 +202,20 @@ and open the template in the editor.
                         <legend>Endereço</legend>
                         <div id="endereco">
 
-                            <input type="hidden" name="cliente" id="cliente" value="<?php echo $cliente_id ?>" />
-                            <input type="hidden" name="empresa" id="empresa" value="<?php echo $empresa_id ?>" />
                             <input type="hidden" name="id" value="<?php echo $id;?>" />
-                            <input type="hidden" name="tipo" value="<?php echo $tipo;?>" />
 
                             <div class="form-group row" style="margin-left: 3px">
                                 <div class="form-group col-md-2">
                                     <label for="cep">CEP: </label>
                                         <span id="cep1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="<?php echo $data['CEP'] ?>" />
+                                            <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="<?php if(!empty($_POST['cep'])) echo $_POST['cep']; else echo $data['CEP']; ?>" />
                                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
                                         </span>
                                 </div>
                                 <div class="form-group col-md-6">
                                 <label for="rua">Rua: </label>
                                     <span id="rua1" class="textfieldHintState">
-                                        <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="<?php echo $data['rua'] ?>" />
+                                        <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($_POST['rua'])) echo $_POST['rua']; else echo $data['rua'] ?>" />
                                         <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
                                         <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                     </span>
@@ -244,7 +223,7 @@ and open the template in the editor.
                                 <div class="form-group col-md-2">
                                     <label for="numero">Numero: </label>
                                         <span id="numero1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="<?php echo $data['numero'] ?>" />
+                                            <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="<?php if(!empty($_POST)) { if(!empty($_POST['numero'])) echo $_POST['numero']; } else { echo $data['numero']; } ?>" />
                                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
                                         </span>
                                 </div>
@@ -252,7 +231,7 @@ and open the template in the editor.
                                 <div class="form-group col-md-5"> 
                                     <label for="bairro">Bairro: </label>
                                         <span id="bairro1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php echo $data['bairro'] ?>" />
+                                            <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($_POST)) { if(!empty($_POST['bairro'])) echo $_POST['bairro']; } else { echo $data['bairro']; } ?>" />
                                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
                                         </span>
                                 </div>
@@ -260,7 +239,7 @@ and open the template in the editor.
                                 <div class="form-group col-md-5">
                                     <label for="cidade">Cidade: </label>
                                         <span id="cidade1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="<?php echo $data['cidade'] ?>" />
+                                            <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($_POST['cidade'])) echo $_POST['cidade']; else echo $data['cidade'] ?>" />
                                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
                                             <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                         </span>
@@ -269,7 +248,7 @@ and open the template in the editor.
                                 <div class="form-group col-md-1">
                                     <label for="uf">Estado: </label>
                                         <span id="uf1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="<?php echo $data['estado'] ?>" />
+                                            <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="<?php if(!empty($_POST['uf'])) echo $_POST['uf']; else echo $data['estado'] ?>" />
                                             <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
                                             <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                         </span>
@@ -293,13 +272,12 @@ and open the template in the editor.
                         <div class="form-actions">
 
                             <button type="submit" class="btn btn-success">Atualizar</button>
-                            <?php 
-                                if($tipo=="cliente") {
-                                    echo '<a href="../Cliente/detail_cliente.php?id='.$cliente_id.'" type="btn" class="btn btn-default">Não</a>';
-                                } else if ($tipo=="empresa") {
-                                    echo '<a href="../Empresa/detail_empresa.php?id='.$empresa_id.'" type="btn" class="btn btn-default">Não</a>';
-                                }   
-                            ?>
+                            <a href="#" type="btn" class="btn btn-default" onclick="goBack();">Voltar</a>
+                            <script>
+                                function goBack () {
+                                    window.history.back();
+                                }
+                            </script>
 
                         </div>
                     </form>
@@ -309,6 +287,78 @@ and open the template in the editor.
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        
+        <?php
+        
+        if(!empty($_POST))
+            if(!empty ($try))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#errorModal").modal("toggle");
+                    });
+                </script>';
+            else 
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
+                            window.history.go(-2);
+                        });
+                        $("#confirmModal").modal("toggle");
+                    });
+                </script>';
+        
+        ?>
+        
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Erro: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                      <label for="erro">Erro na inserção de dados: </label><br>
+                            <?php 
+                            
+                            { echo $try; }
+                            
+                            ?>
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <!--<button type="button" class="btn btn-primary" id="designar">Salvar</button>-->
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados atualizados: </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-8">
+                            O endereço foi atualizado com sucesso!
+                    </div>
+                    <div style="text-align: center;"><img src="../../util/update.png" height="175px" width="175px" /></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        
         <p></p>
     </body>
 </html>

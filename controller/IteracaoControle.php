@@ -47,7 +47,7 @@ class IteracaoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Iteração', $descricao, $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -83,7 +83,7 @@ class IteracaoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Exclusão', 'Iteração', $data['descricao'], $dateTime));
             conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -118,7 +118,7 @@ class IteracaoControle {
             $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Iteração', $descricao, $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
 }

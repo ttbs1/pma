@@ -70,7 +70,7 @@ if(!empty($_POST)) {
     if(empty($try)) {
         if (!empty($endereco->getRua())) {
             $enderecoControle = new EnderecoControle();
-            $try2 = $enderecoControle->inserirEndereco($endereco, "cliente");
+            $try = $enderecoControle->inserirEndereco($endereco, "cliente");
         }
     }
 }
@@ -158,8 +158,7 @@ if(!empty($_POST)) {
                             var cpf = document.getElementById("cpf").checked;
                             var cnpj = document.getElementById("cnpj").checked;
 
-                            document.getElementById("documentfield").innerHTML = '<label>CPF/CNPJ</label><br>'
-                        + '<span id="cpf_cnpj" class="textfieldHintState">'
+                            document.getElementById("documentfield").innerHTML = '<span id="cpf_cnpj" class="textfieldHintState">'
                         +    '<input class="form-control" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" value="">'
                         +    '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
                         +'</span>';
@@ -486,7 +485,16 @@ if(!empty($_POST)) {
                         $("#exampleModalCenter").modal("toggle");
                     });
                 </script>';
-            else 
+            elseif (!empty ($try2))
+                echo '<script> 
+                    $(document).ready(function() {
+                        $("#exampleModalCenter").modal().on("hidden.bs.modal", function (e) {
+                            window.location.href = "list_cliente.php";
+                        })
+                        $("#exampleModalCenter").modal("toggle");
+                    });
+                </script>';
+            else
                 echo '<script> 
                     $(document).ready(function() {
                         $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
@@ -509,15 +517,19 @@ if(!empty($_POST)) {
                 </div>
                 <div class="modal-body">
                     <div class="form-group col-md-12">
-                      <label for="erro">Erro nos dados: </label><br>
-                            <?php if (strpos($try, 'Duplicate')) { 
-                                
-                                if (strpos($try, "'nome'"))
-                                    echo 'O nome inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
-                                elseif (strpos($try, "'cpf_cnpj'"))
-                                    echo 'O campo CPF/CNPJ inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
-                                
-                            } else { echo $try; } ?>
+                      <label for="erro">Erro na inserção de dados: </label><br>
+                            <?php 
+                            
+                            if (strpos($try, 'Duplicate')) { 
+
+                            if (strpos($try, "'nome'"))
+                                echo 'O nome inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+                            elseif (strpos($try, "'cpf_cnpj'"))
+                                echo 'O campo CPF/CNPJ inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+
+                            } else { echo $try; }
+
+                            ?>
                     </div>
                     <div style="text-align: center;"><img src="../../util/suporte-tecnico.png" height="250px" width="250px" /></div>
                 </div>
