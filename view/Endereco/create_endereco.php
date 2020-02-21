@@ -356,7 +356,7 @@ and open the template in the editor.
                 </div>
                 <div class="modal-body">
                     <div class="form-group col-md-8">
-                            O endereço foi adicionado com sucesso!
+                            O endereço foi cadastrado com sucesso!
                     </div>
                     <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
                 </div>

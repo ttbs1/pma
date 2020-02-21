@@ -206,7 +206,7 @@ and open the template in the editor.
                 </div>
                 <div class="modal-body">
                     <div class="form-group col-md-8">
-                            A tarefa foi adicionada com sucesso!
+                            A tarefa foi cadastrada com sucesso!
                     </div>
                     <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
                 </div>

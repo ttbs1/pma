@@ -121,9 +121,8 @@ class ProjetoControle {
             $dateTime = $date->format("Y-m-d H:i:s");
             $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Projeto', 'Id: '.$id, $dateTime));
             $pdo = conexao::desconectar();
-            return $id;
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
 }
