@@ -240,7 +240,7 @@ if((substr_compare($_SESSION['permissao']['tipoprojeto'], '0', 2, 1)) == 0) {
                     <div class="form-group col-md-8">
                             O modelo de projeto foi atualizado com sucesso!
                     </div>
-                    <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
+                    <div style="text-align: center;"><img src="../../util/update.png" height="175px" width="175px" /></div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>

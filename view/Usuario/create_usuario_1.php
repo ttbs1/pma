@@ -8,30 +8,19 @@ and open the template in the editor.
 <?php
 
 session_start(); 
-if((substr_compare($_SESSION['permissao']['usuario'], '0', 2, 1)) == 0) {
+if((substr_compare($_SESSION['permissao']['usuario'], '0', 1, 1)) == 0) {
     header("Location: ../Erro/permissao.php");
 }
 
-include_once '../../domain/usuario.php';
-include_once '../../domain/permissao.php';
-include_once '../../controller/usuariocontrole.php';
-include_once '../../controller/PermissaoControle.php';
-
-if(!empty($_GET['id'])) {
-    {
-        $id = $_REQUEST['id'];
-    }
-}
-
 if(!empty($_POST)) {
+    include_once '../../domain/usuario.php';
+    include_once '../../domain/permissao.php';
+    include_once '../../controller/usuariocontrole.php';
     $usuario = new Usuario();
     $usuario->setPermissao_id(new permissao());
     
-    $id = $_REQUEST['id'];
-    
     $usuario->setUsuario($_POST['usuario']);
-    if(isset($_POST['senha']))
-        $usuario->setSenha($_POST['senha']);
+    $usuario->setSenha($_POST['senha']);
     
     if (isset($_POST['adm'])) {
         $permissao = "1";
@@ -224,30 +213,17 @@ if(!empty($_POST)) {
     }
     
     $usuario->getPermissao_id()->setTarefa($permissao);
-    $permissao_id = $_REQUEST['permissao_id'];
     
     $usuarioControle = new UsuarioControle();
-    if(!empty($_POST['senha']))
-        $try = $usuarioControle->updateUsuario($usuario, $id);
-    else
-        $try = $usuarioControle->updateUsuario_semSenha ($usuario, $id);
-    $permissaoControle = new PermissaoControle();
-    if(empty($try))
-        $try = $permissaoControle->updatePermissao($usuario->getPermissao_id(), $permissao_id);
+    $try = $usuarioControle->inserirUsuario($usuario);
     
-    //header("Location: list_usuario.php");
-} else {
-    $usuarioControle = new UsuarioControle();
-    $data = $usuarioControle->readUsuario($id);
-    $permissaoControle = new PermissaoControle();
-    $data_fk = $permissaoControle->readPermissao($data['permissao_id']);
 }
 ?>
 
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>PMA - Atualizar Usuário</title>
+        <title>PMA - Cadastrar Usuário</title>
         <link rel="icon" href="../../util/icon.png" type="image/icon type">
         
         <!-- Bootstrap CSS -->
@@ -256,12 +232,13 @@ if(!empty($_POST)) {
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        
     </head>
     <body>
         <div class="container">
             <div class="jumbotron row">
                 <div>
-                    <h2>Atualização de Usuários</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
+                    <h2>Cadastro de Usuários</h2><h4><span class="badge badge-secondary">PMA - Project Management Aplication</span></h4>
                 </div>
                 <div class="header-user">
                     <div class="dropdown show">
@@ -270,7 +247,7 @@ if(!empty($_POST)) {
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#"><?php 
+                            <a class="dropdown-item" href="#"><?php
                                                                     if(isset($_SESSION['usuario'])) {
                                                                         echo 'Usuário: '. $_SESSION['usuario'];
                                                                     } else {
@@ -286,22 +263,19 @@ if(!empty($_POST)) {
             <div clas="span10 offset1">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="well"> Atualizar Usuário </h3>
+                        <h3 class="well"> Adicionar Usuário </h3>
                     </div>
                     <div class="card-body">
-                    <form class="form-horizontal" action="update_usuario.php" method="post">
+                    <form class="form-horizontal" action="create_usuario_1.php" method="post">
 
                         <div class="row">
                             <fieldset style="padding-left: 1.5em;">
-                                <legend>Usuário</legend>
-                                        
-                                <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
-                                <input type="hidden" name="permissao_id" id="permissao_id" value="<?php echo $data['permissao_id']; ?>" />
-                                
+                                <legend>Novo usuário</legend>
+
                                 <div class="form-group col-md-12">
                                 <label for="usuario">Nome de usuário: </label>
                                             <span id="usuario1" class="textfieldHintState">
-                                                <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" value="<?php if(!empty($_POST)) echo $_POST['usuario']; else echo $data['usuario']; ?>" />
+                                                <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" value="<?php echo $_POST['usuario'] ?>" />
                                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
                                                 <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                             </span>
@@ -313,20 +287,20 @@ if(!empty($_POST)) {
                                 <div class="form-group col-md-12">
                                 <label for="senha">Senha: </label>
                                             <span id="senha" class="textfieldHintState">
-                                                <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" value="" />
+                                                <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" value="<?php echo $_POST['senha'] ?>" />
                                                 <span class="textfieldMaxCharsMsg">Esse campo tem limite de 12 caracteres.</span>
                                                 <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
                                             </span>
                                 </div>
                                 <script>
-                                    var senha = new Spry.Widget.ValidationTextField("senha", "custom", {validateOn:["blur"], maxChars: 12, isRequired: false});
+                                    var senha = new Spry.Widget.ValidationTextField("senha", "custom", {validateOn:["blur"], maxChars: 12});
                                 </script>
 
-                                <label for="adm">Administrador: </label> <input type="checkbox" name="adm" id="adm" <?php if(isset($_POST['adm'])) echo 'checked'; else if(empty ($_POST)) if($data_fk["adm"]) echo 'checked'; ?>>
+                                <label for="adm">Administrador: </label> <input type="checkbox" name="adm" id="adm" <?php if(isset($_POST['adm'])) echo 'checked'; ?>>
 
                             </fieldset>
-                                
-                            <fieldset style="padding-left: 1.5em;">
+                            
+                            <fieldset  style="padding-left: 1.5em;">
                                 <legend>Permissões do usuário</legend>
                                 <table class="table-striped">
                                     <tr>
@@ -339,66 +313,66 @@ if(!empty($_POST)) {
                                     </tr>
                                     <tr>
                                         <td><label>Usuarios</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_usuario" id="ler_usuario" <?php if(!empty($_POST['ler_usuario'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['usuario'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_usuario" id="cadastrar_usuario" <?php if(!empty($_POST['cadastrar_usuario'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['usuario'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_usuario" id="alterar_usuario" <?php if(!empty($_POST['alterar_usuario'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['usuario'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_usuario" id="excluir_usuario" <?php if(!empty($_POST['excluir_usuario'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['usuario'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_usuario" id="ler_usuario" <?php if(isset($_POST['ler_usuario'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_usuario" id="cadastrar_usuario" <?php if(isset($_POST['cadastrar_usuario'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_usuario" id="alterar_usuario" <?php if(isset($_POST['alterar_usuario'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_usuario" id="excluir_usuario" <?php if(isset($_POST['excluir_usuario'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_usuario" id="marcar_usuario" onclick="marcarUsuarios();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Empresas</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_empresa" id="ler_empresa" <?php if(!empty($_POST['ler_empresa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['empresa'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_empresa" id="cadastrar_empresa" <?php if(!empty($_POST['cadastrar_empresa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['empresa'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_empresa" id="alterar_empresa" <?php if(!empty($_POST['alterar_empresa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['empresa'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_empresa" id="excluir_empresa" <?php if(!empty($_POST['excluir_empresa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['empresa'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_empresa" id="ler_empresa" <?php if(isset($_POST['ler_empresa'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_empresa" id="cadastrar_empresa" <?php if(isset($_POST['cadastrar_empresa'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_empresa" id="alterar_empresa" <?php if(isset($_POST['alterar_empresa'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_empresa" id="excluir_empresa" <?php if(isset($_POST['excluir_empresa'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_empresa" id="marcar_empresa" onclick="marcarEmpresas();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Clientes</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_cliente" id="ler_cliente" <?php if(!empty($_POST['ler_cliente'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['cliente'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_cliente" id="cadastrar_cliente" <?php if(!empty($_POST['cadastrar_cliente'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['cliente'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_cliente" id="alterar_cliente" <?php if(!empty($_POST['alterar_cliente'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['cliente'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_cliente" id="excluir_cliente" <?php if(!empty($_POST['excluir_cliente'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['cliente'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_cliente" id="ler_cliente" <?php if(isset($_POST['ler_cliente'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_cliente" id="cadastrar_cliente" <?php if(isset($_POST['cadastrar_cliente'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_cliente" id="alterar_cliente" <?php if(isset($_POST['alterar_cliente'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_cliente" id="excluir_cliente" <?php if(isset($_POST['excluir_cliente'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_cliente" id="marcar_cliente" onclick="marcarClientes();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Endereços</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_endereco" id="ler_endereco" <?php if(!empty($_POST['ler_endereco'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['endereco'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_endereco" id="cadastrar_endereco" <?php if(!empty($_POST['cadastrar_endereco'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['endereco'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_endereco" id="alterar_endereco" <?php if(!empty($_POST['alterar_endereco'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['endereco'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_endereco" id="excluir_endereco" <?php if(!empty($_POST['excluir_endereco'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['endereco'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_endereco" id="ler_endereco" <?php if(isset($_POST['ler_endereco'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_endereco" id="cadastrar_endereco" <?php if(isset($_POST['cadastrar_endereco'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_endereco" id="alterar_endereco" <?php if(isset($_POST['alterar_endereco'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_endereco" id="excluir_endereco" <?php if(isset($_POST['excluir_endereco'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_endereco" id="marcar_endereco" onclick="marcarEnderecos();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Projetos</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_projeto" id="ler_projeto" <?php if(!empty($_POST['ler_projeto'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['projeto'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_projeto" id="cadastrar_projeto" <?php if(!empty($_POST['cadastrar_projeto'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['projeto'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_projeto" id="alterar_projeto" <?php if(!empty($_POST['alterar_projeto'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['projeto'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_projeto" id="excluir_projeto" <?php if(!empty($_POST['excluir_projeto'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['projeto'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_projeto" id="ler_projeto" <?php if(isset($_POST['ler_projeto'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_projeto" id="cadastrar_projeto" <?php if(isset($_POST['cadastrar_projeto'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_projeto" id="alterar_projeto" <?php if(isset($_POST['alterar_projeto'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_projeto" id="excluir_projeto" <?php if(isset($_POST['excluir_projeto'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_projeto" id="marcar_projeto" onclick="marcarProjetos();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Iterações</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_iteracao" id="ler_iteracao" <?php if(!empty($_POST['ler_iteracao'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['iteracao'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_iteracao" id="cadastrar_iteracao" <?php if(!empty($_POST['cadastrar_iteracao'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['iteracao'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_iteracao" id="alterar_iteracao" <?php if(!empty($_POST['alterar_iteracao'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['iteracao'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_iteracao" id="excluir_iteracao" <?php if(!empty($_POST['excluir_iteracao'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['iteracao'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_iteracao" id="ler_iteracao" <?php if(isset($_POST['ler_iteracao'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_iteracao" id="cadastrar_iteracao" <?php if(isset($_POST['cadastrar_iteracao'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_iteracao" id="alterar_iteracao" <?php if(isset($_POST['alterar_iteracao'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_iteracao" id="excluir_iteracao" <?php if(isset($_POST['excluir_iteracao'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_iteracao" id="marcar_iteracao" onclick="marcarIteracoes();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Tipos de Projeto</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_tipo" id="ler_tipo" <?php if(!empty($_POST['ler_tipo'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tipoprojeto'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_tipo" id="cadastrar_tipo" <?php if(!empty($_POST['cadastrar_tipo'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tipoprojeto'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_tipo" id="alterar_tipo" <?php if(!empty($_POST['alterar_tipo'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tipoprojeto'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_tipo" id="excluir_tipo" <?php if(!empty($_POST['excluir_tipo'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tipoprojeto'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_tipo" id="ler_tipo" <?php if(isset($_POST['ler_tipo'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_tipo" id="cadastrar_tipo" <?php if(isset($_POST['cadastrar_tipo'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_tipo" id="alterar_tipo" <?php if(isset($_POST['alterar_tipo'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_tipo" id="excluir_tipo" <?php if(isset($_POST['excluir_tipo'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_tipo" id="marcar_tipo" onclick="marcarTipos();"></td>
                                     </tr>
                                     <tr>
                                         <td><label>Tarefas</label></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_tarefa" id="ler_tarefa" <?php if(!empty($_POST['ler_tarefa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tarefa'], 0, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_tarefa" id="cadastrar_tarefa" <?php if(!empty($_POST['cadastrar_tarefa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tarefa'], 1, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_tarefa" id="alterar_tarefa" <?php if(!empty($_POST['alterar_tarefa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tarefa'], 2, 1) == '1') { echo 'checked=""';} ?> ></td>
-                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_tarefa" id="excluir_tarefa" <?php if(!empty($_POST['excluir_tarefa'])) echo 'checked'; else if(empty ($_POST)) if(substr($data_fk['tarefa'], 3, 1) == '1') { echo 'checked=""';} ?> ></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="ler_tarefa" id="ler_tarefa" <?php if(isset($_POST['ler_tarefa'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="cadastrar_tarefa" id="cadastrar_tarefa" <?php if(isset($_POST['cadastrar_tarefa'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="alterar_tarefa" id="alterar_tarefa" <?php if(isset($_POST['alterar_tarefa'])) echo 'checked'; ?>></td>
+                                        <td style="padding-left: 5%;"><input type="checkbox" name="excluir_tarefa" id="excluir_tarefa" <?php if(isset($_POST['excluir_tarefa'])) echo 'checked'; ?>></td>
                                         <td style="padding-left: 5%;"><input type="checkbox" name="marcar_tarefa" id="marcar_tarefa" onclick="marcarTarefas();"></td>
                                     </tr>
 
@@ -522,7 +496,7 @@ if(!empty($_POST)) {
                         <div class="form-actions">
                             <br/>
 
-                            <button type="submit" class="btn btn-success">Atualizar</button>
+                            <button type="submit" class="btn btn-success">Adicionar</button>
                             <a href="../Home/home.php" type="btn" class="btn btn-default">Menu Principal</a>
                             <a href="list_usuario.php" type="btn" class="btn btn-default">Voltar</a>
                         </div>
@@ -571,6 +545,7 @@ if(!empty($_POST)) {
                       <label for="erro">Erro na inserção de dados: </label><br>
                             <?php 
                             
+                            
                             if (strpos($try, 'Duplicate')) {
 
                             if (strpos($try, "'usuario'"))
@@ -594,19 +569,20 @@ if(!empty($_POST)) {
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Dados atualizados: </h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">Dados adicionados: </h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group col-md-8">
-                            O usuário foi atualizado com sucesso!
+                            O usuário foi cadastrado com sucesso!
                     </div>
-                    <div style="text-align: center;"><img src="../../util/update.png" height="175px" width="175px" /></div>
+                    <div style="text-align: center;"><img src="../../util/confirma.png" height="175px" width="175px" /></div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <a href="create_usuario.php" type="button" class="btn btn-primary" id="designar">Cadastrar Outro</a>
                 </div>
               </div>
             </div>

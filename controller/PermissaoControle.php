@@ -69,7 +69,7 @@ class PermissaoControle {
             $q->execute(array($permissao->getAdm(), $permissao->getCliente(), $permissao->getEmpresa(), $permissao->getEndereco(), $permissao->getIteracao(), $permissao->getProjeto(), $permissao->getTarefa(), $permissao->getTipoprojeto(), $permissao->getUsuario(), $id));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
 }

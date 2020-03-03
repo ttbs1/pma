@@ -15,6 +15,13 @@ and open the template in the editor.
     </head>
     <body>
         <?php
+        
+        session_start();
+        
+        if(!empty($_SESSION['usuario_id'])) {
+            header("Location: ../home/home.php");
+        }
+        
         $msg = FALSE;
         if(!empty($_POST)) 
         {
@@ -28,7 +35,6 @@ and open the template in the editor.
             $auth = $usuarioControle->autenticarUsuario($usuario, $senha);
             
             if($auth) {
-                session_start();
                 $_SESSION['usuario_id'] = $auth['id'];
                 
                 header("Location: ../home/home.php");

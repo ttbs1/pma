@@ -40,7 +40,7 @@ class UsuarioControle {
             }
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -128,7 +128,30 @@ class UsuarioControle {
             $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Usuário', $usuario->getUsuario(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
+        }
+    }
+    
+    function updateUsuario_semSenha ($usuario, $id) {
+        try {
+            $pdo = conexao::conectar();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE usuario SET usuario = ?, ativo = ? WHERE id = ?";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($usuario->getUsuario(), TRUE, $id));
+            
+            $sql2 = "INSERT INTO registro (usuario_id, acao, tabela, identificacao, datahora) VALUES (?,?,?,?,?)";
+            $q = $pdo->prepare($sql2);
+            
+            
+            $date = new DateTime();
+            $date->modify('-4 hours');
+            $dateTime = $date->format("Y-m-d H:i:s");
+            
+            $q->execute(array($_SESSION['usuario_id'], 'Atualização', 'Usuário', $usuario->getUsuario(), $dateTime));
+            $pdo = conexao::desconectar();
+        } catch (Exception $ex) {
+            return 'Erro: '. $ex->getMessage();
         }
     }
     

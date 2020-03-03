@@ -20,7 +20,7 @@ include_once '../../controller/UsuarioControle.php';
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>PMA - Detalhar Projeto</title>
+        <title>PMA - <?php echo $_SESSION['usuario'] ?></title>
         <link rel="icon" href="../../util/icon.png" type="image/icon type">
         
         
@@ -99,15 +99,17 @@ include_once '../../controller/UsuarioControle.php';
                                             if($tarefas) foreach ($tarefas as $row) {
                                                 if ($row['status'] == 'b') {
                                                     $projeto = $projetoControle->readProjeto($row['projeto_id']);
-                                                    $cli = $clienteControle->readCliente($projeto['cliente_id']);
-                                                    echo '<div class="portlet">';
-                                                        echo '<input type="hidden" class="tarefa_id" value="'.$row['id'].'">';
-                                                        echo '';
-                                                        echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
-                                                        echo '<div class="portlet-content">'.$row['descricao'].'</div>';
-                                                        echo '<div class="portlet-footer">'. $cli['nome'].'<br>'.$projeto['descricao'].'</div>';
-                                                        echo '<div class="portlet-footer"><a class="portlet-icon" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$projeto['id'].'"><i class="fas fa-edit"></i></a> <a class="portlet-icon" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$projeto['id'].'"><i class="fas fa-trash"></i></a></div>';
-                                                    echo '</div>';
+                                                    if($projeto['ativo']) {
+                                                        $cli = $clienteControle->readCliente($projeto['cliente_id']);
+                                                        echo '<div class="portlet">';
+                                                            echo '<input type="hidden" class="tarefa_id" value="'.$row['id'].'">';
+                                                            echo '';
+                                                            echo '<div class="portlet-header">Peso: '.$row['peso'].'</div>';
+                                                            echo '<div class="portlet-content">'.$row['descricao'].'</div>';
+                                                            echo '<div class="portlet-footer">'. $cli['nome'].'<br>'.$projeto['descricao'].'</div>';
+                                                            echo '<div class="portlet-footer"><a class="portlet-icon" href="../Tarefa/update_tarefa.php?id='.$row['id'].'&projeto_id='.$projeto['id'].'"><i class="fas fa-edit"></i></a> <a class="portlet-icon" href="../Tarefa/delete_tarefa.php?id='.$row['id'].'&projeto_id='.$projeto['id'].'"><i class="fas fa-trash"></i></a></div>';
+                                                        echo '</div>';
+                                                    }
                                                 }
                                             }
 
