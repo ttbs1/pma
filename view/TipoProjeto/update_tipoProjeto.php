@@ -159,7 +159,7 @@ if((substr_compare($_SESSION['permissao']['tipoprojeto'], '0', 2, 1)) == 0) {
                                 ?>
                                         </label>
                                 <div class="form-actions" align="right">
-                                    <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?tipoTarefa_id='.$id.'">Adicionar Tarefa</a>' ?>
+                                    <?php echo '<a class="btn btn-default" href="../Tarefa/create_tarefa.php?tipoProjeto_id='.$id.'">Adicionar Tarefa</a>' ?>
                                 </div>
 
                                 <br/>

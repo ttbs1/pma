@@ -85,7 +85,7 @@ class TarefaControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Tarefa', $tarefa->getDescricao(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
@@ -121,7 +121,7 @@ class TarefaControle {
             $q->execute(array($_SESSION['usuario_id'], 'Cadastro', 'Tarefa', $tarefa->getDescricao(), $dateTime));
             $pdo = conexao::desconectar();
         } catch (Exception $ex) {
-            echo 'Erro: '. $ex->getMessage();
+            return 'Erro: '. $ex->getMessage();
         }
     }
     
