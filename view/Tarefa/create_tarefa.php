@@ -67,8 +67,9 @@ and open the template in the editor.
                 
                 $tarefaControle = new TarefaControle();
                 
-                if(!empty($_POST['tipoProjeto_id']))
+                if(!empty($_POST['tipoProjeto_id'])) {
                     $try = $tarefaControle->novaTarefa_TipoProjeto($tarefa, $_POST['tipoProjeto_id']);
+                }
                 elseif (!empty($_POST['projeto_id'])) 
                     $try = $tarefaControle->novaTarefa_Projeto2($tarefa, $_POST['projeto_id']);
                 
@@ -92,8 +93,10 @@ and open the template in the editor.
                             <legend>Tarefa</legend>
                             <div id="tarefa">
 
-                                <input type="hidden" name="tipoProjeto_id" id="tipoProjeto_id" value="<?php echo $tipoProjeto_id ?>" />
-                                <input type="hidden" name="projeto_id" id="projeto_id" value="<?php echo $projeto_id ?>" />
+                                <?php 
+                                if(!empty($tipoProjeto_id)) echo '<input type="hidden" name="tipoProjeto_id" id="tipoProjeto_id" value="'.$tipoProjeto_id.'" />';
+                                if(!empty($projeto_id)) echo '<input type="hidden" name="projeto_id" id="projeto_id" value="'.$projeto_id.'" />';
+                                ?>
                             
                                 <div class="form-group col-md-6">
                                     <label for="descricao">Descrição: </label><br>
