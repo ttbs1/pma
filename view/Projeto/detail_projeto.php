@@ -36,6 +36,11 @@ if(!empty($_GET['id']))
         <link href="../../util/projectTable.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="../../util/styles.css">
         <link rel="stylesheet" href="../../util/kanban.css">
+        
+        <script src="../../util/links/jquery-1.7.2.min.js"></script>
+        <script src="../../util/jquery-ui.min.js"></script>
+        <script src="../../util/jquery.ui.touch-punch.min.js"></script>
+        
 
     </head>
     <body>
@@ -103,16 +108,29 @@ if(!empty($_GET['id']))
 
                 ?>
                 
-                <div class="row" style="width: 100%; height: 25px; margin: 0px 0px 8px 8px"> 
+                <!--<div class="row" style="width: 100%; margin: 0px 0px 8px 8px"> 
                     
-                    <?php 
+                    <?php/* 
                     if ($tarefas) foreach($tarefas as $row) {
                         if ($row['status'] == 'a') { $cor = 'rgb(250,128,114)'; } elseif ($row['status'] == 'b') { $cor = 'rgb(255,247,190)'; } elseif ($row['status'] == 'c') { $cor = 'rgb(40,180,50)';}
                         echo '<div style="width: '.floor((($row['peso']/$peso_total)*100)-1) .'%; height: 25px; margin-right: 4px; background-color: '. $cor .'"></div>';
-                    }
+                        
+                    }*/
                     ?>
                     
+                </div>-->
+                
+                
+                <div class="progress" style="margin-bottom: 5px; opacity: 0.4">
+                    <?php
+                    if ($tarefas) foreach($tarefas as $row) {
+                        if ($row['status'] == 'a') { $cor = 'bg-danger'; } elseif ($row['status'] == 'b') { $cor = 'bg-warning'; } elseif ($row['status'] == 'c') { $cor = 'bg-success';}
+                        echo '<div class="progress-bar progress-bar-striped '.$cor.'" role="progressbar" style="width: '.((($row['peso']/$peso_total)*100)) .'%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">'. floor((($row['peso']/$peso_total)*100)) .'%</div>';
+                    }
+                    ?>
                 </div>
+                
+                
             
                 <div class="card">
                     <div class="card-header">
@@ -489,7 +507,10 @@ if(!empty($_GET['id']))
                   </div>
                 </div>
             </div>
-        
+            <script>
+                $('.portlet').draggable();
+            </script>
+
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

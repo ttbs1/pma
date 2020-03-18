@@ -1,7 +1,7 @@
  $(function() {
     $( ".column" ).sortable({
       connectWith: ".column",
-      handle: ".portlet-header",
+      //handle: ".portlet-header",
       cancel: ".portlet-toggle",
       placeholder: "portlet-placeholder ui-corner-all",
       opacity: 0.6,

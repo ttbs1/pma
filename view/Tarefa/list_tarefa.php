@@ -30,6 +30,11 @@ include_once '../../controller/UsuarioControle.php';
         <link href="../../util/projectTable.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="../../util/styles.css">
         <link rel="stylesheet" href="../../util/kanban.css">
+        
+        <script src="../../util/links/jquery-1.7.2.min.js"></script>
+        <script src="../../util/jquery-ui.min.js"></script>
+        <script src="../../util/jquery.ui.touch-punch.min.js"></script>
+        
 
     </head>
     <body>
@@ -152,6 +157,11 @@ include_once '../../controller/UsuarioControle.php';
                   </div>
                 </div>
             </div>
+        
+        
+            <script>
+                $('.portlet').draggable();
+            </script>
         
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
