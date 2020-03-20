@@ -191,7 +191,7 @@ if(!empty($_POST)) {
                             <div class="input-group-prepend">
                               <span class="input-group-text">R$</span>
                             </div>
-                            <input name="valor" id="valor" class="valor currency" type="text">
+                            <input inputmode="numeric" name="valor" id="valor" class="valor currency" type="text" pattern="[0-9].{17}">
                         </div>
                     </div>
                     
@@ -214,7 +214,7 @@ if(!empty($_POST)) {
         
                     <script type="text/javascript">
                         $(document).ready(function() {
-                            $('.valor').mask('000.000.000.000.000,00', {reverse: true});
+                            $('.valor').mask('000.000.000.000,00', {reverse: true});
                         });
                     </script>
                     
