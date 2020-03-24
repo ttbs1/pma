@@ -23,10 +23,11 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         
-        <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
-        <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../util/validationForm.js"></script>
+        <script type="text/javascript" src="../../util/jquery.mask.js"></script>
     </head>
     <body>
         <?php
@@ -87,114 +88,74 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                 <h3 class="well"> Atualizar Empresa </h3>
             </div>
                 <div class="card-body">
-                    <form class="form-horizontal" action="update_empresa.php" method="post">
-                    <fieldset>
+                    <form class="form-horizontal needs-validation" novalidate action="update_empresa.php" method="post">
+                        <fieldset>
                             <legend>Empresa</legend>
 
                             <input type="hidden" name="id" id="id" placeholder="id" value="<?php echo $id ?>" /><br>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-8">
                                 <label for="nome">Nome: </label>
-                                    <span id="nome1" class="textfieldHintState">
-                                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $empresa->getNome(); else echo $data['nome']?>" />
-                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
-                                           <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                    </span>
+                                <input class="form-control nome" type="text" required name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $empresa->getNome(); else echo $data['nome']?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
+                                <div class="valid-feedback">
+                                    Ok!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Nome inválido.
+                                </div>
                             </div>
-
-                            <script>
-                                var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
+                            
+                            <script type="text/javascript">
+                                $('.nome').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
                             </script>
 
-                            <div class="form-group col-md-3">
-                                <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(empty($_POST)) { if(strlen($data['cpf_cnpj'])==14){echo 'checked';} } else { if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())==14){echo 'checked';} } ?>> CPF 
-                                <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(empty($_POST)) { if(strlen($data['cpf_cnpj'])>14){echo 'checked';} } else { if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())>14){echo 'checked';} } ?>> CNPJ <br>
-                                <div id="documentfield"></div>
+                            <div class="form-group col-md-2">
+                                <label for="telefone">Documento: </label>
+                                <input class="form-control documento" type="text" inputmode="numeric" pattern=".{14}|.{18}" name="cpf_cnpj" id="cpf_cnpj" placeholder="CPF ou CNPJ" value="<?php if(!empty($_POST)) { if(!empty ($empresa->getCpf_cnpj())) echo $empresa->getCpf_cnpj(); } else { echo $data['cpf_cnpj']; } ?>" />
+                                <div class="invalid-feedback">
+                                    Documento inválido.
+                                </div>
                             </div>
 
                             <script type="text/javascript">
-                                
 
-                                function changeDocType() {
-                                    var cpf = document.getElementById("cpf").checked;
-                                    var cnpj = document.getElementById("cnpj").checked;
-
-                                    document.getElementById("documentfield").innerHTML = '<span id="cpf_cnpj" class="textfieldHintState">'
-                                +    '<input class="form-control" size="20" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" >'
-                                +    '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
-                                +'</span>';
-
-                                    if (cpf) {
-                                        document.getElementById("cpf_cnpj_field").placeholder = "000.000.000-00";
-                                        var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "000.000.000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                                    } if (cnpj) {
-                                        document.getElementById("cpf_cnpj_field").placeholder = "00.000.000/0000-00";
-                                        var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
+                                var Doc = function (val) {
+                                    return val.replace(/\D/g, '').length >= 12 ? '00.000.000/0000-00' : '000.000.000-000';
+                                },
+                                docOptions = {
+                                    onKeyPress: function(val, e, field, options) {
+                                        field.mask(Doc.apply({}, arguments), options);
                                     }
-                                }
+                                };
+
+                                $('.documento').mask(Doc, docOptions);
+
                             </script>
-                            <?php if(!empty($_POST)) {
-                                echo '<script>
-                                var radio = document.getElementsByName("document");
-                                if (radio[0].checked || radio[1].checked) { 
-                                    changeDocType();
-                                    document.getElementById("cpf_cnpj_field").value= "'.$empresa->getCpf_cnpj().'";
-                                }
-                                </script>';
-                            } else {
-                                echo '<script>
-                                var radio = document.getElementsByName("document");
-                                if (radio[0].checked || radio[1].checked) { 
-                                    changeDocType();
-                                    document.getElementById("cpf_cnpj_field").value= "'.$data['cpf_cnpj'].'";
-                                }
-                                </script>';
-                            }
-                            
-                            ?>
 
                             <div class="form-group col-md-2">
                                 <label for="telefone">Telefone: </label>
-                                <select id=tipo1 onchange="changeTelType(1)">
-                                    <option> </option>
-                                    <option>Celular</option>
-                                    <option>Fixo</option>
-                                </select>
-                                <div id="tel1field"></div>    
+                                <input class="form-control telefone" type="text" inputmode="tel" pattern=".{13,14}" name="telefone1" id="telefone1" placeholder="(00)00000-0000" value="<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo $empresa->getTelefone(); } else { echo $data['telefone']; } ?>" />
+                                <div class="invalid-feedback">
+                                    Telefone inválido.
+                                </div>
                             </div>
 
                             <script type="text/javascript">
 
-                                if (<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo strlen($empresa->getTelefone()); else echo 0; } else { echo strlen($data['telefone']); } ?> >= 13) {
-                                    if (<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo strlen($empresa->getTelefone()); else echo 0; } else { echo strlen($data['telefone']); } ?> > 13)
-                                        document.getElementById("tipo1").value = "Celular";
-                                    else
-                                        document.getElementById("tipo1").value = "Fixo";
-                                    changeTelType(1);
-                                    document.getElementById("telefone1").value = "<?php if(!empty($_POST)) { if(!empty ($empresa->getTelefone())) echo $empresa->getTelefone(); } else { echo $data['telefone']; } ?>";
-                                }
+                                var SPMaskBehavior = function (val) {
+                                    return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00000';
+                                },
+                                spOptions = {
+                                    onKeyPress: function(val, e, field, options) {
+                                        field.mask(SPMaskBehavior.apply({}, arguments), options);
+                                    }
+                                };
 
-                                function changeTelType(i) {
+                                $('.telefone').mask(SPMaskBehavior, spOptions);
 
-                                    var tipo = document.getElementById("tipo"+i).value;
-
-                                    document.getElementById("tel"+i+"field").innerHTML = '<span id="telefone1'+i+'" class="textfieldHintState">'
-                                    +       '<input class="form-control" type="text" name="telefone'+i+'" id="telefone'+i+'" />'
-                                    +       '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
-                                    +'</span>';
-
-                                    if(tipo == 'Celular'){
-                                        document.getElementById("telefone"+i+"").placeholder = "(00)00000-0000";
-                                        var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)90000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                                    }else if(tipo == 'Fixo') {
-                                        document.getElementById("telefone"+i+"").placeholder = "(00)0000-0000";
-                                        var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)0000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                                    } else document.getElementById("tel"+i+"field").innerHTML = "";
-                                }
                             </script>
-
-
-                            </fieldset>
+                            
+                        </fieldset>
 
 
 
@@ -264,9 +225,9 @@ if((substr_compare($_SESSION['permissao']['empresa'], '0', 2, 1)) == 0) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
         <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

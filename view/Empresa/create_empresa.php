@@ -16,8 +16,12 @@ if(!empty($_POST)) {
     $empresa->setNome($_POST['nome']);
     if (!empty($_POST['cpf_cnpj']))
         $empresa->setCpf_cnpj($_POST['cpf_cnpj']);
+        if($empresa->getCpf_cnpj()=="")
+            $empresa->setCpf_cnpj(NULL);
     if (filter_has_var(INPUT_POST, "telefone1")){
         $empresa->setTelefone($_POST['telefone1']);
+        if($empresa->getTelefone()=="")
+            $empresa->setTelefone(NULL);
     }
 
     $endereco = new Endereco();
@@ -47,18 +51,19 @@ if(!empty($_POST)) {
             $endereco->setCidade(NULL);
     }
     if (filter_has_var(INPUT_POST, "uf")) {
-        $endereco->setEstado($_POST['uf']);
+        $endereco->setEstado(strtoupper($_POST['uf']));
         if ($endereco->getEstado()=="")
             $endereco->setEstado(NULL);
     }
 
     $empresaControle = new EmpresaControle();
     $try = $empresaControle->inserirEmpresa($empresa);
-    if (!empty($endereco->getRua())) {
-        $enderecoControle = new EnderecoControle();
-        $try = $enderecoControle->inserirEndereco($endereco, "empresa");
+    if(empty($try)) {
+        if (!empty($endereco->getRua())) {
+            $enderecoControle = new EnderecoControle();
+            $try = $enderecoControle->inserirEndereco($endereco, "empresa");
+        }
     }
-    //header("Location: list_empresa.php");
 }
 ?>
 
@@ -76,6 +81,9 @@ if(!empty($_POST)) {
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../util/validationForm.js"></script>
+        <script type="text/javascript" src="../../util/jquery.mask.js"></script>
     </head>
     <body>
     <div class="container">
@@ -109,91 +117,77 @@ if(!empty($_POST)) {
                 <h3 class="well"> Adicionar Empresa </h3>
             </div>
             <div class="card-body">
-                <form class="form-horizontal" action="create_empresa.php" method="post">
+                <form class="form-horizontal needs-validation" novalidate action="create_empresa.php" method="post">
 
                 <fieldset>
                 <legend>Nova Empresa</legend>
                 
                 <div class="form-group col-md-8">
                     <label for="nome">Nome: </label>
-                        <span id="nome1" class="textfieldHintState">
-                            <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if (!empty($_POST['nome'])) echo $_POST['nome'] ?>" />
-                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
-                               <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                        </span>
-                </div>
-                <script>
-                    var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
-                </script>
-                
-                <div class="form-group col-md-3">
-                    <input type="radio" name="document" value="CPF" id="cpf" onclick="changeDocType()" <?php if(!empty($_POST)) if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())==14){echo 'checked';} ?>> CPF 
-                    <input type="radio" name="document" value="CNPJ" id="cnpj" onclick="changeDocType()" <?php if(!empty($_POST)) if(!empty($empresa->getCpf_cnpj())) if(strlen($empresa->getCpf_cnpj())>14){echo 'checked';} ?>> CNPJ <br>
-                    <div id="documentfield"></div>
-                    
-                    <script type="text/javascript">
-                        var radio = document.getElementsByName("document");
-                        if (radio[0].checked || radio[1].checked) { 
-                            changeDocType();
-                            document.getElementById("cpf_cnpj_field").value= "<?php if(!empty($_POST)) echo $empresa->getCpf_cnpj()?>";
-                        };
-                                
-                                
-                        function changeDocType() {
-                            var cpf = document.getElementById("cpf").checked;
-                            var cnpj = document.getElementById("cnpj").checked;
-
-                            document.getElementById("documentfield").innerHTML = '<span id="cpf_cnpj" class="textfieldHintState">'
-                        +    '<input class="form-control" name="cpf_cnpj" id="cpf_cnpj_field" type="text" placeholder="" value="">'
-                        +    '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
-                        +'</span>';
-
-                            if (cpf) {
-                                document.getElementById("cpf_cnpj_field").placeholder = "000.000.000-00";
-                                var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "000.000.000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                            } if (cnpj) {
-                                document.getElementById("cpf_cnpj_field").placeholder = "00.000.000/0000-00";
-                                var cpf_cnpj = new Spry.Widget.ValidationTextField("cpf_cnpj", "custom", {format:"custom", pattern: "00.000.000/0000-00", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                            }
-                        }
-                    </script>
+                    <input class="form-control nome" type="text" required name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($try)) echo $empresa->getNome(); ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
+                    <div class="valid-feedback">
+                        Ok!
+                    </div>
+                    <div class="invalid-feedback">
+                        Nome inválido.
+                    </div>
                 </div>
                 
-               <div class="form-group col-md-2">
-                    <label for="telefone">Telefone: </label>
-                    <select id=tipo1 onchange="changeTelType(1)">
-                        <option> </option>
-                        <option>Celular</option>
-                        <option>Fixo</option>
-                    </select>
-                    <div id="tel1field"></div>
+                <div class="form-group col-md-2">
+                    <label for="telefone">Documento: </label>
+                    <input class="form-control documento" type="text" inputmode="numeric" pattern=".{14}|.{18}" name="cpf_cnpj" id="cpf_cnpj" placeholder="CPF ou CNPJ" value="<?php if(!empty($try)) echo $empresa->getCpf_cnpj(); ?>" />
+                    <div class="invalid-feedback">
+                        Documento inválido.
+                    </div>
                 </div>
                 
                 <script type="text/javascript">
-                    function changeTelType(i) {
-                        var tipo = document.getElementById("tipo"+i).value;
-                        
-                        document.getElementById("tel"+i+"field").innerHTML = '<span id="telefone1'+i+'" class="textfieldHintState">'
-                        +       '<input class="form-control" type="text" name="telefone'+i+'" id="telefone'+i+'" />'
-                        +       '<span class="textfieldInvalidFormatMsg">Formato inválido de entrada</span>'
-                        +'</span>';
-                
-                        if(tipo == 'Celular'){
-                            document.getElementById("telefone"+i+"").placeholder = "(00)00000-0000";
-                            var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)90000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                        }else if(tipo == 'Fixo') {
-                            document.getElementById("telefone"+i+"").placeholder = "(00)0000-0000";
-                            var telefone = new Spry.Widget.ValidationTextField("telefone1"+i, "custom", {format:"custom", pattern: "(00)0000-0000", validateOn:["blur"], useCharacterMasking: true, isRequired:false});
-                        } else document.getElementById("tel"+i+"field").innerHTML = "";
-                    }
-                </script>
+                    
+                    var Doc = function (val) {
+                        return val.replace(/\D/g, '').length >= 12 ? '00.000.000/0000-00' : '000.000.000-000';
+                    },
+                    docOptions = {
+                        onKeyPress: function(val, e, field, options) {
+                            field.mask(Doc.apply({}, arguments), options);
+                        }
+                    };
 
+                    $('.documento').mask(Doc, docOptions);
+                    
+                </script>
+                
+                <div class="form-group col-md-2">
+                    <label for="telefone">Telefone: </label>
+                    <input class="form-control telefone" type="text" inputmode="tel" pattern=".{13,14}" name="telefone1" id="telefone1" placeholder="(00)00000-0000" value="<?php if(!empty($try)) echo $empresa->getTelefone() ?>" />
+                    <div class="invalid-feedback">
+                        Telefone inválido.
+                    </div>
+                </div>
+                
+                <script type="text/javascript">
+                    
+                    var SPMaskBehavior = function (val) {
+                        return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00000';
+                    },
+                    spOptions = {
+                        onKeyPress: function(val, e, field, options) {
+                            field.mask(SPMaskBehavior.apply({}, arguments), options);
+                        }
+                    };
+
+                    $('.telefone').mask(SPMaskBehavior, spOptions);
+                    
+                </script>
+                
+                
+                </fieldset>
+                    
                 
                     
+                    
+                    
                     <!-- Adicionando JQuery -->
-                    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-                            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-                            crossorigin="anonymous"></script>
+                    
 
                     <!-- Adicionando Javascript -->
                     <script type="text/javascript" >
@@ -304,87 +298,103 @@ if(!empty($_POST)) {
                     <fieldset>
                     <legend>Endereço</legend>
                     <div id="endereco">
-                        
+                    
                     <div class="form-group row" style="margin-left: 3px">
+                        
                         <div class="form-group col-md-2">
                             <label for="cep">CEP: </label>
-                                <span id="cep1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
-                                </span>
+                            <input type="text" class="form-control cep" pattern=".{9}" inputmode="numeric" required name="cep" id="cep" placeholder="CEP" value="<?php if(!empty($try)) if(!empty($endereco->getCEP())) echo $endereco->getCEP() ?>" />
+                            <div class="valid-feedback">
+                                Ok!
+                            </div>
+                            <div class="invalid-feedback">
+                                CEP inválido.
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                        <label for="rua">Rua: </label>
-                            <span id="rua1" class="textfieldHintState">
-                                <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="" />
-                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                            </span>
+                        
+                        
+                        
+                        <div class="form-group col-md-7">
+                            <label for="rua">Rua: </label>
+                            <input type="text" class="form-control rua" required name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($try)) if(!empty($endereco->getRua())) echo $endereco->getRua() ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
+                            <div class="valid-feedback">
+                                Ok!
+                            </div>
+                            <div class="invalid-feedback">
+                                Rua inválida.
+                            </div>
                         </div>
+                        
                         <div class="form-group col-md-2">
                             <label for="numero">Numero: </label>
-                                <span id="numero1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
-                                </span>
+                            <input type="text" class="form-control num" inputmode="numeric" pattern=".{1,7}" name="numero" id="numero" placeholder="Numero" value="<?php if(!empty($try)) if(!empty($endereco->getNumero())) echo $endereco->getNumero() ?>" />
+                            <div class="invalid-feedback">
+                                Número inválido.
+                            </div>
                         </div>
                           
                         <div class="form-group col-md-5"> 
                             <label for="bairro">Bairro: </label>
-                                <span id="bairro1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                </span>
+                            <input type="text" class="form-control bairro" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($try)) if(!empty($endereco->getBairro())) echo $endereco->getBairro() ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
+                            <div class="invalid-feedback">
+                                Bairro inválido.
+                            </div>
                         </div>
                         
                         <div class="form-group col-md-5">
                             <label for="cidade">Cidade: </label>
-                                <span id="cidade1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                </span>
+                            <input type="text" class="form-control cidade" required name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($try)) if(!empty($endereco->getCidade())) echo $endereco->getCidade() ?>" pattern="[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
+                            <div class="valid-feedback">
+                                Ok!
+                            </div>
+                            <div class="invalid-feedback">
+                                Cidade inválida.
+                            </div>
                         </div>
                     
                         <div class="form-group col-md-1">
                             <label for="uf">Estado: </label>
-                                <span id="uf1" class="textfieldHintState">
-                                    <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="" />
-                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
-                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                </span>
+                            <input type="text" class="form-control estado" required name="uf" id="uf" placeholder="UF" value="<?php if(!empty($try)) if(!empty($endereco->getEstado())) echo $endereco->getEstado() ?>" pattern="[A-Za-z]{2}" />
+                            <div class="valid-feedback">
+                                Ok!
+                            </div>
+                            <div class="invalid-feedback">
+                                Estado inválido.
+                            </div>
                         </div>
+                    
+                        <script type="text/javascript">
+                            
+                            $('.cep').mask('00000-000');
+                            $('.num').mask('0000000');
+                            $('.nome').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.rua').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.bairro').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.cidade').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.estado').mask('XX', {translation:  {'X': {pattern: /[A-Za-z]/}}});
+                            
+                        </script>
+                    
                     </div>
-                        
-                    <script>
-                        var cep1 = new Spry.Widget.ValidationTextField("cep1", "custom", {format:"custom", pattern: "00000-000", validateOn:["blur"], useCharacterMasking: true, isRequired: false});
-                        var rua1 = new Spry.Widget.ValidationTextField("rua1", "custom", {validateOn:["blur"], maxChars: 85});
-                        var numero1 = new Spry.Widget.ValidationTextField("numero1", "custom", {validateOn:["blur"], maxChars: 7, isRequired: false});
-                        var bairro1 = new Spry.Widget.ValidationTextField("bairro1", "custom", {validateOn:["blur"], maxChars: 40, isRequired: false});
-                        var cidade1 = new Spry.Widget.ValidationTextField("cidade1", "custom", {validateOn:["blur"], maxChars: 40});
-                        var uf1 = new Spry.Widget.ValidationTextField("uf1", "custom", {format:"custom", pattern: "AA", validateOn:["blur"], useCharacterMasking: true});
-                    </script>
                     </div>
                     <button type="button" style="min-width: 200px;" class="btn btn-outline-secondary" onclick="toogleAdress()" id='toogle' nome='toogle'> Não cadastrar endereço </button>
                     </fieldset>
                     <script>
                         function toogleAdress () {
                             x = document.getElementById("endereco");
-                            
                             if (x.style.display == 'none') {
                                 x.style.display = 'block';
+                                document.getElementById("cep").required = true;
+                                document.getElementById("rua").required = true;
+                                document.getElementById("cidade").required = true;
+                                document.getElementById("uf").required = true;
                                 document.getElementById("toogle").innerHTML = 'Não cadastrar endereço';
-                                rua1 = new Spry.Widget.ValidationTextField("rua1", "custom", {validateOn:["blur"], maxChars: 85});
-                                cidade1 = new Spry.Widget.ValidationTextField("cidade1", "custom", {validateOn:["blur"], maxChars: 40});
-                                uf1 = new Spry.Widget.ValidationTextField("uf1", "custom", {format:"custom", pattern: "AA", validateOn:["blur"], useCharacterMasking: true});
                             } else {
                                 x.style.display = 'none';
-                                rua1.reset(); // remove the error message
-                                rua1.destroy(); // remove the validation
-                                cidade1.reset(); // remove the error message
-                                cidade1.destroy(); // remove the validation
-                                uf1.reset(); // remove the error message
-                                uf1.destroy(); // remove the validation
+                                document.getElementById("cep").required = false;
+                                document.getElementById("rua").required = false;
+                                document.getElementById("cidade").required = false;
+                                document.getElementById("uf").required = false;
                                 document.getElementById("toogle").innerHTML = 'Cadastrar endereço';
                             }
                         }
@@ -413,7 +423,6 @@ if(!empty($_POST)) {
         </div>
         </div>
     </div>
-    <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
@@ -431,7 +440,7 @@ if(!empty($_POST)) {
                 echo '<script> 
                     $(document).ready(function() {
                         $("#exampleModalCenter").modal().on("hidden.bs.modal", function (e) {
-                            window.location.href = "list_cliente.php";
+                            window.location.href = "list_empresa.php";
                         })
                         $("#exampleModalCenter").modal("toggle");
                     });
@@ -440,7 +449,7 @@ if(!empty($_POST)) {
                 echo '<script> 
                     $(document).ready(function() {
                         $("#confirmModal").modal().on("hidden.bs.modal", function (e) {
-                            window.location.href = "list_cliente.php";
+                            window.location.href = "list_empresa.php";
                         })
                         $("#confirmModal").modal("toggle");
                     });
@@ -468,7 +477,7 @@ if(!empty($_POST)) {
                                 if (strpos($try, "'nome'"))
                                     echo 'O nome inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
                                 elseif (strpos($try, "'cpf_cnpj'"))
-                                    echo 'O campo CPF/CNPJ inserido já existe no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
+                                    echo 'O campo CPF/CNPJ inserido já fexiste no banco de dados, e não pode ser cadastrado em duplicidade. Em caso de dúvidas, entre em contato com o suporte.';
 
                                 } else { echo $try; }
                             } elseif (!empty($try2)) {

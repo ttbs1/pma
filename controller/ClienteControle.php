@@ -114,11 +114,11 @@ class ClienteControle {
         try {
             $pdo = conexao::conectar();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "SELECT * FROM cliente WHERE nome = ?";
+            $sql = "SELECT * FROM cliente WHERE nome = ? and ativo = ?";
             //$sql = "SELECT * FROM cliente WHERE nome like ?";
             $q = $pdo->prepare($sql);
             //$pesquisa = '%'.$pesquisa.'%';
-            $q->execute(array($pesquisa));
+            $q->execute(array($pesquisa, TRUE));
             $data = $q->fetch(PDO::FETCH_ASSOC);
             conexao::desconectar();
             return $data;

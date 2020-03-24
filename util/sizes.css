@@ -9,7 +9,15 @@ and open the template in the editor.
 */
 
 
-
+input.estado {
+    text-transform: uppercase;
+}
+input.estado:-ms-input-placeholder {
+    text-transform: none;
+}
+input.estado::placeholder {
+    text-transform: none;
+}
 
 input.reformulado {
     width: 14%;

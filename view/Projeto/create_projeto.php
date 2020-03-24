@@ -18,10 +18,12 @@ if(!empty($_POST)) {
     
     $clienteControle = new ClienteControle();
     $cliente = $clienteControle->pesquisarCliente($_POST['nome']);
-    $projeto->setCliente_id($cliente['id']);
+    if($cliente)
+        $projeto->setCliente_id($cliente['id']);
     $tipoProjetoControle = new TipoProjetoControle();
     $tipoProjeto = $tipoProjetoControle->pesquisarTipoProjeto($_POST['tipoprojeto']);
-    $projeto->setTipoprojeto_id($tipoProjeto['id']);
+    if($tipoProjeto)
+        $projeto->setTipoprojeto_id($tipoProjeto['id']);
     $projeto->setData_entrada($_POST['data_entrada']);
     $projeto->setData_prevista($_POST['data_prevista']);
     $projeto->setDescricao($_POST['descricao']);
@@ -54,8 +56,6 @@ if(!empty($_POST)) {
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
-        <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
         <link href="../../util/currencyStyle.css" rel="stylesheet" type="text/css" />
@@ -64,9 +64,8 @@ if(!empty($_POST)) {
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <link type="text/css" href="../../util/links/jquery-ui-themes-1.12.1/jquery-ui.css" rel="stylesheet"/>
-        <script type="text/javascript" src="../../util/links/jquery-ui-1.12.1/jquery-ui.js"></script>
         
+        <script type="text/javascript" src="../../util/links/jquery-ui-1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="../../util/jquery.mask.js"></script>
     </head>
     <body>
@@ -101,11 +100,11 @@ if(!empty($_POST)) {
                 <h3 class="well"> Adicionar Projeto </h3>
             </div>
             <div class="card-body">
-                <form class="form-horizontal" action="create_projeto.php" method="post">
+                <form class="form-horizontal needs-validation" action="create_projeto.php" method="post">
 
                 <fieldset>
                 <legend>Novo Projeto</legend>
-                
+                    <link type="text/css" href="../../util/links/jquery-ui-themes-1.12.1/jquery-ui.css" rel="stylesheet"/>
                     <script type="text/javascript">
                         $(document).ready(function() {
 
@@ -125,19 +124,12 @@ if(!empty($_POST)) {
                     </script>
         
                     <div class="form-group col-md-6">
-                        <label for="nome">Selecionar Cliente: </label><br>
-                            <span id="nome1" class="textfieldHintState">
-                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $_POST['nome'] ?>" />
-                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
-                                   <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                            </span>
+                        <label for="nome">Selecionar Cliente: </label>
+                        <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $_POST['nome'] ?>" />
                     </div>
-                    <script>
-                        var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
-                    </script>
                     
                     <div class="form-group col-md-4">
-                        <label for="tipoprojeto">Modelos de projeto: </label><br>
+                        <label for="tipoprojeto">Modelos de projeto: </label>
                         <select class="form-control" name="tipoprojeto" id="tipoprojeto">
                             <option></option>
                             <?php
@@ -191,7 +183,7 @@ if(!empty($_POST)) {
                             <div class="input-group-prepend">
                               <span class="input-group-text">R$</span>
                             </div>
-                            <input inputmode="numeric" name="valor" id="valor" class="valor currency" type="text" pattern="[0-9].{17}">
+                            <input inputmode="numeric" name="valor" id="valor" class="valor currency" type="text" pattern="[0-9].{17}" >
                         </div>
                     </div>
                     

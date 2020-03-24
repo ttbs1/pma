@@ -22,9 +22,10 @@ if((substr_compare($_SESSION['permissao']['usuario'], '0', 1, 1)) == 0) {
         
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
-        <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../util/validationForm.js"></script>
+        <script type="text/javascript" src="../../util/jquery.mask.js"></script>
         
     </head>
     <body>
@@ -59,35 +60,33 @@ if((substr_compare($_SESSION['permissao']['usuario'], '0', 1, 1)) == 0) {
                         <h3 class="well"> Adicionar Usuário </h3>
                     </div>
                     <div class="card-body">
-                    <form class="form-horizontal" action="create_usuario_1.php" method="post">
+                        <form class="form-horizontal needs-validation" novalidate action="create_usuario_1.php" method="post">
 
                         <div class="row">
                             <fieldset style="padding-left: 1.5em;">
                                 <legend>Novo usuário</legend>
 
                                 <div class="form-group col-md-12">
-                                <label for="usuario">Nome de usuário: </label>
-                                            <span id="usuario1" class="textfieldHintState">
-                                                <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" value="" />
-                                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                            </span>
+                                    <label for="usuario">Nome de usuário: </label>
+                                    <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" value="" pattern=".{1,30}" required />
+                                    <div class="valid-feedback">
+                                        Ok!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Nome de usuário inválido.
+                                    </div>
                                 </div>
-                                <script>
-                                    var usuario1 = new Spry.Widget.ValidationTextField("usuario1", "custom", {validateOn:["blur"], maxChars: 85});
-                                </script>
 
                                 <div class="form-group col-md-12">
-                                <label for="senha">Senha: </label>
-                                            <span id="senha" class="textfieldHintState">
-                                                <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" value="" />
-                                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 12 caracteres.</span>
-                                                <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                            </span>
+                                    <label for="senha">Senha: </label>
+                                    <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" value="" pattern=".{1,30}" required />
+                                    <div class="valid-feedback">
+                                        Ok!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Senha inválida.
+                                    </div>
                                 </div>
-                                <script>
-                                    var senha = new Spry.Widget.ValidationTextField("senha", "custom", {validateOn:["blur"], maxChars: 12});
-                                </script>
 
                                 <label for="adm">Administrador: </label> <input type="checkbox" name="adm" id="adm">
 
@@ -300,7 +299,6 @@ if((substr_compare($_SESSION['permissao']['usuario'], '0', 1, 1)) == 0) {
                 </div>
             </div>
         </div>
-        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <p></p>

@@ -14,10 +14,11 @@ and open the template in the editor.
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
-        <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../util/validationForm.js"></script>
+        <script type="text/javascript" src="../../util/jquery.mask.js"></script>
     </head>
     <body>
         <div class="container">
@@ -79,7 +80,7 @@ and open the template in the editor.
                 <h3 class="well"> Atualizar Tarefa </h3>
             </div>
                 <div class="card-body">
-                    <form class="form-horizontal" action="update_tarefa.php" method="post">
+                    <form class="form-horizontal needs-validation" novalidate action="update_tarefa.php" method="post">
 
                                 <fieldset>
                                     <legend>Tarefa</legend>
@@ -87,27 +88,30 @@ and open the template in the editor.
 
                                         <input type="hidden" name="id" value="<?php echo $id;?>" />
 
-                                        <div class="form-group col-md-8">
-                                            <label for="descricao">Descrição: </label><br>
-                                                <span id="descricao1" class="textfieldHintState">
-                                                    <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php if(!empty($_POST)) echo $_POST['descricao']; else echo $data['descricao']; ?>" />
-                                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                                </span>
+                                        <div class="form-group col-md-6">
+                                            <label for="descricao">Descrição: </label>
+                                            <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="<?php if(!empty($_POST)) echo $_POST['descricao']; else echo $data['descricao']; ?>" required pattern=".{1,85}" />
+                                            <div class="valid-feedback">
+                                                Ok!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Descrição inválida.
+                                            </div>
                                         </div>
-                                        <script>
-                                            var user = new Spry.Widget.ValidationTextField("descricao", "custom", {validateOn:["blur"], maxChars: 85});
-                                        </script>
+
                                         <div class="form-group col-md-1">
-                                            <label for="peso">Peso: </label><br>
-                                                <span id="peso1" class="textfieldHintState">
-                                                    <input type="text" class="form-control" name="peso" id="peso" placeholder="Peso" value="<?php if(!empty($_POST)) echo $_POST['peso']; else echo $data['peso']; ?>" />
-                                                    <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                                    <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                                </span>
+                                            <label for="peso">Peso: </label>
+                                            <input type="text" inputmode="numeric" class="form-control peso" name="peso" id="peso" placeholder="Peso" value="<?php if(!empty($_POST)) echo $_POST['peso']; else echo $data['peso']; ?>" required pattern="[0-9]{1,4}" />
+                                            <div class="valid-feedback">
+                                                Ok!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Peso inválido.
+                                            </div>
                                         </div>
-                                        <script>
-                                            var user = new Spry.Widget.ValidationTextField("peso", "custom", {validateOn:["blur"], maxChars: 85});
+
+                                        <script type="text/javascript">
+                                            $('.peso').mask('0000');
                                         </script>
                                     </div>
                                 </fieldset>
@@ -115,8 +119,8 @@ and open the template in the editor.
 
 
 
-
                         <div class="form-actions">
+                                <br>
 
                             <button type="submit" class="btn btn-success">Atualizar</button>
                             <a href="#" type="btn" class="btn btn-default" onclick="goBack();">Voltar</a>

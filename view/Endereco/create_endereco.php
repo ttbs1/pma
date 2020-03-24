@@ -18,6 +18,9 @@ and open the template in the editor.
         <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
+        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../util/validationForm.js"></script>
+        <script type="text/javascript" src="../../util/jquery.mask.js"></script>
     </head>
     <body>
         <div class="container">
@@ -87,14 +90,11 @@ and open the template in the editor.
                     <h3 class="well"> Cadastrar Endereço </h3>
                 </div>
                 <div class="card-body">
-                    <form class="form-horizontal" action="create_endereco.php" method="post">
+                    <form class="form-horizontal needs-validation" novalidate action="create_endereco.php" method="post">
 
 
 
                         <!-- Adicionando JQuery -->
-                        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-                                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-                                crossorigin="anonymous"></script>
 
                         <!-- Adicionando Javascript -->
                         <script type="text/javascript" >
@@ -211,64 +211,82 @@ and open the template in the editor.
                             <input type="hidden" name="projeto_id" id="projeto_id" value="<?php echo $projeto_id ?>" />
 
                             <div class="form-group row" style="margin-left: 3px">
+                        
                                 <div class="form-group col-md-2">
                                     <label for="cep">CEP: </label>
-                                        <span id="cep1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" value="<?php if(!empty($_POST)) echo $_POST['cep'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 9 caracteres.</span>
-                                        </span>
+                                    <input type="text" class="form-control cep" pattern=".{9}" inputmode="numeric" required name="cep" id="cep" placeholder="CEP" value="<?php if(!empty($try)) if(!empty($endereco->getCEP())) echo $endereco->getCEP() ?>" />
+                                    <div class="valid-feedback">
+                                        Ok!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        CEP inválido.
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                <label for="rua">Rua: </label>
-                                    <span id="rua1" class="textfieldHintState">
-                                        <input type="text" class="form-control" name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($_POST)) echo $_POST['rua'] ?>" />
-                                        <span class="textfieldMaxCharsMsg">Esse campo tem limite de 85 caracteres.</span>
-                                        <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                    </span>
+
+
+
+                                <div class="form-group col-md-7">
+                                    <label for="rua">Rua: </label>
+                                    <input type="text" class="form-control rua" required name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($try)) if(!empty($endereco->getRua())) echo $endereco->getRua() ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
+                                    <div class="valid-feedback">
+                                        Ok!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Rua inválida.
+                                    </div>
                                 </div>
+
                                 <div class="form-group col-md-2">
                                     <label for="numero">Numero: </label>
-                                        <span id="numero1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" value="<?php if(!empty($_POST)) if(!empty($_POST['numero'])) echo $_POST['numero'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 7 caracteres.</span>
-                                        </span>
+                                    <input type="text" class="form-control num" inputmode="numeric" pattern=".{1,7}" name="numero" id="numero" placeholder="Numero" value="<?php if(!empty($try)) if(!empty($endereco->getNumero())) echo $endereco->getNumero() ?>" />
+                                    <div class="invalid-feedback">
+                                        Número inválido.
+                                    </div>
                                 </div>
 
                                 <div class="form-group col-md-5"> 
                                     <label for="bairro">Bairro: </label>
-                                        <span id="bairro1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($_POST)) if(!empty($_POST['bairro'])) echo $_POST['bairro'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                        </span>
+                                    <input type="text" class="form-control bairro" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($try)) if(!empty($endereco->getBairro())) echo $endereco->getBairro() ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
+                                    <div class="invalid-feedback">
+                                        Bairro inválido.
+                                    </div>
                                 </div>
 
                                 <div class="form-group col-md-5">
                                     <label for="cidade">Cidade: </label>
-                                        <span id="cidade1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($_POST)) echo $_POST['cidade'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 40 caracteres.</span>
-                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                        </span>
+                                    <input type="text" class="form-control cidade" required name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($try)) if(!empty($endereco->getCidade())) echo $endereco->getCidade() ?>" pattern="[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
+                                    <div class="valid-feedback">
+                                        Ok!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Cidade inválida.
+                                    </div>
                                 </div>
 
                                 <div class="form-group col-md-1">
                                     <label for="uf">Estado: </label>
-                                        <span id="uf1" class="textfieldHintState">
-                                            <input type="text" class="form-control" name="uf" id="uf" placeholder="UF" value="<?php if(!empty($_POST)) echo $_POST['uf'] ?>" />
-                                            <span class="textfieldMaxCharsMsg">Esse campo tem limite de 2 caracteres.</span>
-                                            <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                                        </span>
+                                    <input type="text" class="form-control estado" required name="uf" id="uf" placeholder="UF" value="<?php if(!empty($try)) if(!empty($endereco->getEstado())) echo $endereco->getEstado() ?>" pattern="[A-Za-z]{2}" />
+                                    <div class="valid-feedback">
+                                        Ok!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Estado inválido.
+                                    </div>
                                 </div>
-                            </div>
 
-                        <script>
-                            var cep1 = new Spry.Widget.ValidationTextField("cep1", "custom", {format:"custom", pattern: "00000-000", validateOn:["blur"], useCharacterMasking: true, isRequired: false});
-                            var rua1 = new Spry.Widget.ValidationTextField("rua1", "custom", {validateOn:["blur"], maxChars: 85});
-                            var numero1 = new Spry.Widget.ValidationTextField("numero1", "custom", {validateOn:["blur"], maxChars: 7, isRequired: false});
-                            var bairro1 = new Spry.Widget.ValidationTextField("bairro1", "custom", {validateOn:["blur"], maxChars: 40, isRequired: false});
-                            var cidade1 = new Spry.Widget.ValidationTextField("cidade1", "custom", {validateOn:["blur"], maxChars: 40});
-                            var uf1 = new Spry.Widget.ValidationTextField("uf1", "custom", {format:"custom", pattern: "AA", validateOn:["blur"], useCharacterMasking: true});
-                        </script>
+                                <script type="text/javascript">
+
+                                    $('.cep').mask('00000-000');
+                                    $('.num').mask('0000000');
+                                    $('.nome').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z\u00C0-\u00FF ]/}}});
+                                    $('.rua').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                                    $('.bairro').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                                    $('.cidade').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                                    $('.estado').mask('XX', {translation:  {'X': {pattern: /[A-Za-z]/}}});
+
+                                </script>
+                        
+                            </div>
                         </div>
                         </fieldset>
 
@@ -292,7 +310,6 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
-        <script src="../../util/links/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="../../util/links/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="../../util/links/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         

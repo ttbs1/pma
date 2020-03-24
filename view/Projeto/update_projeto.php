@@ -70,8 +70,6 @@ if(!empty($_POST)) {
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="../../util/links/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="../../util/SpryValidationTextField.js" type="text/javascript"></script> 
-        <link href="../../util/SpryValid.css" rel="stylesheet" type="text/css" />
         <link href="../../util/sizes.css" rel="stylesheet" type="text/css" />
         <link href="../../util/styles.css" rel="stylesheet" type="text/css" />
         <link href="../../util/currencyStyle.css" rel="stylesheet" type="text/css" />
@@ -143,15 +141,8 @@ if(!empty($_POST)) {
         
                     <div class="form-group col-md-6">
                         <label for="nome">Selecionar Cliente: </label>
-                            <span id="nome1" class="textfieldHintState">
-                                <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $_POST['nome']; else echo $data_cli['nome']; ?>" />
-                                <span class="textfieldMaxCharsMsg">Esse campo tem limite de 150 caracteres.</span>
-                                   <span class="textfieldRequiredMsg">Esse campo é obrigatório</span>
-                            </span>
+                        <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($_POST)) echo $_POST['nome']; else echo $data_cli['nome']; ?>" />
                     </div>
-                    <script>
-                        var nome1 = new Spry.Widget.ValidationTextField("nome1", "custom", {validateOn:["blur"], maxChars: 150});
-                    </script>
                     
                     <div class="form-group col-md-4">
                         <label for="tipoprojeto">Modelos de projeto: </label>
@@ -228,7 +219,7 @@ if(!empty($_POST)) {
                             <div class="input-group-prepend">
                               <span class="input-group-text">R$</span>
                             </div>
-                            <input name="valor" id="valor" class="valor currency" type="text" value="<?php if(!empty($_POST)) { if(!empty($_POST['valor'])) echo $_POST['valor']; } else { echo $data['valor']; } ?>">
+                            <input name="valor" id="valor" class="valor currency" type="text" value="<?php if(!empty($_POST)) { if(!empty($_POST['valor'])) echo $_POST['valor']; } else { echo $data['valor']; } ?>" pattern="[0-9].{17}" >
                         </div>
                     </div>
                     

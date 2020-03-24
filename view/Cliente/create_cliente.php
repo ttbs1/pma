@@ -14,16 +14,22 @@ if(!empty($_POST)) {
 
     $cliente = new Cliente();
     if (filter_has_var(INPUT_POST, "nome")) {
-        $cliente->setNome($_POST['nome']);  
+        $cliente->setNome($_POST['nome']);
     }
     if (filter_has_var(INPUT_POST, "cpf_cnpj")) {
         $cliente->setCpf_cnpj($_POST['cpf_cnpj']);  
+        if ($cliente->getCpf_cnpj()=="")
+            $cliente->setCpf_cnpj(NULL);
     }
     if (filter_has_var(INPUT_POST, "telefone1")) {
-        $cliente->setTelefone1($_POST['telefone1']);  
+        $cliente->setTelefone1($_POST['telefone1']);
+        if ($cliente->getTelefone1()=="")
+            $cliente->setTelefone1(NULL);
     }
     if (filter_has_var(INPUT_POST, "telefone2")) {
-        $cliente->setTelefone2($_POST['telefone2']);  
+        $cliente->setTelefone2($_POST['telefone2']);
+        if ($cliente->getTelefone2()=="")
+            $cliente->setTelefone2(NULL);
     }
     if (filter_has_var(INPUT_POST, "email")) {
         $cliente->setEmail($_POST['email']);
@@ -58,7 +64,7 @@ if(!empty($_POST)) {
             $endereco->setCidade(NULL);
     }
     if (filter_has_var(INPUT_POST, "uf")) {
-        $endereco->setEstado($_POST['uf']);
+        $endereco->setEstado(strtoupper($_POST['uf']));
         if ($endereco->getEstado()=="")
             $endereco->setEstado(NULL);
     }
@@ -134,7 +140,7 @@ if(!empty($_POST)) {
                 
                 <div class="form-group col-md-8">
                     <label for="nome">Nome: </label>
-                    <input class="form-control" type="text" required name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($try)) echo $cliente->getNome(); ?>" pattern="[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
+                    <input class="form-control nome" type="text" required name="nome" id="nome" placeholder="Nome" value="<?php if(!empty($try)) echo $cliente->getNome(); ?>" pattern="[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
                     <div class="valid-feedback">
                         Ok!
                     </div>
@@ -145,7 +151,7 @@ if(!empty($_POST)) {
                 
                 <div class="form-group col-md-2">
                     <label for="telefone">Documento: </label>
-                    <input class="form-control documento" type="text" inputmode="numeric" pattern=".{14}|.{18}" name="cpf_cnpj" id="cpf_cnpj" placeholder="CPF ou CNPJ" value="<?php if(!empty($try)) if(!empty($cliente->getCpf_cnpj())) echo $cliente->getCpf_cnpj(); ?>" />
+                    <input class="form-control documento" type="text" inputmode="numeric" pattern=".{14}|.{18}" name="cpf_cnpj" id="cpf_cnpj" placeholder="CPF ou CNPJ" value="<?php if(!empty($try)) echo $cliente->getCpf_cnpj(); ?>" />
                     <div class="invalid-feedback">
                         Documento inválido.
                     </div>
@@ -168,7 +174,7 @@ if(!empty($_POST)) {
                 
                 <div class="form-group col-md-2">
                     <label for="telefone">Telefone 01: </label>
-                    <input class="form-control telefone" type="text" inputmode="tel" pattern=".{13,14}" name="telefone1" id="telefone1" placeholder="(00)00000-0000" />
+                    <input class="form-control telefone" type="text" inputmode="tel" pattern=".{13,14}" name="telefone1" id="telefone1" placeholder="(00)00000-0000" value="<?php if(!empty($try)) echo $cliente->getTelefone1() ?>" />
                     <div class="invalid-feedback">
                         Telefone inválido.
                     </div>
@@ -176,7 +182,7 @@ if(!empty($_POST)) {
 
                 <div class="form-group col-md-2">
                     <label for="telefone">Telefone 02: </label>
-                    <input class="form-control telefone" type="text" inputmode="tel" pattern=".{13,14}" name="telefone2" id="telefone2" placeholder="(00)00000-0000" />
+                    <input class="form-control telefone" type="text" inputmode="tel" pattern=".{13,14}" name="telefone2" id="telefone2" placeholder="(00)00000-0000" value="<?php if(!empty($try)) echo $cliente->getTelefone2() ?>" />
                     <div class="invalid-feedback">
                         Telefone inválido.
                     </div>
@@ -199,7 +205,7 @@ if(!empty($_POST)) {
 
                 <div class="form-group col-md-6">
                     <label for="email">E-Mail: </label>
-                    <input type="email" class="form-control" name="email" id="email" placeholder="exemplo@meudominio.com" value="<?php if(!empty($try)) echo $cliente->getEmail()?>" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+                    <input type="email" class="form-control" name="email" id="email" placeholder="exemplo@meudominio.com" value="<?php if(!empty($try)) echo $cliente->getEmail()?>" pattern="[a-z0-9._%+-]{1,50}@[a-z0-9.-]{1,15}\.[a-z]{2,10}$" />
                     <div class="invalid-feedback">
                         E-mail inválido.
                     </div>
@@ -342,7 +348,7 @@ if(!empty($_POST)) {
                         
                         <div class="form-group col-md-7">
                             <label for="rua">Rua: </label>
-                            <input type="text" class="form-control rua" required name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($try)) if(!empty($endereco->getRua())) echo $endereco->getRua() ?>" pattern="[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
+                            <input type="text" class="form-control rua" required name="rua" id="rua" placeholder="Rua" value="<?php if(!empty($try)) if(!empty($endereco->getRua())) echo $endereco->getRua() ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
                             <div class="valid-feedback">
                                 Ok!
                             </div>
@@ -361,7 +367,7 @@ if(!empty($_POST)) {
                           
                         <div class="form-group col-md-5"> 
                             <label for="bairro">Bairro: </label>
-                            <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($try)) if(!empty($endereco->getBairro())) echo $endereco->getBairro() ?>" pattern="[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
+                            <input type="text" class="form-control bairro" name="bairro" id="bairro" placeholder="Bairro" value="<?php if(!empty($try)) if(!empty($endereco->getBairro())) echo $endereco->getBairro() ?>" pattern="[0-9]{0,4}\s?[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{1,25}[0-9]{0,4}" />
                             <div class="invalid-feedback">
                                 Bairro inválido.
                             </div>
@@ -369,7 +375,7 @@ if(!empty($_POST)) {
                         
                         <div class="form-group col-md-5">
                             <label for="cidade">Cidade: </label>
-                            <input type="text" class="form-control" required name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($try)) if(!empty($endereco->getCidade())) echo $endereco->getCidade() ?>" pattern="[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
+                            <input type="text" class="form-control cidade" required name="cidade" id="cidade" placeholder="Cidade" value="<?php if(!empty($try)) if(!empty($endereco->getCidade())) echo $endereco->getCidade() ?>" pattern="[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s*?]{3,50}" />
                             <div class="valid-feedback">
                                 Ok!
                             </div>
@@ -380,7 +386,7 @@ if(!empty($_POST)) {
                     
                         <div class="form-group col-md-1">
                             <label for="uf">Estado: </label>
-                            <input type="text" class="form-control" required name="uf" id="uf" placeholder="UF" value="<?php if(!empty($try)) if(!empty($endereco->getEstado())) echo $endereco->getEstado() ?>" pattern="[A-Z]{2}" />
+                            <input type="text" class="form-control estado" required name="uf" id="uf" placeholder="UF" value="<?php if(!empty($try)) if(!empty($endereco->getEstado())) echo $endereco->getEstado() ?>" pattern="[A-Za-z]{2}" />
                             <div class="valid-feedback">
                                 Ok!
                             </div>
@@ -393,7 +399,11 @@ if(!empty($_POST)) {
                             
                             $('.cep').mask('00000-000');
                             $('.num').mask('0000000');
-                            $('.rua').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z\u00C0-\u00FF ]/}}});
+                            $('.nome').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z\u00C0-\u00FF ]/}}});
+                            $('.rua').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.bairro').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.cidade').mask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', {translation:  {'X': {pattern: /[a-zA-Z0-9\u00C0-\u00FF ]/}}});
+                            $('.estado').mask('XX', {translation:  {'X': {pattern: /[A-Za-z]/}}});
                             
                         </script>
                     
@@ -408,9 +418,17 @@ if(!empty($_POST)) {
                             x = document.getElementById("endereco");
                             if (x.style.display == 'none') {
                                 x.style.display = 'block';
+                                document.getElementById("cep").required = true;
+                                document.getElementById("rua").required = true;
+                                document.getElementById("cidade").required = true;
+                                document.getElementById("uf").required = true;
                                 document.getElementById("toogle").innerHTML = 'Não cadastrar endereço';
                             } else {
                                 x.style.display = 'none';
+                                document.getElementById("cep").required = false;
+                                document.getElementById("rua").required = false;
+                                document.getElementById("cidade").required = false;
+                                document.getElementById("uf").required = false;
                                 document.getElementById("toogle").innerHTML = 'Cadastrar endereço';
                             }
                         }
